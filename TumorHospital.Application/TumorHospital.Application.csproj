@@ -10,4 +10,14 @@
     <ProjectReference Include="..\TumorHospital.Domain\TumorHospital.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Services\" />
+    <Folder Include="Interfaces\UOW\" />
+    <Folder Include="Interfaces\Repositories\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Mapping\" />
+    <Folder Include="Validators\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
