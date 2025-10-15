@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TumorHospital.Domain\TumorHospital.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
