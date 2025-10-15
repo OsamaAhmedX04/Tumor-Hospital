@@ -5,12 +5,6 @@ VisualStudioVersion = 17.14.36310.24 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TumorHospital.WebAPI", "TumorHospital.WebAPI\TumorHospital.WebAPI.csproj", "{92C1FDAD-2CCA-4CEB-AAD4-24EEC7AE24B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TumorHospital.Domain", "TumorHospital.Domain\TumorHospital.Domain.csproj", "{578E9A67-98D8-4F59-8CD6-604D7DEF54BF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TumorHospital.Application", "TumorHospital.Application\TumorHospital.Application.csproj", "{4CE3AD0B-30A2-49E9-BD08-447D35F3B087}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TumorHospital.Infrastructure", "TumorHospital.Infrastructure\TumorHospital.Infrastructure.csproj", "{2E0BBF86-8844-454B-B3F5-5BC2B1CF1EF0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,18 +15,6 @@ Global
 		{92C1FDAD-2CCA-4CEB-AAD4-24EEC7AE24B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92C1FDAD-2CCA-4CEB-AAD4-24EEC7AE24B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92C1FDAD-2CCA-4CEB-AAD4-24EEC7AE24B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{578E9A67-98D8-4F59-8CD6-604D7DEF54BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{578E9A67-98D8-4F59-8CD6-604D7DEF54BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{578E9A67-98D8-4F59-8CD6-604D7DEF54BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{578E9A67-98D8-4F59-8CD6-604D7DEF54BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CE3AD0B-30A2-49E9-BD08-447D35F3B087}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CE3AD0B-30A2-49E9-BD08-447D35F3B087}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CE3AD0B-30A2-49E9-BD08-447D35F3B087}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CE3AD0B-30A2-49E9-BD08-447D35F3B087}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E0BBF86-8844-454B-B3F5-5BC2B1CF1EF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E0BBF86-8844-454B-B3F5-5BC2B1CF1EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E0BBF86-8844-454B-B3F5-5BC2B1CF1EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E0BBF86-8844-454B-B3F5-5BC2B1CF1EF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
