@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +10,13 @@ using TumorHospital.WebAPI.Data.Models;
 using TumorHospital.WebAPI.Extensions;
 using TumorHospital.WebAPI.ExternalServices.Implementation;
 using TumorHospital.WebAPI.ExternalServices.Interfaces;
+using TumorHospital.WebAPI.Repositories.Implementations;
+using TumorHospital.WebAPI.Repositories.Interfaces;
+using TumorHospital.WebAPI.Services.Implementations;
+using TumorHospital.WebAPI.Services.Interfaces;
 using TumorHospital.WebAPI.Settings;
+using TumorHospital.WebAPI.UOW;
+using TumorHospital.WebAPI.Validators;
 
 namespace TumorHospital.WebAPI
 {
@@ -68,6 +76,20 @@ namespace TumorHospital.WebAPI
                     IssuerSigningKey = new SymmetricSecurityKey(secretKey)
                 };
             });
+
+            // Validators Service
+            builder.Services.AddFluentValidationClientsideAdapters()
+                            .AddValidatorsFromAssemblyContaining<UserDtoValidator>();
+
+            // Repositories and UnitOfWork
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Add Services
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+            // AutoMapper
+            builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
 
