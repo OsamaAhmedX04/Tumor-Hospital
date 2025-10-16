@@ -16,7 +16,7 @@ using TumorHospital.WebAPI.Services.Implementations;
 using TumorHospital.WebAPI.Services.Interfaces;
 using TumorHospital.WebAPI.Settings;
 using TumorHospital.WebAPI.UOW;
-using TumorHospital.WebAPI.Validators;
+using TumorHospital.WebAPI.Validators.Auth;
 
 namespace TumorHospital.WebAPI
 {

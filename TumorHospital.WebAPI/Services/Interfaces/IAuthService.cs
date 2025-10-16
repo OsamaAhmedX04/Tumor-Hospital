@@ -11,6 +11,6 @@ namespace TumorHospital.WebAPI.Services.Interfaces
         Task ChangePassword(ChangePasswordDto change);
         Task ForgotPassword(string email);
         Task ResetPassword(ResetPasswordDto reset);
-        Task<AuthModel> RefreshToken(RefreshTokenDto refreshTokenDto);
+        Task<AuthModel> RefreshToken(string refreshToken);
     }
 }

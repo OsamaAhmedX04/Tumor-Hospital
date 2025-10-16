@@ -64,7 +64,7 @@ namespace TumorHospital.WebAPI.Services.Implementations
 
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token)); // مهم جدًا عشان الرموز
             var body = $@"
-            <a href=""https://localhost:7088/api/Auth/Confirm-Email?email={newUser.Email}&token={encodedToken}""
+            <a href=""https://localhost:7114/api/Auth/Confirm-Email?email={newUser.Email}&confirmToken={encodedToken}""
                style=""display:inline-block;
                       padding:10px 20px;
                       background-color:#28a745;
@@ -78,7 +78,7 @@ namespace TumorHospital.WebAPI.Services.Implementations
             await _emailService.SendEmailAsync(
                 newUser.Email,
                 "Email Confirmation",
-                body);
+                encodedToken);
         }
 
         public async Task<AuthModel> ConfirmEmail(string email, string confirmToken)
@@ -216,6 +216,8 @@ namespace TumorHospital.WebAPI.Services.Implementations
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null) throw new Exception("User Not Exist");
 
+            if(!await _userManager.IsEmailConfirmedAsync(user)) throw new Exception("Email Not Confirmed Yet");
+
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             await _emailService.SendEmailAsync(
                 email,
@@ -237,11 +239,11 @@ namespace TumorHospital.WebAPI.Services.Implementations
             //return Ok("Password Reset Succefully");
         }
 
-        public async Task<AuthModel> RefreshToken(RefreshTokenDto refreshTokenDto)
+        public async Task<AuthModel> RefreshToken(string refreshToken)
         {
             var tokenRow = await _unitOfWork.RefreshTokenAuths
                 .GetAllAsIQueryable()
-                .FirstOrDefaultAsync(x => x.RefreshToken == refreshTokenDto.RefreshToken);
+                .FirstOrDefaultAsync(x => x.RefreshToken == refreshToken);
 
             if (tokenRow == null)
                 throw new Exception("Invalid Refresh Token");

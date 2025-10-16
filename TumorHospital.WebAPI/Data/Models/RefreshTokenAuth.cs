@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TumorHospital.WebAPI.Data.Models
 {
     public class RefreshTokenAuth
     {
+        [Key]
         [ForeignKey("User")]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
