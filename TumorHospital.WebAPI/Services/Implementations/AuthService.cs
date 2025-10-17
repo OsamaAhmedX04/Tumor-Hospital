@@ -42,48 +42,77 @@ namespace TumorHospital.WebAPI.Services.Implementations
             _jwtService = jwtService;
         }
 
-        public async Task Register(RegisterDto user)
+        public async Task Register(RegisterDto model)
         {
             var newUser = new ApplicationUser
             {
-                FirstName = user.FirstName,
-                LasttName = user.LastName,
-                UserName = user.Email,
-                Email = user.Email,
+                FirstName = model.FirstName,
+                LasttName = model.LastName,
+                UserName = model.Email,
+                Email = model.Email,
             };
 
-            var result = await _userManager.CreateAsync(newUser, user.Password);
+            var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
                 throw new Exception(result.Errors.FirstOrDefault()?.Description ?? "Unknown error");
 
-            if (!await _roleManager.RoleExistsAsync(user.Role))
-                await _roleManager.CreateAsync(new IdentityRole(user.Role));
-            await _userManager.AddToRoleAsync(newUser, user.Role);
+            if (!await _roleManager.RoleExistsAsync(model.Role))
+                await _roleManager.CreateAsync(new IdentityRole(model.Role));
+            await _userManager.AddToRoleAsync(newUser, model.Role);
 
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            //var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
-            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token)); // مهم جدًا عشان الرموز
+            //var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token)); // مهم جدًا عشان الرموز
+            //var body = $@"
+            //<a href=""https://localhost:7114/api/Auth/Confirm-Email?email={newUser.Email}&confirmToken={encodedToken}""
+            //   style=""display:inline-block;
+            //          padding:10px 20px;
+            //          background-color:#28a745;
+            //          color:white;
+            //          text-decoration:none;
+            //          border-radius:5px;
+            //          font-size:16px;"">
+            //    Confirm Email
+            //</a>";
+
+            var token = new Random().Next(100000,999999).ToString();
+            var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(
+                newUser, "Default", "EmailConfirmation", token
+                );
             var body = $@"
-            <a href=""https://localhost:7114/api/Auth/Confirm-Email?email={newUser.Email}&confirmToken={encodedToken}""
-               style=""display:inline-block;
-                      padding:10px 20px;
-                      background-color:#28a745;
-                      color:white;
-                      text-decoration:none;
-                      border-radius:5px;
-                      font-size:16px;"">
-                Confirm Email
-            </a>";
+                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
+                    <h2 style='text-align: center; color: #333;'>Confirm Your Email</h2>
+
+                    <p style='font-size: 15px; color: #555;'>
+                        Thanks for registering! Please use the code below to confirm your email:
+                    </p>
+
+                    <div style='text-align: center; margin: 30px 0;'>
+                        <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
+                            {token}
+                        </span>
+                    </div>
+
+                    <p style='font-size: 14px; color: #666;'>
+                        If you didn’t create this account, you can ignore this email.
+                    </p>
+
+                    <p style='margin-top: 30px; font-size: 14px; color: #333;'>
+                        Best regards,<br/>
+                        <strong>Your App Team</strong>
+                    </p>
+                </div>
+                ";
 
             await _emailService.SendEmailAsync(
                 newUser.Email,
                 "Email Confirmation",
-                encodedToken);
+                body);
         }
 
-        public async Task<AuthModel> ConfirmEmail(string email, string confirmToken)
+        public async Task<AuthModel> ConfirmEmail(ConfirmEmailDto model)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 throw new Exception("User Not Found");
 
@@ -91,12 +120,22 @@ namespace TumorHospital.WebAPI.Services.Implementations
                 throw new Exception("Email Is Already Confirmed Before");
 
 
-            var decodedTokenBytes = WebEncoders.Base64UrlDecode(confirmToken);
-            var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+            //var decodedTokenBytes = WebEncoders.Base64UrlDecode(confirmToken);
+            //var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
 
-            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
-            if (!result.Succeeded)
-                throw new Exception("Invalid Token");
+            //var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+            //if (!result.Succeeded)
+            //    throw new Exception("Invalid Token");
+
+            var savedToken = await _userManager.GetAuthenticationTokenAsync(
+                user, "Default", "EmailConfirmation"
+                );
+            if (savedToken != model.Token) throw new Exception("Invalid Token");
+            user.EmailConfirmed = true;
+            await _userManager.UpdateAsync(user);
+
+            await _userManager.RemoveAuthenticationTokenAsync(user, "Default", "EmailConfirmation");
+
 
             var userRoles = await _userManager.GetRolesAsync(user);
             var jwtToken = _jwtService.GenerateToken(new UserDto
@@ -138,16 +177,16 @@ namespace TumorHospital.WebAPI.Services.Implementations
             };
         }
 
-        public async Task<AuthModel> Login(LoginDto login)
+        public async Task<AuthModel> Login(LoginDto model)
         {
-            var user = await _userManager.FindByEmailAsync(login.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 throw new Exception("User Not Found");
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
                 throw new Exception("Email Not Confirmed Yet");
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, login.Password, lockoutOnFailure: false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
             if (!result.Succeeded)
                 throw new Exception("Email Or Password Wrong");
 
@@ -201,13 +240,13 @@ namespace TumorHospital.WebAPI.Services.Implementations
             }
         }
 
-        public async Task ChangePassword(ChangePasswordDto change)
+        public async Task ChangePassword(ChangePasswordDto model)
         {
-            var user = await _userManager.FindByEmailAsync(change.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null) throw new Exception("User Not Exist");
 
-            var result = await _userManager.ChangePasswordAsync(user, change.OldPassword, change.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!result.Succeeded) throw new Exception("Please Enter Right Password");
         }
 
@@ -218,25 +257,60 @@ namespace TumorHospital.WebAPI.Services.Implementations
 
             if(!await _userManager.IsEmailConfirmedAsync(user)) throw new Exception("Email Not Confirmed Yet");
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            //var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var token = new Random().Next(100000, 999999).ToString();
+            var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(
+                user, "Default", "ResetPasswordConfirmation", token
+                );
+            var body = $@"
+                    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
+                        <h2 style='text-align: center; color: #333;'>Reset Your Password</h2>
+                        <p style='font-size: 15px; color: #555;'>
+                            We received a request to reset your password. Use the code below to continue:
+                        </p>
+                        <div style='text-align: center; margin: 30px 0;'>
+                            <span style='display: inline-block; background-color: #4CAF50; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
+                                {token}
+                            </span>
+                        </div>
+                        <p style='font-size: 14px; color: #666;'>
+                            If you didn’t request this, you can safely ignore this email.
+                        </p>
+                        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
+                            Best regards,<br/>
+                            <strong>Your App Team</strong>
+                        </p>
+                    </div>
+                    ";
             await _emailService.SendEmailAsync(
                 email,
                 "Reset Password",
-                $"Reset Password Confirmation Token : {token}"
+                body
                 );
 
-            //return Ok("We Sent you confirmation token");
         }
 
-        public async Task ResetPassword(ResetPasswordDto reset)
+        public async Task ResetPassword(ResetPasswordDto model)
         {
-            var user = await _userManager.FindByEmailAsync(reset.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) throw new Exception("User Not Exist");
 
-            var result = await _userManager.ResetPasswordAsync(user, reset.Token, reset.NewPassword);
-            if (!result.Succeeded) throw new Exception("Invalid Token");
+            //var result = await _userManager.ResetPasswordAsync(user, reset.Token, reset.NewPassword);
+            //if (!result.Succeeded) throw new Exception("Invalid Token");
 
-            //return Ok("Password Reset Succefully");
+            var savedToken = await _userManager.GetAuthenticationTokenAsync(
+                user, "Default", "ResetPasswordConfirmation"
+                );
+            if (savedToken != model.Token) throw new Exception("Invalid Token");
+
+            await _userManager.RemoveAuthenticationTokenAsync(user, "Default", "ResetPasswordConfirmation");
+
+            var removeResult = await _userManager.RemovePasswordAsync(user);
+            if(!removeResult.Succeeded) throw new Exception($"Failed to remove Password");
+
+            var addResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
+            if (!addResult.Succeeded) throw new Exception($"Failed to add new Password");
         }
 
         public async Task<AuthModel> RefreshToken(string refreshToken)
@@ -278,9 +352,5 @@ namespace TumorHospital.WebAPI.Services.Implementations
                 RefreshToken = newRefreshToken
             };
         }
-
-
-
-
     }
 }
