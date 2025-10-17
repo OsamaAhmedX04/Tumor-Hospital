@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using TumorHospital.WebAPI.Data;
 using TumorHospital.WebAPI.DTOs.AuthDto;
+using TumorHospital.WebAPI.Extensions;
 using TumorHospital.WebAPI.Services.Interfaces;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -54,7 +55,7 @@ namespace TumorHospital.WebAPI.Controllers
             foreach (var error in result.Errors)
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
 
-            return BadRequest(ModelState);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
 
         }
 
@@ -68,8 +69,9 @@ namespace TumorHospital.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError("Identity", ex.Message);
             }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpPost("Login")]
@@ -92,7 +94,7 @@ namespace TumorHospital.WebAPI.Controllers
             foreach (var error in result.Errors)
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
 
-            return BadRequest(ModelState);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpPost("Logout")]
@@ -122,21 +124,22 @@ namespace TumorHospital.WebAPI.Controllers
             foreach (var error in result.Errors)
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
 
-            return BadRequest(ModelState);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpPost("Forgot-Password")]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
         {
             try
             {
-                await _authService.ForgotPassword(email);
+                await _authService.ForgotPassword(model);
                 return Ok(new { Message = "Reset Password Confirmation Token Sent To Your Email" });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError("Identity", ex.Message);
             }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpPost("Reset-Password")]
@@ -149,22 +152,24 @@ namespace TumorHospital.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError("Identity", ex.Message);
             }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpPost("Refresh-Token")]
-        public async Task<IActionResult> RefreshToken(string refreshToken)
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
         {
             try
             {
-                var authModel = await _authService.RefreshToken(refreshToken);
+                var authModel = await _authService.RefreshToken(request);
                 return Ok(authModel);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError("Identity", ex.Message);
             }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
 
