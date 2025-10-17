@@ -58,12 +58,12 @@ namespace TumorHospital.WebAPI.Controllers
 
         }
 
-        [HttpGet("Confirm-Email")]
-        public async Task<IActionResult> ConfirmEmail(string email, string confirmToken)
+        [HttpPost("Confirm-Email")]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto model)
         {
             try
             {
-                var authModel = await _authService.ConfirmEmail(email,confirmToken);
+                var authModel = await _authService.ConfirmEmail(model);
                 return Ok(authModel);
             }
             catch (Exception ex)
