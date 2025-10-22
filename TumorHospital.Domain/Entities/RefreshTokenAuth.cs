@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TumorHospital.Infrastructure.Persistence.Identity.Entites
+namespace TumorHospital.Domain.Entities
 {
     public class RefreshTokenAuth
     {

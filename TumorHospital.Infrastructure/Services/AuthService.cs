@@ -1,18 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.Auth;
 using TumorHospital.Application.DTOs.Response.Auth;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
+using TumorHospital.Domain.Entities;
 using TumorHospital.Infrastructure.ExternalServices;
-using TumorHospital.Infrastructure.Persistence.Identity.Entites;
 
 namespace TumorHospital.Infrastructure.Services
 {
@@ -127,10 +122,10 @@ namespace TumorHospital.Infrastructure.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            var tokenRow = await _unitOfWork.Repo<RefreshTokenAuth>().GetAllAsIQueryable().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var tokenRow = await _unitOfWork.RefreshTokenAuths.GetAllAsIQueryable().FirstOrDefaultAsync(x => x.UserId == user.Id);
             if (tokenRow == null)
             {
-                await _unitOfWork.Repo<RefreshTokenAuth>().AddAsync(new RefreshTokenAuth
+                await _unitOfWork.RefreshTokenAuths.AddAsync(new RefreshTokenAuth
                 {
                     UserId = user.Id,
                     Token = token,
@@ -180,10 +175,10 @@ namespace TumorHospital.Infrastructure.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            var tokenRow = await _unitOfWork.Repo<RefreshTokenAuth>().GetAllAsIQueryable().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var tokenRow = await _unitOfWork.RefreshTokenAuths.GetAllAsIQueryable().FirstOrDefaultAsync(x => x.UserId == user.Id);
             if (tokenRow == null)
             {
-                await _unitOfWork.Repo<RefreshTokenAuth>().AddAsync(new RefreshTokenAuth
+                await _unitOfWork.RefreshTokenAuths.AddAsync(new RefreshTokenAuth
                 {
                     UserId = user.Id,
                     Token = token,
@@ -210,10 +205,10 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task Logout(string userId)
         {
-            var token = await _unitOfWork.Repo<RefreshTokenAuth>().GetAllAsIQueryable().FirstOrDefaultAsync(x => x.UserId == userId);
+            var token = await _unitOfWork.RefreshTokenAuths.GetAllAsIQueryable().FirstOrDefaultAsync(x => x.UserId == userId);
             if (token != null)
             {
-                _unitOfWork.Repo<RefreshTokenAuth>().Delete(token.UserId);
+                _unitOfWork.RefreshTokenAuths.Delete(token.UserId);
                 await _unitOfWork.CompleteAsync();
             }
         }
@@ -291,7 +286,7 @@ namespace TumorHospital.Infrastructure.Services
         public async Task<AuthModel> RefreshToken(RefreshTokenRequest request)
         {
             if (string.IsNullOrEmpty(request.RefreshToken)) throw new Exception("Please Send Refresh Token");
-            var tokenRow = await _unitOfWork.Repo<RefreshTokenAuth>()
+            var tokenRow = await _unitOfWork.RefreshTokenAuths
                 .GetAllAsIQueryable()
                 .FirstOrDefaultAsync(x => x.RefreshToken == request.RefreshToken);
 

@@ -1,11 +1,5 @@
-﻿using LinqKit;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Intefaces.Repositories;
 using TumorHospital.Application.Specifications;
@@ -76,7 +70,7 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
             Expression<Func<TEntity, TResult>> selector,
             int pageNumber = 1, int pageSize = 10,
             Expression<Func<TEntity, bool>>? filter = null,
-            bool exbandable = false,
+            //bool exbandable = false,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             params Expression<Func<TEntity, object>>[] Includes) where TResult : class
         {
@@ -87,8 +81,8 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
 
             if (filter != null)
             {
-                if (exbandable)
-                    query = query.AsExpandableEFCore().Where(filter);
+                //if (exbandable)
+                    //query = query.AsExpandableEFCore().Where(filter);
                 query = query.Where(filter);
             }
 

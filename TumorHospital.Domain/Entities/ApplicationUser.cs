@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TumorHospital.Infrastructure.Persistence.Identity.Entites
+namespace TumorHospital.Domain.Entities
 {
     public class ApplicationUser : IdentityUser
     {

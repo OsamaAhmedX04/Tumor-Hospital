@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Application.Validators.Auth;
 
 namespace TumorHospital.Application
@@ -13,7 +11,7 @@ namespace TumorHospital.Application
         {
             // Validators Service
             services.AddFluentValidationClientsideAdapters()
-                            .AddValidatorsFromAssemblyContaining<UserDtoValidator>();
+                            .AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
             // Register DbContext
 
             return services;

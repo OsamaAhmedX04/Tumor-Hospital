@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TumorHospital.Application",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TumorHospital.Infrastructure", "TumorHospital.Infrastructure\TumorHospital.Infrastructure.csproj", "{6C5058B9-8D4C-48ED-A2D5-6F4DF8B35994}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TumorHospital.Domain", "TumorHospital.Domain\TumorHospital.Domain.csproj", "{5EAE274A-EB9E-4797-A034-18AFC282BB62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6C5058B9-8D4C-48ED-A2D5-6F4DF8B35994}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C5058B9-8D4C-48ED-A2D5-6F4DF8B35994}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C5058B9-8D4C-48ED-A2D5-6F4DF8B35994}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EAE274A-EB9E-4797-A034-18AFC282BB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EAE274A-EB9E-4797-A034-18AFC282BB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EAE274A-EB9E-4797-A034-18AFC282BB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EAE274A-EB9E-4797-A034-18AFC282BB62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

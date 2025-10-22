@@ -23,6 +23,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\TumorHospital.Application\TumorHospital.Application.csproj" />
+    <ProjectReference Include="..\TumorHospital.Domain\TumorHospital.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

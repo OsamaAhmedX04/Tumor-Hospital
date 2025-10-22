@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Specifications;
 
@@ -35,7 +30,7 @@ namespace TumorHospital.Application.Intefaces.Repositories
             Expression<Func<TEntity, TResult>> selector,
             int pageNumber = 1, int pageSize = 10,
             Expression<Func<TEntity, bool>>? filter = null,
-            bool expandable = false,
+            //bool expandable = false,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             params Expression<Func<TEntity, object>>[] Includes)
             where TResult : class;
