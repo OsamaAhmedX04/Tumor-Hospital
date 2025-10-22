@@ -8,10 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using TumorHospital.WebAPI.Data;
-using TumorHospital.WebAPI.DTOs.AuthDto;
+using TumorHospital.Application.DTOs.Request.Auth;
+using TumorHospital.Application.Intefaces.Services;
+
+//using TumorHospital.WebAPI.Data;
+//using TumorHospital.WebAPI.DTOs.AuthDto;
 using TumorHospital.WebAPI.Extensions;
-using TumorHospital.WebAPI.Services.Interfaces;
+//using TumorHospital.WebAPI.Services.Interfaces;
 
 namespace TumorHospital.WebAPI.Controllers
 {
