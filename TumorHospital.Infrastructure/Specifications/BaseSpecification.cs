@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using TumorHospital.Application.Specifications;
+
+namespace TumorHospital.Infrastructure.Specifications
+{
+    public class BaseSpecification<T> : ISpecification<T> where T : class
+    {
+        public Expression<Func<T, bool>>? Criteria { get; protected set; }
+
+        public List<Expression<Func<T, object>>> Includes { get; protected set; } = new();
+
+        public Expression<Func<T, object>>? OrderBy { get; protected set; }
+
+        public Expression<Func<T, object>>? OrderByDescending { get; protected set; }
+
+        public Expression<Func<T, object>> Selector { get; protected set; } = x => x;
+
+
+        protected void ApplyInclude(Expression<Func<T, object>> include)
+            => Includes.Add(include);
+
+        protected void ApplyOrderBy(Expression<Func<T, object>> orderBy)
+            => OrderBy = orderBy;
+
+        protected void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescending)
+            => OrderByDescending = orderByDescending;
+
+        protected void ApplySelector(Expression<Func<T, object>> selector)
+            => Selector = selector;
+    }
+}
