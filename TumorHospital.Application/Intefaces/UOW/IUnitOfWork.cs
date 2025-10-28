@@ -6,6 +6,26 @@ namespace TumorHospital.Application.Intefaces.UOW
     public interface IUnitOfWork
     {
         IRepository<RefreshTokenAuth> RefreshTokenAuths { get; }
+
+        IRepository<Admin> Admins { get; }
+        IRepository<Doctor> Doctors { get; }
+        IRepository<Patient> Patients { get; }
+        IRepository<Receptionist> Receptionists { get; }
+
+        IRepository<Bill> Bills { get; }
+        IRepository<CharityNeed> CharityNeeds { get; }
+        IRepository<VolunteerDonation> VolunteerDonations { get; }
+
+        IRepository<Appointment> Appointments { get; }
+        IRepository<DoctorSchedule> DoctorSchedules { get; }
+
+        IRepository<MedicalRecord> MedicalRecords { get; }
+        IRepository<Diagnostic> Diagnostics { get; }
+        IRepository<MentalHealthSurvey> MentalHealthSurvies { get; }
+        IRepository<Prescription> Prescriptions { get; }
+
+        IRepository<Notification> Notifications { get; }
+        
         Task<int> CompleteAsync();
     }
 }
