@@ -9,8 +9,14 @@ namespace TumorHospital.Domain.Entities
         public string FirstName { get; set; }
 
         [Required, MaxLength(40)]
-        public string LasttName { get; set; }
+        public string LastName { get; set; }
 
         public RefreshTokenAuth RefreshTokenAuth { get; set; }
+
+        public ICollection<Admin> Admins { get; set; } = new List<Admin>();
+        public ICollection<Doctor> Doctors { get; set; } = new List<Doctor>();
+        public ICollection<Patient> Patients { get; set; } = new List<Patient>();
+        public ICollection<Receptionist> Receptionists { get; set; } = new List<Receptionist>();
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     }
 }
