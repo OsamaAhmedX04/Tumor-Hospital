@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TumorHospital.Domain.Entities;
+using TumorHospital.Infrastructure.Persistence.Configurations;
 
 namespace TumorHospital.Infrastructure.Persistence.Context
 {
@@ -9,17 +10,34 @@ namespace TumorHospital.Infrastructure.Persistence.Context
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-
+        // its already exist in IdentityDbContext base class
+        //public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<RefreshTokenAuth> RefreshTokenAuths { get; set; }
+
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Receptionist> Receptionists { get; set; }
+
+        public DbSet<Bill> Bills { get; set; }
+        public DbSet<CharityNeed> CharityNeeds { get; set; }
+        public DbSet<VolunteerDonation> VolunteerDonations { get; set; }
+
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<DoctorSchedule> DoctorSchedules { get; set; }
+
+        public DbSet<MedicalRecord> MedicalRecords { get; set; }
+        public DbSet<Diagnostic> Diagnostics { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
+        public DbSet<MentalHealthSurvey> MentalHealthSurvies { get; set; }
+        
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<ApplicationUser>().ToTable("Users");
-            builder.Entity<IdentityRole>().ToTable("Roles");
-
-            builder.Entity<RefreshTokenAuth>().HasKey(rfa => rfa.UserId);
+            builder.ApplyConfigurationsFromAssembly(typeof(RoleConfig).Assembly);
         }
     }
 }
