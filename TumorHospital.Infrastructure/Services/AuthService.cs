@@ -42,7 +42,7 @@ namespace TumorHospital.Infrastructure.Services
             var newUser = new ApplicationUser
             {
                 FirstName = model.FirstName,
-                LasttName = model.LastName,
+                LastName = model.LastName,
                 UserName = model.Email,
                 Email = model.Email,
             };
@@ -114,7 +114,7 @@ namespace TumorHospital.Infrastructure.Services
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
                 Email = user.Email!,
-                Name = user.FirstName + " " + user.LasttName,
+                Name = user.FirstName + " " + user.LastName,
                 Role = userRoles[0]
             });
 
@@ -168,7 +168,7 @@ namespace TumorHospital.Infrastructure.Services
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
                 Email = user.Email!,
-                Name = user.FirstName + " " + user.LasttName,
+                Name = user.FirstName + " " + user.LastName,
                 Role = userRoles[0]
             });
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -305,7 +305,7 @@ namespace TumorHospital.Infrastructure.Services
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
                 Email = user.Email!,
-                Name = user.FirstName + " " + user.LasttName,
+                Name = user.FirstName + " " + user.LastName,
                 Role = userRoles.FirstOrDefault()!
             });
 
