@@ -8,6 +8,7 @@ using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Entities;
 using TumorHospital.Infrastructure.ExternalServices;
+using TumorHospital.Infrastructure.Persistence.Context;
 
 namespace TumorHospital.Infrastructure.Services
 {
@@ -19,6 +20,7 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
         private readonly JWTService _jwtService;
+        private readonly AppDbContext _db;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
@@ -26,7 +28,8 @@ namespace TumorHospital.Infrastructure.Services
             RoleManager<IdentityRole> roleManager,
             IUnitOfWork unitOfWork,
             IEmailService emailService,
-            JWTService jwtService
+            JWTService jwtService,
+            AppDbContext db
             )
         {
             _userManager = userManager;
@@ -35,6 +38,7 @@ namespace TumorHospital.Infrastructure.Services
             _unitOfWork = unitOfWork;
             _emailService = emailService;
             _jwtService = jwtService;
+            _db = db;
         }
 
         public async Task Register(RegisterDto model)
@@ -47,18 +51,27 @@ namespace TumorHospital.Infrastructure.Services
                 Email = model.Email,
             };
 
+            if (!await _roleManager.RoleExistsAsync(model.Role))
+                throw new Exception("Unknown Role");
+
             var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
                 throw new Exception(result.Errors.FirstOrDefault()?.Description ?? "Unknown error");
 
-            if (!await _roleManager.RoleExistsAsync(model.Role))
-                await _roleManager.CreateAsync(new IdentityRole(model.Role));
             await _userManager.AddToRoleAsync(newUser, model.Role);
 
             var token = new Random().Next(100000, 999999).ToString();
             var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(
                 newUser, "Default", "EmailConfirmation", token
                 );
+
+            var setterToken = await _db
+                .UserTokens
+                .FirstOrDefaultAsync(u => u.UserId == newUser.Id);
+            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            await _db.SaveChangesAsync();
+                
+
             var body = $@"
                 <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
                     <h2 style='text-align: center; color: #333;'>Confirm Your Email</h2>
@@ -103,7 +116,12 @@ namespace TumorHospital.Infrastructure.Services
             var savedToken = await _userManager.GetAuthenticationTokenAsync(
                 user, "Default", "EmailConfirmation"
                 );
-            if (savedToken != model.Token) throw new Exception("Invalid Token");
+
+            var tokenToCheck = await _db.UserTokens
+                .FirstOrDefaultAsync(u => u.Value == savedToken);
+            var isTokenExpired = tokenToCheck.ExpireDate < DateTime.UtcNow;
+
+            if (savedToken != model.Token || isTokenExpired) throw new Exception("Invalid Or Expired Token");
             user.EmailConfirmed = true;
             await _userManager.UpdateAsync(user);
 
@@ -149,6 +167,58 @@ namespace TumorHospital.Infrastructure.Services
                 RefreshToken = refreshToken
             };
         }
+
+        public async Task ResendConfirmEmailToken(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) throw new Exception("User Not Exist");
+            if (await _userManager.IsEmailConfirmedAsync(user))
+                throw new Exception("This Email Is Aleardy Confirmed Before");
+
+            var token = new Random().Next(100000, 999999).ToString();
+            var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(
+                user, "Default", "EmailConfirmation", token
+                );
+
+            var setterToken = await _db
+                .UserTokens.FirstOrDefaultAsync(
+                u => u.Value == token && u.UserId == user.Id);
+            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            await _db.SaveChangesAsync();
+
+
+            var body = $@"
+                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
+                    <h2 style='text-align: center; color: #333;'>Confirm Your Email</h2>
+
+                    <p style='font-size: 15px; color: #555;'>
+                        Thanks for registering! Please use the code below to confirm your email:
+                    </p>
+
+                    <div style='text-align: center; margin: 30px 0;'>
+                        <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
+                            {token}
+                        </span>
+                    </div>
+
+                    <p style='font-size: 14px; color: #666;'>
+                        If you didn’t create this account, you can ignore this email.
+                    </p>
+
+                    <p style='margin-top: 30px; font-size: 14px; color: #333;'>
+                        Best regards,<br/>
+                        <strong>Your App Team</strong>
+                    </p>
+                </div>
+                ";
+
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Email Confirmation",
+                body);
+        }
+
+
 
         public async Task<AuthModel> Login(LoginDto model)
         {
@@ -223,7 +293,7 @@ namespace TumorHospital.Infrastructure.Services
             if (!result.Succeeded) throw new Exception("Please Enter Right Password");
         }
 
-        public async Task ForgotPassword(ForgotPasswordDto model)
+        public async Task ForgotPassword(EmailDto model)
         {
             if (string.IsNullOrEmpty(model.Email)) throw new Exception("Please Send Refresh Token");
 
@@ -236,6 +306,13 @@ namespace TumorHospital.Infrastructure.Services
             var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(
                 user, "Default", "ResetPasswordConfirmation", token
                 );
+
+            var setterToken = await _db
+                .UserTokens
+                .FirstOrDefaultAsync(u => u.UserId == user.Id);
+            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            await _db.SaveChangesAsync();
+
             var body = $@"
                     <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
                         <h2 style='text-align: center; color: #333;'>Reset Your Password</h2>
@@ -272,7 +349,12 @@ namespace TumorHospital.Infrastructure.Services
             var savedToken = await _userManager.GetAuthenticationTokenAsync(
                 user, "Default", "ResetPasswordConfirmation"
                 );
-            if (savedToken != model.Token) throw new Exception("Invalid Token");
+
+            var tokenToCheck = await _db.UserTokens
+                .FirstOrDefaultAsync(u => u.Value == savedToken);
+            var isTokenExpired = tokenToCheck.ExpireDate < DateTime.UtcNow;
+
+            if (savedToken != model.Token || isTokenExpired) throw new Exception("Invalid Or Expired Token");
 
             var removeResult = await _userManager.RemovePasswordAsync(user);
             if (!removeResult.Succeeded) throw new Exception($"Failed to remove Password");
@@ -281,6 +363,51 @@ namespace TumorHospital.Infrastructure.Services
             if (!addResult.Succeeded) throw new Exception(addResult.Errors.FirstOrDefault()?.Description ?? "Unknown error");
 
             await _userManager.RemoveAuthenticationTokenAsync(user, "Default", "ResetPasswordConfirmation");
+        }
+
+
+        public async Task ResendResetPasswordToken(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) throw new Exception("User Not Exist");
+            var token = new Random().Next(100000, 999999).ToString();
+            var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(
+                user, "Default", "ResetPasswordConfirmation", token
+                );
+
+            var setterToken = await _db
+                .UserTokens.FirstOrDefaultAsync(
+                u => u.Value == token && u.UserId == user.Id);
+
+            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            await _db.SaveChangesAsync();
+
+
+            var body = $@"
+                    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
+                        <h2 style='text-align: center; color: #333;'>Reset Your Password</h2>
+                        <p style='font-size: 15px; color: #555;'>
+                            We received a request to reset your password. Use the code below to continue:
+                        </p>
+                        <div style='text-align: center; margin: 30px 0;'>
+                            <span style='display: inline-block; background-color: #4CAF50; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
+                                {token}
+                            </span>
+                        </div>
+                        <p style='font-size: 14px; color: #666;'>
+                            If you didn’t request this, you can safely ignore this email.
+                        </p>
+                        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
+                            Best regards,<br/>
+                            <strong>Your App Team</strong>
+                        </p>
+                    </div>
+                    ";
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Reset Password",
+                body
+                );
         }
 
         public async Task<AuthModel> RefreshToken(RefreshTokenRequest request)

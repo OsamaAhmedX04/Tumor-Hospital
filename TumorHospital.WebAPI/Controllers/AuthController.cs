@@ -65,6 +65,21 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+        [HttpPost("Resend-Confirm-Email-Token")]
+        public async Task<IActionResult> ResetConfirmEmailToken(EmailDto model)
+        {
+            try
+            {
+                await _authService.ResendConfirmEmailToken(model.Email);
+                return Ok(new { Message = "Confirm Email Token Resent To Your Email" });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto user)
         {
@@ -119,7 +134,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost("Forgot-Password")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
+        public async Task<IActionResult> ForgotPassword(EmailDto model)
         {
             try
             {
@@ -140,6 +155,21 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 await _authService.ResetPassword(model);
                 return Ok(new { Message = "Password Reseted Successfully" });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [HttpPost("Resend-Reset-Password-Token")]
+        public async Task<IActionResult> ResetResetPasswordToken(EmailDto model)
+        {
+            try
+            {
+                await _authService.ResendResetPasswordToken(model.Email);
+                return Ok(new { Message = "Reset Password Token Resent To Your Eamil" });
             }
             catch (Exception ex)
             {

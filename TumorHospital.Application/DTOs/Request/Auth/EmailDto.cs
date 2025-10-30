@@ -1,6 +1,6 @@
 ﻿namespace TumorHospital.Application.DTOs.Request.Auth
 {
-    public class ForgotPasswordDto
+    public class EmailDto
     {
         public string Email { get; set; }
     }

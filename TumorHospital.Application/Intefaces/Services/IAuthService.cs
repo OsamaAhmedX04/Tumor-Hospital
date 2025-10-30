@@ -7,11 +7,13 @@ namespace TumorHospital.Application.Intefaces.Services
     {
         Task Register(RegisterDto model);
         Task<AuthModel> ConfirmEmail(ConfirmEmailDto model);
+        Task ResendConfirmEmailToken(string email);
         Task<AuthModel> Login(LoginDto model);
         Task Logout(string userId);
         Task ChangePassword(ChangePasswordDto model);
-        Task ForgotPassword(ForgotPasswordDto model);
+        Task ForgotPassword(EmailDto model);
         Task ResetPassword(ResetPasswordDto model);
+        Task ResendResetPasswordToken(string email);
         Task<AuthModel> RefreshToken(RefreshTokenRequest request);
     }
 }
