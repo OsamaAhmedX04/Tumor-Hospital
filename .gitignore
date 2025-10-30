@@ -11,3 +11,4 @@ Release/
 
 # Others
 appsettings.Development.json
+Infra/Migrations/
