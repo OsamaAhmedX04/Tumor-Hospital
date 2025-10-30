@@ -65,7 +65,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpPost("Resend-Confirm-Email-Token")]
+        [HttpPut("Resend-Confirm-Email-Token")]
         public async Task<IActionResult> ResetConfirmEmailToken(EmailDto model)
         {
             try
@@ -163,7 +163,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpPost("Resend-Reset-Password-Token")]
+        [HttpPut("Resend-Reset-Password-Token")]
         public async Task<IActionResult> ResetResetPasswordToken(EmailDto model)
         {
             try
