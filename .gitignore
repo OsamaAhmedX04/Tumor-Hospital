@@ -12,3 +12,4 @@ Release/
 # Others
 appsettings.Development.json
 TumorHospital.Infrastructure/Migrations
+TumorHospital.WebAPI\appsettings.json
