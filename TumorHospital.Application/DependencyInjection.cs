@@ -9,10 +9,14 @@ namespace TumorHospital.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            #region FluentValidation And AutoMapper
             // Validators Service
             services.AddFluentValidationClientsideAdapters()
                             .AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
-            // Register DbContext
+
+            // AutoMapper
+            services.AddAutoMapper(typeof(DependencyInjection).Assembly);
+            #endregion
 
             return services;
         }

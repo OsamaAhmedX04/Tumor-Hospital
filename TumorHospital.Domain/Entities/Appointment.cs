@@ -10,7 +10,7 @@ namespace TumorHospital.Domain.Entities
     public class Appointment
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [ForeignKey("Patient")]
         public string PatientId { get; set; }

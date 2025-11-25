@@ -13,7 +13,7 @@ namespace TumorHospital.Domain.Entities
 
         public string Gender { get; set; }
         public string Specialization { get; set; }
-        public string ProfilePicturePath { get; set; }
+        public string? ProfilePicturePath { get; set; }
         public DateTime RegistrationDate { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

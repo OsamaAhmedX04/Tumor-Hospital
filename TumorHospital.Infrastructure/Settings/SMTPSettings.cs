@@ -1,4 +1,4 @@
-﻿namespace TumorHospital.Application.Settings
+﻿namespace TumorHospital.Infrastructure.Settings
 {
     public class SMTPSettings
     {

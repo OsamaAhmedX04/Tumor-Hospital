@@ -2,7 +2,8 @@
 using System.Net;
 using System.Net.Mail;
 using TumorHospital.Application.Intefaces.ExternalServices;
-using TumorHospital.Application.Settings;
+//using TumorHospital.Application.Settings;
+using TumorHospital.Infrastructure.Settings;
 
 namespace TumorHospital.Infrastructure.ExternalServices
 {

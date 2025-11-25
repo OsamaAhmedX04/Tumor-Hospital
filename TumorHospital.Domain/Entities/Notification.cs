@@ -6,7 +6,7 @@ namespace TumorHospital.Domain.Entities
     public class Notification
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }

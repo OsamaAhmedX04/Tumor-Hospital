@@ -19,6 +19,11 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasColumnType("DECIMAL(18,2)");
 
+            builder.Property(b => b.Code)
+                .IsRequired();
+
+            builder.HasIndex(b => b.Code).IsUnique();
+
             builder.Property(b => b.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");
 

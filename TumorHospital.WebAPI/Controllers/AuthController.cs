@@ -110,7 +110,7 @@ namespace TumorHospital.WebAPI.Controllers
             return Ok(new { Message = "Loged Out" });
         }
 
-        [HttpPost("Change-Password")]
+        [HttpPut("Change-Password")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
         {
             var result = _ChangePasswordValidator.Validate(model);
@@ -120,6 +120,29 @@ namespace TumorHospital.WebAPI.Controllers
                 {
                     await _authService.ChangePassword(model);
                     return Ok(new { Message = "Password Changed Successfully" });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("Identity", ex.Message);
+                }
+            }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [HttpPut("Change-InActiveRole-Password")]
+        public async Task<IActionResult> ChangeInActiveRolePassword(ChangePasswordDto model)
+        {
+            var result = _ChangePasswordValidator.Validate(model);
+            if (result.IsValid)
+            {
+                try
+                {
+                    var authModel = await _authService.ChangeInActiveRolePassword(model);
+                    return Ok(authModel);
                 }
                 catch (Exception ex)
                 {

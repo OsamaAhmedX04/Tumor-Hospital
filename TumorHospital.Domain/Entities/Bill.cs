@@ -9,12 +9,13 @@ namespace TumorHospital.Domain.Entities
     public class Bill
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         
         [ForeignKey("Patient")]
         public string PatientId { get; set; }
         public Patient Patient { get; set; }
         public decimal TotalAmount { get; set; }
+        public string Code { get; set; }
         public BillStatus Status { get; set; }
 
         [ForeignKey("Receptionist")]

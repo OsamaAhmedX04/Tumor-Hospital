@@ -11,6 +11,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task<AuthModel> Login(LoginDto model);
         Task Logout(string userId);
         Task ChangePassword(ChangePasswordDto model);
+        Task<AuthModel> ChangeInActiveRolePassword(ChangePasswordDto model);
         Task ForgotPassword(EmailDto model);
         Task ResetPassword(ResetPasswordDto model);
         Task ResendResetPasswordToken(string email);

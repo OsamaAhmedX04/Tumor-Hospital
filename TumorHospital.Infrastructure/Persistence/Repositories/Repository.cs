@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LinqKit;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Intefaces.Repositories;
@@ -20,6 +21,8 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
         #region Retriving
 
         public async Task<TEntity?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+        public async Task<TEntity?> GetByIdAsync(string id) => await _dbSet.FindAsync(id);
+        public async Task<TEntity?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
 
         public async Task<List<TEntity>> GetAllAsync()
             => await _dbSet.ToListAsync();
@@ -40,6 +43,17 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
 
             foreach (var include in Includes)
                 query = query.Include(include);
+
+            return query.Select(selector).FirstOrDefaultAsync();
+        }
+
+        public virtual Task<TResult?> GetEnhancedAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> filter) where TResult : class
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            query = query.Where(filter);
 
             return query.Select(selector).FirstOrDefaultAsync();
         }
@@ -115,6 +129,52 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
             };
         }
 
+        public async Task<PageSourcePagination<TResult>> GetAllPaginatedEnhancedAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            int pageNumber = 1,
+            int pageSize = 10,
+            Expression<Func<TEntity, bool>>? filter = null,
+            bool expandable = false,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+            where TResult : class
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 5) pageSize = 5;
+
+            IQueryable<TEntity> query = _dbSet;
+
+            if (filter != null)
+            {
+                if (expandable)
+                    query = query.AsExpandableEFCore().Where(filter);
+                else
+                    query = query.Where(filter);
+            }
+
+            if (include != null)
+                query = include(query);
+
+            if (orderBy != null)
+                query = orderBy(query);
+
+            var totalRecords = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            var result = query.Select(selector);
+
+            return new PageSourcePagination<TResult>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = totalPages,
+                Data = await result.ToListAsync()
+            };
+        }
+
 
         public async Task<List<object>> GetBySpecificationAsync(ISpecification<TEntity> specification)
         {
@@ -143,6 +203,9 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
         #region Add_Update_Delete
         public async Task AddAsync(TEntity entity)
             => await _dbSet.AddAsync(entity);
+
+        public async Task AddRangeAsync(List<TEntity> entities)
+            => await _dbSet.AddRangeAsync(entities);
         public void Update(TEntity entity)
             => _dbSet.Update(entity);
 
@@ -153,6 +216,12 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
                 _dbSet.Remove(entity);
         }
         public void Delete(string id)
+        {
+            var entity = _dbSet.Find(id);
+            if (entity != null)
+                _dbSet.Remove(entity);
+        }
+        public void Delete(Guid id)
         {
             var entity = _dbSet.Find(id);
             if (entity != null)

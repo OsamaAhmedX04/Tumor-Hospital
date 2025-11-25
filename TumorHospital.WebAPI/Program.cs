@@ -25,8 +25,6 @@ namespace TumorHospital.WebAPI
             // Register Infrastructure Layer
             builder.Services.AddInfrastructure(builder.Configuration);
 
-            //// AutoMapper
-            ////builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
 

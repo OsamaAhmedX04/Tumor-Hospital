@@ -2,11 +2,12 @@
 {
     public enum Day
     {
-        SAT,
-        SUN,
-        MON,
-        TUE,
-        WED,
-        THU
+        Saturday,
+        Sunday,
+        Monday, 
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday
     }
 }

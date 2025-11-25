@@ -1,20 +1,26 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Amazon.Runtime;
+using Amazon.S3;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Supabase;
+using System.Runtime;
 using System.Text;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
-using TumorHospital.Application.Settings;
+//using TumorHospital.Application.Settings;
 using TumorHospital.Domain.Entities;
 using TumorHospital.Infrastructure.ExternalServices;
 using TumorHospital.Infrastructure.Persistence.Context;
 using TumorHospital.Infrastructure.Persistence.Repositories;
 using TumorHospital.Infrastructure.Services;
+using TumorHospital.Infrastructure.Settings;
 using TumorHospital.Infrastructure.UOW;
 
 namespace TumorHospital.Infrastructure
@@ -23,6 +29,7 @@ namespace TumorHospital.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            #region DBContext And Identity
             // Register DbContext
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
@@ -39,7 +46,9 @@ namespace TumorHospital.Infrastructure
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders(); // For email confirm, reset password
+            #endregion
 
+            #region JWT
             // Register JWT
             services.AddScoped<JWTService>();
             var jwtSettings = configuration.GetSection("JWT");
@@ -64,19 +73,48 @@ namespace TumorHospital.Infrastructure
                     IssuerSigningKey = new SymmetricSecurityKey(secretKey)
                 };
             });
+            #endregion
 
+            #region UnitOfWork And Repository Pattern
             // Register UOW
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Register Repository
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            #endregion
 
+            #region EmailService
             // Register EmailService
             services.Configure<SMTPSettings>(configuration.GetSection("SmtpSettings"));
             services.AddScoped<IEmailService, EmailService>();
+            #endregion
 
-            // Register AuthService
+            #region FileService
+            // Bind Supabase settings from appsettings.json
+            services.Configure<SupabaseSettings>(configuration.GetSection("Supabase"));
+
+            // Register Supabase.Client as singleton
+            services.AddSingleton<Client>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<SupabaseSettings>>().Value;
+                return new Client(settings.Url, settings.ServiceKey, new SupabaseOptions
+                {
+                    AutoRefreshToken = true,
+                    AutoConnectRealtime = true
+                });
+            });
+
+            services.AddScoped<IFileService, FileService>();
+            #endregion
+
+            #region BuisenessService
+            // Register Seevices
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IAdminSevice, AdminService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IReceptionService, ReceptionService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            #endregion
 
             return services;
         }

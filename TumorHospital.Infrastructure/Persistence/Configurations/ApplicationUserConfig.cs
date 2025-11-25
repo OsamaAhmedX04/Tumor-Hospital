@@ -17,6 +17,7 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
 
             builder.Property(au => au.FirstName).HasMaxLength(40).IsRequired();
             builder.Property(au => au.LastName).HasMaxLength(40).IsRequired();
+            builder.Property(au => au.IsActive).HasDefaultValue(false);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace TumorHospital.Domain.Entities
         [Required, MaxLength(40)]
         public string LastName { get; set; }
 
+        public bool IsActive { get; set; }
+
         public RefreshTokenAuth RefreshTokenAuth { get; set; }
 
         public ICollection<Admin> Admins { get; set; } = new List<Admin>();

@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+		<PackageReference Include="AWSSDK.S3" Version="4.0.11.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.0" />
@@ -18,12 +19,14 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Supabase" Version="1.1.1" />
+		<PackageReference Include="Supabase.Storage" Version="2.4.1" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 	</ItemGroup>
 	
   <ItemGroup>
     <ProjectReference Include="..\TumorHospital.Application\TumorHospital.Application.csproj" />
-    <ProjectReference Include="..\TumorHospital.Domain\TumorHospital.Domain.csproj" />
+    
   </ItemGroup>
 
 </Project>

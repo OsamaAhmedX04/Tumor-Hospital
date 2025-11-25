@@ -14,6 +14,8 @@ namespace TumorHospital.Domain.Entities
         public string Address { get; set; }
         public DateTime RegistrationDate { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public ICollection<Bill> Bills { get; set; } = new List<Bill>();
     }
 }

@@ -4,6 +4,7 @@
     {
         Admin,
         Doctor,
+        InActiveRole,
         Receptionist,
         Patient
     }

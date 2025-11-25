@@ -7,6 +7,7 @@ using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Entities;
+using TumorHospital.Domain.Enums;
 using TumorHospital.Infrastructure.ExternalServices;
 using TumorHospital.Infrastructure.Persistence.Context;
 
@@ -51,14 +52,13 @@ namespace TumorHospital.Infrastructure.Services
                 Email = model.Email,
             };
 
-            if (!await _roleManager.RoleExistsAsync(model.Role))
-                throw new Exception("Unknown Role");
+            
 
             var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
                 throw new Exception(result.Errors.FirstOrDefault()?.Description ?? "Unknown error");
 
-            await _userManager.AddToRoleAsync(newUser, model.Role);
+            await _userManager.AddToRoleAsync(newUser, Role.Patient.ToString());
 
             var token = new Random().Next(100000, 999999).ToString();
             var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(
@@ -123,6 +123,7 @@ namespace TumorHospital.Infrastructure.Services
 
             if (savedToken != model.Token || isTokenExpired) throw new Exception("Invalid Or Expired Token");
             user.EmailConfirmed = true;
+            user.IsActive = true;
             await _userManager.UpdateAsync(user);
 
             await _userManager.RemoveAuthenticationTokenAsync(user, "Default", "EmailConfirmation");
@@ -290,7 +291,62 @@ namespace TumorHospital.Infrastructure.Services
             if (user == null) throw new Exception("User Not Exist");
 
             var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
             if (!result.Succeeded) throw new Exception("Please Enter Right Password");
+        }
+
+        public async Task<AuthModel> ChangeInActiveRolePassword(ChangePasswordDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) throw new Exception("User Not Exist");
+
+            var isInActiveDoctor = await _userManager.IsInRoleAsync(user, Role.InActiveRole.ToString());
+            if (!isInActiveDoctor) throw new Exception("User Already Active");
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (!result.Succeeded) throw new Exception("Please Enter Right Password");
+
+            await _userManager.RemoveFromRoleAsync(user, Role.InActiveRole.ToString());
+            await _userManager.AddToRoleAsync(user, Role.Doctor.ToString());
+
+            var jwtToken = _jwtService.GenerateToken(new UserDto
+            {
+                Email = user.Email!,
+                Name = user.FirstName + " " + user.LastName,
+                Role = Role.Doctor.ToString()
+            });
+            var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+
+            var refreshToken = Guid.NewGuid().ToString();
+
+            var tokenRow = await _unitOfWork.RefreshTokenAuths.GetAllAsIQueryable().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            if (tokenRow == null)
+            {
+                await _unitOfWork.RefreshTokenAuths.AddAsync(new RefreshTokenAuth
+                {
+                    UserId = user.Id,
+                    Token = token,
+                    RefreshToken = refreshToken,
+                });
+            }
+            else
+            {
+                tokenRow.Token = token;
+                tokenRow.RefreshToken = refreshToken;
+                tokenRow.RefreshTokenExpiration = DateTime.Now.AddDays(20);
+            }
+
+            user.IsActive = true;
+            await _userManager.UpdateAsync(user);
+
+            return new AuthModel
+            {
+                Message = "Password Changed Succefully",
+                UserId = user.Id,
+                Token = token,
+                RefreshToken = refreshToken
+            };
         }
 
         public async Task ForgotPassword(EmailDto model)

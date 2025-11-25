@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Infrastructure.Persistence.Configurations
 {
@@ -31,6 +25,13 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                     Name = "Doctor",
                     NormalizedName = "DOCTOR",
                     ConcurrencyStamp = "22222222-2222-2222-2222-222222222222"
+                },
+                new IdentityRole
+                {
+                    Id = "c3e4c1a9-4f7e-4a42-9c36-8d2a6e9c75bd",
+                    Name = "InActiveRole",
+                    NormalizedName = "INACTIVEROLE",
+                    ConcurrencyStamp = "22222222-2222-2200-0000-000000000000"
                 },
                 new IdentityRole
                 {
