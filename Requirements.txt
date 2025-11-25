@@ -1,0 +1,13 @@
+1) Adminstration System
+ 
+  - Create New Doctor/Receptionist
+  - Delete Doctor/Receptionist
+
+2) Reception System
+
+3) Donation System
+
+4) Authentication System
+
+5) File System
+

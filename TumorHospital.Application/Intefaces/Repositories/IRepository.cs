@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Response.Pagination;
-using TumorHospital.Application.Specifications;
+using TumorHospital.Application.Intefaces.Specifications;
 
 namespace TumorHospital.Application.Intefaces.Repositories
 {

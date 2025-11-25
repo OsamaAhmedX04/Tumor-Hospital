@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Intefaces.Repositories;
-using TumorHospital.Application.Specifications;
+using TumorHospital.Application.Intefaces.Specifications;
 using TumorHospital.Infrastructure.Persistence.Context;
 
 namespace TumorHospital.Infrastructure.Persistence.Repositories

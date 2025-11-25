@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace TumorHospital.Application.Specifications
+namespace TumorHospital.Application.Intefaces.Specifications
 {
     public interface ISpecification<T> where T : class
     {

@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using TumorHospital.Application.Specifications;
+using TumorHospital.Application.Intefaces.Specifications;
 
 namespace TumorHospital.Infrastructure.Specifications
 {
