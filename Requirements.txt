@@ -1,13 +1,55 @@
-1) Adminstration System
- 
-  - Create New Doctor/Receptionist
-  - Delete Doctor/Receptionist
+🚀 Project Roadmap – Hospital Management System
 
-2) Reception System
+0️⃣ Setup & Project Foundation 🧱
+ - 📝 Create Solution & Initialize Git Repository
+ - 🧩 Apply Clean Architecture (Vertical Slice / CQRS Ready)
+ - 🗂️ Implement Repository + Specification Pattern
+ - 🔄 Implement Unit Of Work
+ - 🛠️ Add Service Layer
+ - 🧬 Add Models, DBContext, Identity, Configurations
+ - 🔁 Create DTOs + Mapping with AutoMapper
+ - 🛡️ Validate with FluentValidation
+ - ✉️ Implement Email Service
 
-3) Donation System
+1️⃣ FileBase System 📁 (Supabase Storage)
+ - 🔗 Connect with Supabase
+ - ⬆️ Upload File
+ - ✏️ Edit File
+ - ❌ Delete File
+ - 📥 Retrieve File
 
-4) Authentication System
+2️⃣ Authentication System 🔐
+ - 👤 Register & Login
+ - 📧 Email Confirmation + Resend Link
+ - 🆘 Forget/Reset Password + Resend Reset Link
+ - 🔑 Change Password (Active / Inactive Roles)
+ - 🛡️ JWT + Refresh Token Authentication
 
-5) File System
+3️⃣ Administration System 🧑‍💼
+ - ➕ Add New Doctor / Receptionist
+ - 🗑️ Remove Doctor / Receptionist
 
+4️⃣ Reception System 🧾
+ - 👥 Show All Receptionists
+ - 🧍 View Receptionist Details
+ - 💵 Show All Bills
+ - 🧾 Get Bill Details
+ - 💰 Receive Payment
+
+5️⃣ Donation System ❤️‍🩹
+ - 🎯 Add Charity Needs
+ - ❌ Delete Need
+ - ✏️ Edit Need
+ - 📋 Show All Needs
+ - 🔍 Get Need Details
+ - 🤝 Show All Volunteers
+ - ❤️ Donate
+
+6️⃣ Users Module 👥
+ - 🧑‍⚕️ Show Quick Info:
+   (Admins / Doctors / Receptionists / Patients / Inactive Roles)
+
+7️⃣ Scheduling System 📅
+ - ➕ Add Schedule for Doctors
+ - ✏️ Edit Schedule
+ - ❌ Delete Schedule
