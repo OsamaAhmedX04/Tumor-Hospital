@@ -73,6 +73,8 @@ namespace TumorHospital.Application.Intefaces.Repositories
 
         #region Existance
         Task<bool> IsExistAsync(int id);
+        Task<bool> IsExistAsync(string id);
+        Task<bool> IsExistAsync(Guid id);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? filter = null);
         Task<bool> AllAsync(Expression<Func<TEntity, bool>> filter);
         #endregion

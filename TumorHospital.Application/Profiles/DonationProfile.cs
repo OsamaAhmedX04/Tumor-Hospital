@@ -14,7 +14,15 @@ namespace TumorHospital.Application.Profiles
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src =>  Enum.Parse<CharityCategory>(src.CharityCategory, true)))
                 .ReverseMap()
                 .ForMember(dest => dest.CharityCategory,opt => opt.MapFrom(src => src.Category.ToString()));
-            
+
+            CreateMap<NewNeedDto, CharityNeed>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => Enum.Parse<CharityCategory>(src.CharityCategory, true)))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<VolunteerInfoDto, VolunteerDonation>();
+
+
+
         }
     }
 }

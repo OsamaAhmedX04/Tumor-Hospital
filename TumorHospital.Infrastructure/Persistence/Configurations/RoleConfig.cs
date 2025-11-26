@@ -29,9 +29,16 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 new IdentityRole
                 {
                     Id = "c3e4c1a9-4f7e-4a42-9c36-8d2a6e9c75bd",
-                    Name = "InActiveRole",
-                    NormalizedName = "INACTIVEROLE",
+                    Name = "InActiveDoctorRole",
+                    NormalizedName = "INACTIVEDOCTORROLE",
                     ConcurrencyStamp = "22222222-2222-2200-0000-000000000000"
+                },
+                new IdentityRole
+                {
+                    Id = "3f209613-7a40-4a9b-b270-ff3a39a1337c",
+                    Name = "InActiveReceptionistRole",
+                    NormalizedName = "INACTIVERECEPTIONISTROLE",
+                    ConcurrencyStamp = "33333333-3333-3300-0000-000000000000"
                 },
                 new IdentityRole
                 {

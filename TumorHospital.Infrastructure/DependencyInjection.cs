@@ -1,6 +1,4 @@
-﻿using Amazon.Runtime;
-using Amazon.S3;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,13 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
-using System.Runtime;
 using System.Text;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
-//using TumorHospital.Application.Settings;
 using TumorHospital.Domain.Entities;
 using TumorHospital.Infrastructure.ExternalServices;
 using TumorHospital.Infrastructure.Persistence.Context;
@@ -114,6 +110,7 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IReceptionService, ReceptionService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IDonationService, DonationService>();
             #endregion
 
             return services;

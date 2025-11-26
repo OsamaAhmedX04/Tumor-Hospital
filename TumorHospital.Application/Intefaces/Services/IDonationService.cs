@@ -8,11 +8,11 @@ namespace TumorHospital.Application.Intefaces.Services
     {
         Task<PageSourcePagination<NeedDto>> GetAllNeeds(int pageSize, int pageNumber);
         Task<NeedDetailsDto> GetNeed(Guid id);
-        string GetCategoriesOfNeeds();
-        Task AddNeed(NeedDetailsDto need);
+        CharityCategoriesDto GetCategoriesOfNeeds();
+        Task AddNeed(NewNeedDto need);
         Task UpdateNeed(UpdateNeedDto newNeed, Guid id);
         Task DeleteNeed(Guid id);
         Task Donate(VolunteerDto volunteer);
-        Task<PageSourcePagination<VolunteerDto>> GetAllVolunteers(int pageSize, int pageNumber);
+        Task<PageSourcePagination<VolunteerInfoDto>> GetAllVolunteers(int pageSize, int pageNumber);
     }
 }

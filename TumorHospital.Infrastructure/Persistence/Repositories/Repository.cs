@@ -244,6 +244,10 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
         #region Existance
         public async Task<bool> IsExistAsync(int id)
             => await _dbSet.FindAsync(id) == null ? false : true;
+        public async Task<bool> IsExistAsync(string id)
+            => await _dbSet.FindAsync(id) == null ? false : true;
+        public async Task<bool> IsExistAsync(Guid id)
+            => await _dbSet.FindAsync(id) == null ? false : true;
 
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? filter = null)
         {
