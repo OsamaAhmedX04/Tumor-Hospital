@@ -14,6 +14,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task<PageSourcePagination<UserDto>> GetAllPatients(int pageSize, int pageNumber);
         Task<PageSourcePagination<UserDto>> GetAllAdmins(int pageSize, int pageNumber);
         Task<PageSourcePagination<UserDto>> GetAllReceptionist(int pageSize, int pageNumber);
-        Task<PageSourcePagination<UserDto>> GetAllInActiveRoles(int pageSize, int pageNumber);
+        Task<PageSourcePagination<UserDto>> GetAllInActiveDoctorRoles(int pageSize, int pageNumber);
+        Task<PageSourcePagination<UserDto>> GetAllInActiveReceptionistRoles(int pageSize, int pageNumber);
     }
 }
