@@ -5,6 +5,7 @@ using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
+using TumorHospital.Domain.Constants;
 using TumorHospital.Domain.Entities;
 using TumorHospital.Domain.Enums;
 
@@ -42,7 +43,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
 
             var createdUser = await _userManager.FindByEmailAsync(model.Email);
-            await _userManager.AddToRoleAsync(createdUser, Role.InActiveRole.ToString());
+            await _userManager.AddToRoleAsync(createdUser, Role.InActiveDoctorRole.ToString());
 
 
             var doctor = _mapper.Map<Doctor>(model);
@@ -52,37 +53,37 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
 
 
-            var body = $@"
-                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-                    <h2 style='text-align: center; color: #333;'>Welcome to Our Hospital!</h2>
+            //var body = $@"
+            //    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
+            //        <h2 style='text-align: center; color: #333;'>Welcome to Our Hospital!</h2>
 
-                    <p style='font-size: 15px; color: #555;'>
-                        Dear Dr. {appUser.FirstName} {appUser.LastName},<br/><br/>
-                        Your account has been successfully created. Below is your temporary password to access your account:
-                    </p>
+            //        <p style='font-size: 15px; color: #555;'>
+            //            Dear Dr. {appUser.FirstName} {appUser.LastName},<br/><br/>
+            //            Your account has been successfully created. Below is your temporary password to access your account:
+            //        </p>
 
-                    <div style='text-align: center; margin: 30px 0;'>
-                        <span style='display: inline-block; background-color: #28a745; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 2px; border-radius: 6px;'>
-                            {doctorPassword}
-                        </span>
-                    </div>
+            //        <div style='text-align: center; margin: 30px 0;'>
+            //            <span style='display: inline-block; background-color: #28a745; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 2px; border-radius: 6px;'>
+            //                {doctorPassword}
+            //            </span>
+            //        </div>
 
-                    <p style='font-size: 14px; color: #666;'>
-                        ⚠️ For security reasons, please <strong>do not share this password with anyone</strong>.<br/>
-                        You are required to change it after your first login.
-                    </p>
+            //        <p style='font-size: 14px; color: #666;'>
+            //            ⚠️ For security reasons, please <strong>do not share this password with anyone</strong>.<br/>
+            //            You are required to change it after your first login.
+            //        </p>
 
-                    <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-                        Best regards,<br/>
-                        <strong>The Hospital Admin Team</strong>
-                    </p>
-                </div>
-                ";
+            //        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
+            //            Best regards,<br/>
+            //            <strong>The Hospital Admin Team</strong>
+            //        </p>
+            //    </div>
+            //    ";
 
             await _emailService.SendEmailAsync(
                 appUser.Email,
                 "Doctor Account Activated",
-                body);
+                EmailBody.GetDoctorEmailCreatedBody(appUser.FirstName, appUser.LastName, doctorPassword));
 
         }
 
@@ -111,7 +112,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
 
             var createdUser = await _userManager.FindByEmailAsync(model.Email);
-            await _userManager.AddToRoleAsync(createdUser, Role.InActiveRole.ToString());
+            await _userManager.AddToRoleAsync(createdUser, Role.InActiveReceptionistRole.ToString());
 
 
             var receptionist = _mapper.Map<Receptionist>(model);
@@ -120,38 +121,38 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Receptionists.AddAsync(receptionist);
             await _unitOfWork.CompleteAsync();
 
-            var body = $@"
-                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-                    <h2 style='text-align: center; color: #333;'>Welcome to Our Hospital Team!</h2>
+            //var body = $@"
+            //    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
+            //        <h2 style='text-align: center; color: #333;'>Welcome to Our Hospital Team!</h2>
 
-                    <p style='font-size: 15px; color: #555;'>
-                        Dear {appUser.FirstName} {appUser.LastName},<br/><br/>
-                        We’re pleased to inform you that your <strong>Receptionist account</strong> has been successfully created.<br/>
-                        You can now log in to the system using the temporary password below:
-                    </p>
+            //        <p style='font-size: 15px; color: #555;'>
+            //            Dear {appUser.FirstName} {appUser.LastName},<br/><br/>
+            //            We’re pleased to inform you that your <strong>Receptionist account</strong> has been successfully created.<br/>
+            //            You can now log in to the system using the temporary password below:
+            //        </p>
 
-                    <div style='text-align: center; margin: 30px 0;'>
-                        <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 2px; border-radius: 6px;'>
-                            {receptionistPassword}
-                        </span>
-                    </div>
+            //        <div style='text-align: center; margin: 30px 0;'>
+            //            <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 2px; border-radius: 6px;'>
+            //                {receptionistPassword}
+            //            </span>
+            //        </div>
 
-                    <p style='font-size: 14px; color: #666;'>
-                        ⚠️ For security reasons, please <strong>do not share this password with anyone</strong>.<br/>
-                        You are required to change it after your first login.
-                    </p>
+            //        <p style='font-size: 14px; color: #666;'>
+            //            ⚠️ For security reasons, please <strong>do not share this password with anyone</strong>.<br/>
+            //            You are required to change it after your first login.
+            //        </p>
 
-                    <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-                        Best regards,<br/>
-                        <strong>The Hospital Admin Team</strong>
-                    </p>
-                </div>
-            ";
+            //        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
+            //            Best regards,<br/>
+            //            <strong>The Hospital Admin Team</strong>
+            //        </p>
+            //    </div>
+            //";
 
             await _emailService.SendEmailAsync(
                 appUser.Email,
                 "Receptionist Account Activated",
-                body);
+                EmailBody.GetReceptionistEmailCreatedBody(appUser.FirstName, appUser.LastName, receptionistPassword));
 
         }
 

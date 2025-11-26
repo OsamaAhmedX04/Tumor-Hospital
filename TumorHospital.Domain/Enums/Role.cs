@@ -4,8 +4,9 @@
     {
         Admin,
         Doctor,
-        InActiveRole,
         Receptionist,
+        InActiveDoctorRole,
+        InActiveReceptionistRole,
         Patient
     }
 }

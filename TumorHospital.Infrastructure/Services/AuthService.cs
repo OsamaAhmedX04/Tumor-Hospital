@@ -6,6 +6,7 @@ using TumorHospital.Application.DTOs.Response.Auth;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
+using TumorHospital.Domain.Constants;
 using TumorHospital.Domain.Entities;
 using TumorHospital.Domain.Enums;
 using TumorHospital.Infrastructure.ExternalServices;
@@ -72,35 +73,35 @@ namespace TumorHospital.Infrastructure.Services
             await _db.SaveChangesAsync();
                 
 
-            var body = $@"
-                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-                    <h2 style='text-align: center; color: #333;'>Confirm Your Email</h2>
+            //var body = $@"
+            //    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
+            //        <h2 style='text-align: center; color: #333;'>Confirm Your Email</h2>
 
-                    <p style='font-size: 15px; color: #555;'>
-                        Thanks for registering! Please use the code below to confirm your email:
-                    </p>
+            //        <p style='font-size: 15px; color: #555;'>
+            //            Thanks for registering! Please use the code below to confirm your email:
+            //        </p>
 
-                    <div style='text-align: center; margin: 30px 0;'>
-                        <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
-                            {token}
-                        </span>
-                    </div>
+            //        <div style='text-align: center; margin: 30px 0;'>
+            //            <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
+            //                {token}
+            //            </span>
+            //        </div>
 
-                    <p style='font-size: 14px; color: #666;'>
-                        If you didn’t create this account, you can ignore this email.
-                    </p>
+            //        <p style='font-size: 14px; color: #666;'>
+            //            If you didn’t create this account, you can ignore this email.
+            //        </p>
 
-                    <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-                        Best regards,<br/>
-                        <strong>Your App Team</strong>
-                    </p>
-                </div>
-                ";
+            //        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
+            //            Best regards,<br/>
+            //            <strong>Your App Team</strong>
+            //        </p>
+            //    </div>
+            //    ";
 
             await _emailService.SendEmailAsync(
                 newUser.Email,
                 "Email Confirmation",
-                body);
+                EmailBody.GetPatientEmailCreatedBody(token));
         }
 
         public async Task<AuthModel> ConfirmEmail(ConfirmEmailDto model)
@@ -300,21 +301,31 @@ namespace TumorHospital.Infrastructure.Services
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) throw new Exception("User Not Exist");
 
-            var isInActiveDoctor = await _userManager.IsInRoleAsync(user, Role.InActiveRole.ToString());
-            if (!isInActiveDoctor) throw new Exception("User Already Active");
+            var isInActiveDoctor = await _userManager.IsInRoleAsync(user, Role.InActiveDoctorRole.ToString());
+            var isInActiveReceptionist = await _userManager.IsInRoleAsync(user, Role.InActiveReceptionistRole.ToString());
+            if (!isInActiveDoctor || !isInActiveReceptionist) throw new Exception("User Already Active");
 
             var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
             if (!result.Succeeded) throw new Exception("Please Enter Right Password");
 
-            await _userManager.RemoveFromRoleAsync(user, Role.InActiveRole.ToString());
-            await _userManager.AddToRoleAsync(user, Role.Doctor.ToString());
+            if (isInActiveDoctor)
+            {
+                await _userManager.RemoveFromRoleAsync(user, Role.InActiveDoctorRole.ToString());
+                await _userManager.AddToRoleAsync(user, Role.Doctor.ToString());
+            }
+            else
+            {
+                await _userManager.RemoveFromRoleAsync(user, Role.InActiveReceptionistRole.ToString());
+                await _userManager.AddToRoleAsync(user, Role.Receptionist.ToString());
+            }
+
 
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
                 Email = user.Email!,
                 Name = user.FirstName + " " + user.LastName,
-                Role = Role.Doctor.ToString()
+                Role = isInActiveDoctor ? Role.Doctor.ToString() : Role.Receptionist.ToString()
             });
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
