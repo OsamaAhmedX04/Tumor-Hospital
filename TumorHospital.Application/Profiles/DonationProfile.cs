@@ -17,7 +17,9 @@ namespace TumorHospital.Application.Profiles
 
             CreateMap<NewNeedDto, CharityNeed>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => Enum.Parse<CharityCategory>(src.CharityCategory, true)))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.CollectedAmount, opt => opt.MapFrom(src => 0))
+                .ForMember(dest => dest.IsCompleted, opt => opt.MapFrom(src => false));
 
             CreateMap<VolunteerInfoDto, VolunteerDonation>();
 
