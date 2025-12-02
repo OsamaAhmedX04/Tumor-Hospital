@@ -9,7 +9,7 @@ namespace TumorHospital.Application.DTOs.Request.User
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Gender { get; set; }
-        public string Specialization { get; set; }
+        public string SpecializationName { get; set; }
 
         public List<DoctorScheduleDto> Schedules { get; set; } = new List<DoctorScheduleDto>();
     }

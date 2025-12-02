@@ -24,7 +24,7 @@ namespace TumorHospital.Application.Validators.User
                 .NotEmpty().WithMessage("Please Enter The Gender")
                 .Must(g => g == Gender.Male.ToString() || g == Gender.Male.ToString()).WithMessage("Only Male Or Female");
 
-            RuleFor(d => d.Specialization)
+            RuleFor(d => d.SpecializationName)
                 .NotEmpty().WithMessage("Specialization Is Required")
                 .MaximumLength(100);
 

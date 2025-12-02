@@ -15,7 +15,6 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(p => p.ApplicationUserId);
 
-            builder.Property(d => d.Specialization).HasMaxLength(100).IsRequired();
             builder.Property(d => d.Gender).HasMaxLength(10).IsRequired();
             builder.Property(d => d.RegistrationDate).HasDefaultValueSql("GETDATE()");
 
@@ -23,6 +22,11 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .HasOne(d => d.User).WithMany(u => u.Doctors)
                 .HasForeignKey(d => d.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .HasOne(d => d.Specialization).WithMany(s => s.Doctors)
+                .HasForeignKey(d => d.SpecializationId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

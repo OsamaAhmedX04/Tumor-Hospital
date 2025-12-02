@@ -5,6 +5,8 @@ using TumorHospital.Application.DTOs.Request.Donation;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.WebAPI.Extensions;
 
+// NOT TESTED YET!
+
 namespace TumorHospital.WebAPI.Controllers
 {
     [Route("api/[controller]")]

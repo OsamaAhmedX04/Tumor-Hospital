@@ -12,7 +12,10 @@ namespace TumorHospital.Domain.Entities
         public ApplicationUser User { get; set; }
 
         public string Gender { get; set; }
-        public string Specialization { get; set; }
+        
+        [ForeignKey("Specialization")]
+        public Guid? SpecializationId { get; set; }
+        public Specialization? Specialization { get; set; }
         public string? ProfilePicturePath { get; set; }
         public DateTime RegistrationDate { get; set; }
 
@@ -22,6 +25,5 @@ namespace TumorHospital.Domain.Entities
     }
 
 
-//    certifications NVARCHAR(MAX),
 
 }

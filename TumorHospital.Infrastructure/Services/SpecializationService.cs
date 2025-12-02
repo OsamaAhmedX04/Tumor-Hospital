@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TumorHospital.Application.DTOs.Request.User;
+using TumorHospital.Application.DTOs.Response.User;
+using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Application.Intefaces.UOW;
+using TumorHospital.Domain.Entities;
+
+namespace TumorHospital.Infrastructure.Services
+{
+    public class SpecializationService : ISpecializationService
+    {
+
+        private readonly IUnitOfWork _unitOfWork;
+        public SpecializationService(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+        public async Task AddSpecialization(SpecializationDto model)
+        {
+            if(string.IsNullOrEmpty(model.Name))
+                throw new ArgumentException("Specialization name cannot be empty.");
+
+            bool isExisting = await _unitOfWork.Specializations
+                .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
+            if (isExisting)
+                throw new InvalidOperationException("Specialization with the same name already exists.");
+
+
+            var specialization = new Specialization
+            {
+                Name = model.Name,
+                Description = string.IsNullOrEmpty(model.Description) ? "N/A" : model.Description
+            };
+            await _unitOfWork.Specializations.AddAsync(specialization);
+            await _unitOfWork.CompleteAsync();
+        }
+
+        public async Task DeleteSpecialization(Guid id)
+        {
+            bool isExisting = await _unitOfWork.Specializations.IsExistAsync(id);
+            if (!isExisting)
+                throw new KeyNotFoundException("Specialization not found.");
+            _unitOfWork.Specializations.Delete(id);
+            await _unitOfWork.CompleteAsync();
+        }
+
+        public async Task<List<SpecializationDetailsDto>> GetSpecializations()
+            => await _unitOfWork.Specializations.GetAllAsync(
+                selector: s => new SpecializationDetailsDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Description = s.Description ?? "N/A",
+                    CreatedAt = s.CreatedAt
+                }
+                );
+
+        public async Task UpdateSpecialization(Guid id, SpecializationDto model)
+        {
+            var specialization = await _unitOfWork.Specializations.GetByIdAsync(id);
+            if (specialization == null)
+                throw new KeyNotFoundException("Specialization not found.");
+
+            if (string.IsNullOrEmpty(model.Name))
+                throw new ArgumentException("Specialization name cannot be empty.");
+
+            bool isExisting = await _unitOfWork.Specializations
+                .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
+            if (isExisting)
+                throw new InvalidOperationException("Specialization with the same name already exists.");
+            
+            specialization.Name = model.Name;
+            specialization.Description = string.IsNullOrEmpty(model.Description) ? "N/A" : model.Description;
+            await _unitOfWork.CompleteAsync();
+        }
+    }
+}

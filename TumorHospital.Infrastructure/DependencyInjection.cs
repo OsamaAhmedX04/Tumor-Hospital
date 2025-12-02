@@ -104,7 +104,7 @@ namespace TumorHospital.Infrastructure
             #endregion
 
             #region BuisenessService
-            // Register Seevices
+            // Register Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAdminSevice, AdminService>();
             services.AddScoped<IScheduleService, ScheduleService>();
@@ -112,6 +112,7 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IDonationService, DonationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISpecializationService, SpecializationService>();
             #endregion
 
             return services;

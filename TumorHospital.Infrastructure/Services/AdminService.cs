@@ -20,7 +20,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public AdminService(IUnitOfWork unitOfWork, IMapper mapper,
             UserManager<ApplicationUser> userManager, IEmailService emailService)
-        {
+        { 
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
@@ -29,6 +29,14 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task CreateNewDoctor(NewDoctorDto model)
         {
+            var specialization = await _unitOfWork.Specializations
+                .GetEnhancedAsync(
+                filter: s => s.Name == model.SpecializationName,
+                selector: s => new { s.Id }
+                );
+            if (specialization is null)
+                throw new Exception("This Specialization Is Not Exist");
+
             var appUser = new ApplicationUser
             {
                 FirstName = model.FirstName,
@@ -48,6 +56,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var doctor = _mapper.Map<Doctor>(model);
             doctor.ApplicationUserId = createdUser.Id;
+            doctor.SpecializationId = specialization.Id;
 
             await _unitOfWork.Doctors.AddAsync(doctor);
             await _unitOfWork.CompleteAsync();

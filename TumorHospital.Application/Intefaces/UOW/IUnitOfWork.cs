@@ -18,6 +18,7 @@ namespace TumorHospital.Application.Intefaces.UOW
 
         IRepository<Appointment> Appointments { get; }
         IRepository<DoctorSchedule> DoctorSchedules { get; }
+        IRepository<Specialization> Specializations { get; }
 
         IRepository<MedicalRecord> MedicalRecords { get; }
         IRepository<Diagnostic> Diagnostics { get; }
