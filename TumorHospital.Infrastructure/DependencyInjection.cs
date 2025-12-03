@@ -114,6 +114,7 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISpecializationService, SpecializationService>();
             services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
             #endregion
 
             return services;

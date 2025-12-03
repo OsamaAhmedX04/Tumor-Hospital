@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TumorHospital.Application.DTOs.Response.Pagination;
+using TumorHospital.Application.DTOs.Response.User;
 
 namespace TumorHospital.Application.Intefaces.Services
 {
     public interface IDoctorService
     {
+        Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageSize, int pageNumber, string? workDay = null);
+        Task<DoctorDetailsDto> GetDoctorDetails(string doctorId);
     }
 }

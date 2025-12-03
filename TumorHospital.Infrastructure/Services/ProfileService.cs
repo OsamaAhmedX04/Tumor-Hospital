@@ -40,7 +40,11 @@ namespace TumorHospital.Infrastructure.Services
             var doctor = await _unitOfWork.Doctors.GetByIdAsync(userId);
             if (doctor is null) throw new Exception("This Doctor Does Not Exist");
 
-            var filePath = await _fileService.UploadAsync(file, "Images/Doctors");
+            string filePath = string.Empty;
+            if (doctor.ProfilePicturePath != null)
+                filePath = await _fileService.EditAsync(doctor.ProfilePicturePath, file);
+            else
+                filePath = await _fileService.UploadAsync(file, "Images/Doctors");
             
             doctor.ProfilePicturePath = filePath;
             await _unitOfWork.CompleteAsync();

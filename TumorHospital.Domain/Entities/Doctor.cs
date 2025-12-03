@@ -17,6 +17,7 @@ namespace TumorHospital.Domain.Entities
         public Guid? SpecializationId { get; set; }
         public Specialization? Specialization { get; set; }
         public string? ProfilePicturePath { get; set; }
+        public string? Bio { get; set; }
         public DateTime RegistrationDate { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

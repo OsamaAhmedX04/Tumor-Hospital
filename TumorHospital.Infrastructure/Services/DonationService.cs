@@ -28,7 +28,7 @@ namespace TumorHospital.Infrastructure.Services
         {
             var needToAdd = _mapper.Map<CharityNeed>(need);
 
-            needToAdd.ImagePath = await _fileService.UploadAsync(need.Image, "CharityNeeds");
+            needToAdd.ImagePath = await _fileService.UploadAsync(need.Image, "Images/CharityNeeds");
 
             await _unitOfWork.CharityNeeds.AddAsync(needToAdd);
 
@@ -116,7 +116,7 @@ namespace TumorHospital.Infrastructure.Services
 
             need.Title = newNeed.Title;
             need.Description = newNeed.Description;
-            need.ImagePath = await _fileService.UploadAsync(newNeed.Image, "CharityNeeds");
+            need.ImagePath = await _fileService.EditAsync(need.ImagePath,newNeed.Image);
             need.NeedAmount = newNeed.NeedAmount;
             need.Category = Enum.Parse<CharityCategory>(newNeed.CharityCategory);
 

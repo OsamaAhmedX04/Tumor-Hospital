@@ -10,9 +10,11 @@ namespace TumorHospital.WebAPI.Controllers
     public class DoctorController : ControllerBase
     {
         private readonly IProfileService _profileService;
-        public DoctorController(IProfileService profileService)
+        private readonly IDoctorService _doctorService;
+        public DoctorController(IProfileService profileService, IDoctorService doctorService)
         {
             _profileService = profileService;
+            _doctorService = doctorService;
         }
 
         [HttpPost("Profile-Picture")]
@@ -25,7 +27,35 @@ namespace TumorHospital.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Identity", ex.Message);
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
+
+        [HttpGet("/api/Doctors")]
+        public async Task<IActionResult> GetDoctors(int pageSize, int pageNumber, string? workDay = null)
+        {
+            try
+            {
+                return Ok(await _doctorService.GetDoctors(pageSize, pageNumber, workDay));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDoctors(string id)
+        {
+            try
+            {
+                return Ok(await _doctorService.GetDoctorDetails(id));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
         }
