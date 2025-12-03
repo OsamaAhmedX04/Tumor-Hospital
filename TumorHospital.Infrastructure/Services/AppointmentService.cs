@@ -7,6 +7,7 @@ using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
 using TumorHospital.Domain.Entities;
+using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Infrastructure.Services
 {
@@ -28,6 +29,9 @@ namespace TumorHospital.Infrastructure.Services
             _userManager = userManager;
             _scheduleService = scheduleService;
         }
+
+        
+
         public async Task AppointConsultation(NewConsultationAppointmentDto appointment)
         {
             var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
@@ -56,7 +60,7 @@ namespace TumorHospital.Infrastructure.Services
             => await _unitOfWork.Appointments.GetAllPaginatedEnhancedAsync(
                 selector: a => new AppointmentDto
                 {
-                    Id = a.Id,
+                    AppointmentId = a.Id,
                     PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
                     DoctorName = a.Doctor.User.FirstName + " " + a.Doctor.User.LastName,
                     DoctorImagePath = SupabaseConstants.PrefixSupaURL + a.Doctor.ProfilePicturePath,
@@ -71,5 +75,27 @@ namespace TumorHospital.Infrastructure.Services
                 pageSize: 15,
                 pageNumber: pageNumber
                 );
+
+        public async Task AcceptAppointment(Guid appointmentId, AppointmentSetterDateTimeDto setter)
+        {
+            var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentException("Appointment not found.");
+
+            appointment.Status = AppointmentStatus.Approved;
+            appointment.FromTime = setter.FromTime;
+            appointment.ToTime = setter.ToTime;
+            appointment.AttendenceDate = setter.AttendenceDate;
+
+            await _unitOfWork.CompleteAsync();
+        }
+        public async Task RejectAppointment(Guid appointmentId)
+        {
+            var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
+            if (appointment == null)
+                throw new ArgumentException("Appointment not found.");
+            appointment.Status = AppointmentStatus.Rejected;
+            await _unitOfWork.CompleteAsync();
+        }
     }
 }

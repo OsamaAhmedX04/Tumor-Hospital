@@ -11,5 +11,8 @@ namespace TumorHospital.Application.Intefaces.Services
         Task AppointSurgery(NewConsultationAppointmentDto appointment);
 
         Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber);
+
+        Task AcceptAppointment(Guid appointmentId, AppointmentSetterDateTimeDto setter);
+        Task RejectAppointment(Guid appointmentId);
     }
 }

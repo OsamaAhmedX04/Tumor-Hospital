@@ -5,7 +5,7 @@ namespace TumorHospital.Application.DTOs.Response.Appointment
     public class AppointmentDto
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid AppointmentId { get; set; }
 
         public string PatientName { get; set; }
 

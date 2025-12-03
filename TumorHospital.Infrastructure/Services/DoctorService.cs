@@ -16,7 +16,8 @@ namespace TumorHospital.Infrastructure.Services
         }
 
         public async Task<DoctorDetailsDto> GetDoctorDetails(string doctorId)
-            => await _unitOfWork.Doctors.GetEnhancedAsync(
+        {
+            var doctorDetails = await _unitOfWork.Doctors.GetEnhancedAsync(
                 filter: d => d.ApplicationUserId == doctorId && d.User.IsActive,
                 selector: d => new DoctorDetailsDto
                 {
@@ -35,6 +36,37 @@ namespace TumorHospital.Infrastructure.Services
                     }).ToList()
                 }
                 ) ?? throw new Exception("DoctorNot Found");
+
+            foreach (var day in doctorDetails.WorkingDays)
+            {
+                Day dayEnum = Enum.Parse<Day>(day.Day);
+                day.IsAvailable = await IsAvailableDay(doctorId,dayEnum);
+            }
+
+            return doctorDetails;
+        }
+
+        private async Task<bool> IsAvailableDay(string doctorId, Day dayOfWeek)
+        {
+            var isHaveSurgery = await _unitOfWork.Appointments
+                .AnyAsync(a => a.DoctorId == doctorId &&
+                               a.DayOfWeek == dayOfWeek &&
+                               a.Reason == AppointmentReason.Surgery &&
+                               a.Status == AppointmentStatus.Approved);
+
+            var appointments = await _unitOfWork.Appointments.GetAllAsync(
+                filter: a => a.DoctorId == doctorId &&
+                             a.DayOfWeek == dayOfWeek &&
+                             a.Status == AppointmentStatus.Approved &&
+                             (a.Reason == AppointmentReason.Consultation || a.Reason == AppointmentReason.FollowUp),
+                selector: a => new { a.Id}
+                );
+            var isFullyBooked = appointments.Count() == Appointments.NumberOfConsultationsOrFollowUpsPerDay;
+
+            return !isHaveSurgery && !isFullyBooked;
+
+        }
+         
 
         public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageSize, int pageNumber, string? workDay = null)
         {
