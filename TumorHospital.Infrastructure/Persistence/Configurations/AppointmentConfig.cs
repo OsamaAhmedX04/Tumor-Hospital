@@ -15,9 +15,20 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.Date).HasDefaultValueSql("GETDATE()").IsRequired();
-            builder.Property(a => a.Reason).HasColumnType("NVARCHAR(MAX)").IsRequired();
-            builder.Property(a => a.Status).HasMaxLength(50).HasDefaultValue("Scheduled").IsRequired();
+            builder.Property(a => a.RequestCreatedAt).HasDefaultValueSql("GETDATE()").IsRequired();
+
+            builder.Property(a => a.Status)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(20);
+            builder.Property(a => a.DayOfWeek)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(10);
+            builder.Property(a => a.Reason)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(50);
 
             builder
                 .HasOne(a => a.Patient)
