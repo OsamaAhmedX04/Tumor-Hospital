@@ -60,6 +60,12 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception(result.Errors.FirstOrDefault()?.Description ?? "Unknown error");
 
             await _userManager.AddToRoleAsync(newUser, Role.Patient.ToString());
+            await _db.Patients.AddAsync(new Patient
+            {
+                ApplicationUserId = newUser.Id,
+                Gender = model.Gender,
+                RegistrationDate = DateTime.Now
+            });
 
             var token = new Random().Next(100000, 999999).ToString();
             var confirmTokenResult = await _userManager.SetAuthenticationTokenAsync(

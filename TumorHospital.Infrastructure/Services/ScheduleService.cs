@@ -22,11 +22,6 @@ namespace TumorHospital.Infrastructure.Services
             _unitOfWork = unitOfWork;
         }
 
-        //public async Task<DoctorScheduleDto> GetDoctorSchedule(string doctorId)
-        //{
-
-        //}
-
         public async Task AddSchedule(string doctorId, DoctorScheduleDto doctorSchedule)
         {
             var doctorSchedules = await _unitOfWork.DoctorSchedules
@@ -82,7 +77,27 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        
+        public async Task<bool> IsWorkIn(string doctorId, string day)
+        {
+            if(!Enum.TryParse<Day>(day, out _))
+                throw new Exception("Invalid Day Provided");
+            
+                var dayOfWeek = day switch
+                {
+                    "Saturday" => Day.Saturday,
+                    "Sunday" => Day.Sunday,
+                    "Monday" => Day.Monday,
+                    "Tuesday" => Day.Tuesday,
+                    "Wednesday" => Day.Wednesday,
+                    "Thursday" => Day.Thursday,
+                    "Friday" => Day.Friday,
+                    _ => Day.Saturday
+                };
+            var isWorkIn = await _unitOfWork.DoctorSchedules.AnyAsync(ds =>
+                ds.DoctorId == doctorId && ds.DayOfWeek == dayOfWeek);
+
+            return isWorkIn;
+        }
 
         public async Task UpdateScheduale(Guid scheduleId,string doctorId, DoctorScheduleDto schedule)
         {

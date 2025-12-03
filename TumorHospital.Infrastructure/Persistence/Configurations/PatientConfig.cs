@@ -16,7 +16,7 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
             builder.HasKey(p => p.ApplicationUserId);
 
             builder.Property(p => p.Gender).HasMaxLength(10).IsRequired();
-            builder.Property(p => p.Address).HasMaxLength(200).IsRequired();
+            builder.Property(p => p.Address).HasMaxLength(200);
             builder.Property(p => p.RegistrationDate).HasDefaultValueSql("GETDATE()");
 
             builder

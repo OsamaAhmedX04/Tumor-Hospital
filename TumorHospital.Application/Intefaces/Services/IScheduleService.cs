@@ -12,5 +12,6 @@ namespace TumorHospital.Application.Intefaces.Services
         Task AddSchedule(string doctorId, DoctorScheduleDto doctorSchedule);
         Task DeleteScheduale(Guid scheduleId);
         Task UpdateScheduale(Guid scheduleId, string doctorId, DoctorScheduleDto schedule);
+        Task<bool> IsWorkIn(string doctorId, string day);
     }
 }
