@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.User;
+using TumorHospital.Application.DTOs.Response.Schedule;
 
 namespace TumorHospital.Application.Intefaces.Services
 {
@@ -13,5 +14,6 @@ namespace TumorHospital.Application.Intefaces.Services
         Task DeleteScheduale(Guid scheduleId);
         Task UpdateScheduale(Guid scheduleId, string doctorId, DoctorScheduleDto schedule);
         Task<bool> IsWorkIn(string doctorId, string day);
+        Task<List<DurationTimeAvailabilityDto>> GetAvailableTimes(string doctorId, string day);
     }
 }

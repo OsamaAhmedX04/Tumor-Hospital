@@ -84,8 +84,6 @@ namespace TumorHospital.Infrastructure.Services
 
             appointment.Status = AppointmentStatus.Approved;
             appointment.FromTime = setter.FromTime;
-            appointment.ToTime = setter.ToTime;
-            appointment.AttendenceDate = setter.AttendenceDate;
 
             await _unitOfWork.CompleteAsync();
         }

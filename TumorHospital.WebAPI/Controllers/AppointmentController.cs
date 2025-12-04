@@ -14,18 +14,20 @@ namespace TumorHospital.WebAPI.Controllers
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
+        private readonly IScheduleService _scheduleService;
         private readonly IValidator<NewConsultationAppointmentDto> _newAppointmentConsultaionValidator;
         private readonly IValidator<AppointmentSetterDateTimeDto> _appointmentSetterDateTimeDtoValidator;
 
         public AppointmentController(
             IAppointmentService appointmentService,
             IValidator<NewConsultationAppointmentDto> newAppointmentConsultaionValidator,
-            IValidator<AppointmentSetterDateTimeDto> appointmentSetterDateTimeDtoValidator
-            )
+            IValidator<AppointmentSetterDateTimeDto> appointmentSetterDateTimeDtoValidator,
+            IScheduleService scheduleService)
         {
             _appointmentService = appointmentService;
             _newAppointmentConsultaionValidator = newAppointmentConsultaionValidator;
             _appointmentSetterDateTimeDtoValidator = appointmentSetterDateTimeDtoValidator;
+            _scheduleService = scheduleService;
         }
 
         [HttpPost("Consultaion")]
@@ -52,11 +54,74 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+        [HttpPost("followup")]
+        public async Task<IActionResult> AppointFollowUp(NewConsultationAppointmentDto appointmentDto)
+        {
+            var validationResult = await _newAppointmentConsultaionValidator.ValidateAsync(appointmentDto);
+            if (validationResult.IsValid)
+            {
+                try
+                {
+                    await _appointmentService.AppointConsultation(appointmentDto);
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("Identity", ex.Message);
+                }
+
+            }
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [HttpPost("Surgery")]
+        public async Task<IActionResult> AppointSurgery(NewConsultationAppointmentDto appointmentDto)
+        {
+            var validationResult = await _newAppointmentConsultaionValidator.ValidateAsync(appointmentDto);
+            if (validationResult.IsValid)
+            {
+                try
+                {
+                    await _appointmentService.AppointConsultation(appointmentDto);
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("Identity", ex.Message);
+                }
+
+            }
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAppointments(int pageNumber)
             => Ok(await _appointmentService.GetAppointments(pageNumber));
 
-        [HttpPut("Accept-Appointment")]
+        [HttpGet("availble-times")]
+        public async Task<IActionResult> GetAvailableSheduleTimes(string doctorId, string day)
+        {
+            try
+            {
+                return Ok(await _scheduleService.GetAvailableTimes(doctorId, day));
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+            
+        }
+
+        [HttpPut("accept-appointment")]
         public async Task<IActionResult> AcceptAppointment(Guid appointmentId, [FromForm]AppointmentSetterDateTimeDto setter)
         {
             var validationResult = await _appointmentSetterDateTimeDtoValidator.ValidateAsync(setter);
@@ -78,7 +143,7 @@ namespace TumorHospital.WebAPI.Controllers
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
-        [HttpPut("Reject-Appointment")]
+        [HttpPut("reject-appointment")]
         public async Task<IActionResult> RejectAppointment(Guid appointmentId)
         {
             try

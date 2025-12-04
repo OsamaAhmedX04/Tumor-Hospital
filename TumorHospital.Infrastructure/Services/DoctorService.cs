@@ -40,7 +40,7 @@ namespace TumorHospital.Infrastructure.Services
             foreach (var day in doctorDetails.WorkingDays)
             {
                 Day dayEnum = Enum.Parse<Day>(day.Day);
-                day.IsAvailable = await IsAvailableDay(doctorId,dayEnum);
+                day.IsAvailable = await IsAvailableDay(doctorId,dayEnum) && !await IsDayInPast(dayEnum);
             }
 
             return doctorDetails;
@@ -64,11 +64,26 @@ namespace TumorHospital.Infrastructure.Services
             var isFullyBooked = appointments.Count() == Appointments.NumberOfConsultationsOrFollowUpsPerDay;
 
             return !isHaveSurgery && !isFullyBooked;
-
+        }
+        private async Task<bool> IsDayInPast(Day dayOfWeek)
+        {
+            var day = DateTime.Now.DayOfWeek switch
+            {
+                DayOfWeek.Saturday => Day.Saturday,
+                DayOfWeek.Sunday => Day.Sunday,
+                DayOfWeek.Monday => Day.Monday,
+                DayOfWeek.Tuesday => Day.Tuesday,
+                DayOfWeek.Wednesday => Day.Wednesday,
+                DayOfWeek.Thursday => Day.Thursday,
+                DayOfWeek.Friday => Day.Friday,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            return dayOfWeek < day || dayOfWeek == day;
         }
          
 
-        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageSize, int pageNumber, string? workDay = null)
+        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null)
         {
             PageSourcePagination<DoctorDto> doctors;
             if (string.IsNullOrEmpty(workDay))
@@ -83,7 +98,7 @@ namespace TumorHospital.Infrastructure.Services
                                     null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
                     Gender = d.Gender
                 },
-                pageSize: pageSize,
+                pageSize: 15,
                 pageNumber: pageNumber
                 );
             }
@@ -110,7 +125,7 @@ namespace TumorHospital.Infrastructure.Services
                                     null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
                     Gender = d.Gender
                 },
-                pageSize: pageSize,
+                pageSize: 15,
                 pageNumber: pageNumber
                 );
             }

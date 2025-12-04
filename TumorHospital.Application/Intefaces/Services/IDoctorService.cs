@@ -5,7 +5,7 @@ namespace TumorHospital.Application.Intefaces.Services
 {
     public interface IDoctorService
     {
-        Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageSize, int pageNumber, string? workDay = null);
+        Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null);
         Task<DoctorDetailsDto> GetDoctorDetails(string doctorId);
     }
 }

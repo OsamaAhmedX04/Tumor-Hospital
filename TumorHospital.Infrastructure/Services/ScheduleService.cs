@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.User;
+using TumorHospital.Application.DTOs.Response.Schedule;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Entities;
@@ -123,6 +124,63 @@ namespace TumorHospital.Infrastructure.Services
                     .SetProperty(ds => ds.DayOfWeek, dayOfWeek)
                     .SetProperty(ds => ds.LastModified, DateTime.Now)
                     );
+        }
+
+        public async Task<List<DurationTimeAvailabilityDto>> GetAvailableTimes(string doctorId, string day)
+        {
+            if (!await IsWorkIn(doctorId, day))
+                throw new Exception("Doctor Not Work In That Day");
+            var dayOfWeek = day switch
+            {
+                "Saturday" => Day.Saturday,
+                "Sunday" => Day.Sunday,
+                "Monday" => Day.Monday,
+                "Tuesday" => Day.Tuesday,
+                "Wednesday" => Day.Wednesday,
+                "Friday" => Day.Friday,
+                _ => throw new Exception("Invalid Day")
+            };
+            var durationTime = await _unitOfWork.DoctorSchedules.GetEnhancedAsync(
+                filter: ds => ds.DoctorId == doctorId && ds.DayOfWeek == dayOfWeek,
+                selector: ds => new DurationTimeDto
+                {
+                    FromTime = ds.StartTime,
+                    ToTime = ds.EndTime
+                }
+                );
+            var appointmentsTimes = await _unitOfWork.Appointments.GetAllAsync(
+                filter: a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == dayOfWeek,
+                selector: a => new DurationTimeDto
+                {
+                    FromTime = a.FromTime!.Value,
+                    ToTime = a.ToTime!.Value,
+                }
+                );
+
+            List<DurationTimeAvailabilityDto> availableTimes = GetAvailableTimesDuration(durationTime!,appointmentsTimes);
+            
+            return availableTimes;
+        }
+
+        private List<DurationTimeAvailabilityDto> GetAvailableTimesDuration(DurationTimeDto durationTime, List<DurationTimeDto> appointmentsTimes)
+        {
+            var startTime = durationTime.FromTime;
+            var times = new List<TimeSpan>();
+            while(startTime != durationTime.ToTime)
+            {
+                times.Add(startTime);
+                startTime = startTime.Add(TimeSpan.FromMinutes(30));
+            }
+
+            List<DurationTimeAvailabilityDto> availableTimes = new List<DurationTimeAvailabilityDto>();
+            foreach(var time in times)
+            {
+                if (appointmentsTimes.Select(at => at.FromTime).Contains(time))
+                    availableTimes.Add(new DurationTimeAvailabilityDto { FromTime = time, IsAvailable = false });
+                else
+                    availableTimes.Add(new DurationTimeAvailabilityDto { FromTime = time, IsAvailable = true });
+            }
+            return availableTimes;
         }
 
         private async Task<bool> IsDuplicatedDoctorWorkDayAsync(string doctorId, string dayOfWeek)
