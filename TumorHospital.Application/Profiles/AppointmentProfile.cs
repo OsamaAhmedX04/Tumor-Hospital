@@ -14,6 +14,18 @@ namespace TumorHospital.Application.Profiles
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => Enum.Parse<Day>(src.DayOfWeek, true)))
                 .ForMember(dest => dest.Reason, opt => opt.MapFrom(src => AppointmentReason.Consultation))
                 .ForMember(dest => dest.RequestCreatedAt, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<NewFollowUpAppointmentDto, Appointment>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => AppointmentStatus.Pending))
+                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => Enum.Parse<Day>(src.DayOfWeek, true)))
+                .ForMember(dest => dest.Reason, opt => opt.MapFrom(src => AppointmentReason.FollowUp))
+                .ForMember(dest => dest.RequestCreatedAt, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<NewSurgeryAppointmentDto, Appointment>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => AppointmentStatus.Pending))
+                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => Enum.Parse<Day>(src.DayOfWeek, true)))
+                .ForMember(dest => dest.Reason, opt => opt.MapFrom(src => AppointmentReason.Surgery))
+                .ForMember(dest => dest.RequestCreatedAt, opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }

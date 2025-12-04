@@ -17,6 +17,6 @@ namespace TumorHospital.Application.DTOs.Response.Appointment
         public TimeSpan? ToTime { get; set; }
         public string Status { get; set; }
         public DateTime RequestCreatedAt { get; set; }
-        public DateTime? AttendenceDate { get; set; }
+        public DateOnly? AttendenceDate { get; set; }
     }
 }

@@ -16,18 +16,24 @@ namespace TumorHospital.WebAPI.Controllers
         private readonly IAppointmentService _appointmentService;
         private readonly IScheduleService _scheduleService;
         private readonly IValidator<NewConsultationAppointmentDto> _newAppointmentConsultaionValidator;
+        private readonly IValidator<NewFollowUpAppointmentDto> _newAppointmentFollowUpValidator;
+        private readonly IValidator<NewSurgeryAppointmentDto> _newAppointmentSurgeryValidator;
         private readonly IValidator<AppointmentSetterDateTimeDto> _appointmentSetterDateTimeDtoValidator;
 
         public AppointmentController(
             IAppointmentService appointmentService,
             IValidator<NewConsultationAppointmentDto> newAppointmentConsultaionValidator,
             IValidator<AppointmentSetterDateTimeDto> appointmentSetterDateTimeDtoValidator,
-            IScheduleService scheduleService)
+            IScheduleService scheduleService,
+            IValidator<NewFollowUpAppointmentDto> newAppointmentFollowUpValidator,
+            IValidator<NewSurgeryAppointmentDto> newAppointmentSurgeryValidator)
         {
             _appointmentService = appointmentService;
             _newAppointmentConsultaionValidator = newAppointmentConsultaionValidator;
             _appointmentSetterDateTimeDtoValidator = appointmentSetterDateTimeDtoValidator;
             _scheduleService = scheduleService;
+            _newAppointmentFollowUpValidator = newAppointmentFollowUpValidator;
+            _newAppointmentSurgeryValidator = newAppointmentSurgeryValidator;
         }
 
         [HttpPost("Consultaion")]
@@ -55,14 +61,14 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost("followup")]
-        public async Task<IActionResult> AppointFollowUp(NewConsultationAppointmentDto appointmentDto)
+        public async Task<IActionResult> AppointFollowUp(NewFollowUpAppointmentDto appointmentDto)
         {
-            var validationResult = await _newAppointmentConsultaionValidator.ValidateAsync(appointmentDto);
+            var validationResult = await _newAppointmentFollowUpValidator.ValidateAsync(appointmentDto);
             if (validationResult.IsValid)
             {
                 try
                 {
-                    await _appointmentService.AppointConsultation(appointmentDto);
+                    await _appointmentService.AppointFollowUp(appointmentDto);
                     return Ok();
                 }
                 catch (Exception ex)
@@ -79,14 +85,14 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost("Surgery")]
-        public async Task<IActionResult> AppointSurgery(NewConsultationAppointmentDto appointmentDto)
+        public async Task<IActionResult> AppointSurgery(NewSurgeryAppointmentDto appointmentDto)
         {
-            var validationResult = await _newAppointmentConsultaionValidator.ValidateAsync(appointmentDto);
+            var validationResult = await _newAppointmentSurgeryValidator.ValidateAsync(appointmentDto);
             if (validationResult.IsValid)
             {
                 try
                 {
-                    await _appointmentService.AppointConsultation(appointmentDto);
+                    await _appointmentService.AppointSurgery(appointmentDto);
                     return Ok();
                 }
                 catch (Exception ex)
@@ -102,9 +108,37 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAppointments(int pageNumber)
-            => Ok(await _appointmentService.GetAppointments(pageNumber));
+        [HttpGet("reasons")]
+        public IActionResult GetAppointmentReasons()
+            => Ok(_appointmentService.AppointmentReasons());
+
+        [HttpGet("/api/Appointments")]
+        public async Task<IActionResult> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
+        {
+            try
+            {
+                return Ok(await _appointmentService.GetAppointments(pageNumber, appointmentReason, appointmentStatus));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
+
+        [HttpGet("/api/Appointments/{patientId}")]
+        public async Task<IActionResult> GetAppointments(int pageNumber, string patientId, string? appointmentReason = null, string? appointmentStatus = null)
+        {
+            try
+            {
+                return Ok(await _appointmentService.GetPatientAppointments(pageNumber, patientId, appointmentReason, appointmentStatus));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
 
         [HttpGet("availble-times")]
         public async Task<IActionResult> GetAvailableSheduleTimes(string doctorId, string day)

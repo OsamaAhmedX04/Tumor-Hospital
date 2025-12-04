@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.DTOs.Response.Pagination;
@@ -45,19 +46,70 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
-
-        public Task AppointFollowUp(NewConsultationAppointmentDto appointment)
+        public async Task AppointFollowUp(NewFollowUpAppointmentDto appointment)
         {
-            throw new NotImplementedException();
+            var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
+                              await _userManager.FindByIdAsync(appointment.DoctorId) != null;
+            if (!isUsersExist)
+                throw new ArgumentException("Patient or Doctor does not exist.");
+            if (!await _scheduleService.IsWorkIn(appointment.DoctorId, appointment.DayOfWeek))
+                throw new ArgumentException("Doctor is not working on that day.");
+
+            var appointmentEntity = _mapper.Map<Appointment>(appointment);
+            await _unitOfWork.Appointments.AddAsync(appointmentEntity);
+            await _unitOfWork.CompleteAsync();
+        }
+        public async Task AppointSurgery(NewSurgeryAppointmentDto appointment)
+        {
+            var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
+                              await _userManager.FindByIdAsync(appointment.DoctorId) != null;
+            if (!isUsersExist)
+                throw new ArgumentException("Patient or Doctor does not exist.");
+            if (!await _scheduleService.IsWorkIn(appointment.DoctorId, appointment.DayOfWeek))
+                throw new ArgumentException("Doctor is not working on that day.");
+
+            var appointmentEntity = _mapper.Map<Appointment>(appointment);
+            await _unitOfWork.Appointments.AddAsync(appointmentEntity);
+            await _unitOfWork.CompleteAsync();
         }
 
-        public Task AppointSurgery(NewConsultationAppointmentDto appointment)
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public async Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber)
-            => await _unitOfWork.Appointments.GetAllPaginatedEnhancedAsync(
+        public async Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
+        {
+            Expression<Func<Appointment, bool>>? filter = null;
+
+            AppointmentReason? reason = null;
+            AppointmentStatus? status = null;
+
+            if (!string.IsNullOrEmpty(appointmentReason))
+            {
+                if (!Enum.TryParse<AppointmentReason>(appointmentReason, out AppointmentReason outReason))
+                    throw new Exception("Invalid Appointment Reason");
+                else
+                {
+                    reason = outReason;
+                    filter = a => a.Reason == reason;
+                }
+            }
+                
+            if (!string.IsNullOrEmpty(appointmentStatus))
+            {
+                if (!Enum.TryParse<AppointmentStatus>(appointmentStatus, out AppointmentStatus outStatus))
+                    throw new Exception("Invalid Appointment Reason");
+                else
+                {
+                    status = outStatus;
+                    filter = status != null && reason != null
+                           ? a => a.Reason == reason && a.Status == status
+                           : a => a.Status == status;
+                }
+                    
+            }
+                    
+
+            var appointments = await _unitOfWork.Appointments.GetAllPaginatedEnhancedAsync(
+                filter: filter,
                 selector: a => new AppointmentDto
                 {
                     AppointmentId = a.Id,
@@ -76,6 +128,70 @@ namespace TumorHospital.Infrastructure.Services
                 pageNumber: pageNumber
                 );
 
+            return appointments;
+        }
+
+        public async Task<PageSourcePagination<AppointmentDto>> GetPatientAppointments(int pageNumber, string patientId, string? appointmentReason = null, string? appointmentStatus = null)
+        {
+            Expression<Func<Appointment, bool>>? filter = a => a.PatientId == patientId;
+
+            AppointmentReason? reason = null;
+            AppointmentStatus? status = null;
+
+            if (!string.IsNullOrEmpty(appointmentReason))
+            {
+                if (!Enum.TryParse<AppointmentReason>(appointmentReason, out AppointmentReason outReason))
+                    throw new Exception("Invalid Appointment Reason");
+                else
+                {
+                    reason = outReason;
+                    filter = a => a.Reason == reason;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(appointmentStatus))
+            {
+                if (!Enum.TryParse<AppointmentStatus>(appointmentStatus, out AppointmentStatus outStatus))
+                    throw new Exception("Invalid Appointment Reason");
+                else
+                {
+                    status = outStatus;
+                    filter = status != null && reason != null
+                           ? a => a.Reason == reason && a.Status == status
+                           : a => a.Status == status;
+                }
+
+            }
+
+
+            var appointments = await _unitOfWork.Appointments.GetAllPaginatedEnhancedAsync(
+                filter: filter,
+                selector: a => new AppointmentDto
+                {
+                    AppointmentId = a.Id,
+                    PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
+                    DoctorName = a.Doctor.User.FirstName + " " + a.Doctor.User.LastName,
+                    DoctorImagePath = SupabaseConstants.PrefixSupaURL + a.Doctor.ProfilePicturePath,
+                    Reason = a.Reason.ToString(),
+                    DayOfWeek = a.DayOfWeek.ToString(),
+                    FromTime = a.FromTime,
+                    ToTime = a.ToTime,
+                    Status = a.Status.ToString(),
+                    RequestCreatedAt = a.RequestCreatedAt,
+                    AttendenceDate = a.AttendenceDate
+                },
+                pageSize: 15,
+                pageNumber: pageNumber
+                );
+
+            return appointments;
+        }
+        public List<string> AppointmentReasons()
+        {
+            var reasons = Enum.GetNames(typeof(AppointmentReason)).ToList();
+            return reasons;
+        }
+
         public async Task AcceptAppointment(Guid appointmentId, AppointmentSetterDateTimeDto setter)
         {
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
@@ -84,6 +200,8 @@ namespace TumorHospital.Infrastructure.Services
 
             appointment.Status = AppointmentStatus.Approved;
             appointment.FromTime = setter.FromTime;
+            appointment.ToTime = setter.FromTime.Add(TimeSpan.FromMinutes(30));
+            appointment.AttendenceDate = GetDateThisWeek(appointment.DayOfWeek);
 
             await _unitOfWork.CompleteAsync();
         }
@@ -95,5 +213,19 @@ namespace TumorHospital.Infrastructure.Services
             appointment.Status = AppointmentStatus.Rejected;
             await _unitOfWork.CompleteAsync();
         }
+
+        private DateOnly GetDateThisWeek(Day day)
+        {
+            var targetDay = Enum.Parse<DayOfWeek>(day.ToString());
+            DateTime today = DateTime.Today;
+            int diff = targetDay - today.DayOfWeek;
+            DateTime result = today.AddDays(diff).Date;
+
+            return DateOnly.FromDateTime(result);
+        }
+
+
+
+
     }
 }

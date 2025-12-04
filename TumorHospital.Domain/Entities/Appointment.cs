@@ -26,6 +26,6 @@ namespace TumorHospital.Domain.Entities
         public TimeSpan? ToTime { get; set; }
         public AppointmentStatus Status { get; set; }
         public DateTime RequestCreatedAt { get; set; }
-        public DateTime? AttendenceDate { get; set; }
+        public DateOnly? AttendenceDate { get; set; }
     }
 }
