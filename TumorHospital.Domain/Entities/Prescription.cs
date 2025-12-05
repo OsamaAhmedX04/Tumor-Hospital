@@ -9,21 +9,12 @@ namespace TumorHospital.Domain.Entities
         [Key]
         public Guid Id { get; set; }
 
-        [ForeignKey("Patient")]
-        public string PatientId { get; set; }
-        public Patient Patient { get; set; }
-
-        [ForeignKey("Doctor")]
-        public string? DoctorId { get; set; }
-        public Doctor? Doctor { get; set; }
+        [ForeignKey("Appointment")]
+        public Guid AppointmentId { get; set; }
+        public Appointment Appointment { get; set; }
         public string Medication { get; set; }
         public string Dosage { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }
-
-
-//    medication NVARCHAR(MAX) NOT NULL,
-//    dosage NVARCHAR(MAX),
-
 }

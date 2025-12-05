@@ -18,14 +18,9 @@ namespace TumorHospital.Domain.Entities
 
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public ICollection<Bill> Bills { get; set; } = new List<Bill>();
-        public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
         public ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
         public ICollection<MentalHealthSurvey> MentalHealthSurvies { get; set; } = new List<MentalHealthSurvey>();
 
     }
-
-
-
-    //medical_history NVARCHAR(MAX),
 
 }

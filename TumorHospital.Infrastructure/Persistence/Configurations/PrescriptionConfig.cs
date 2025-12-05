@@ -21,11 +21,8 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
 
 
             builder
-                .HasOne(p => p.Patient).WithMany(p => p.Prescriptions)
-                .HasForeignKey(p => p.PatientId).OnDelete(DeleteBehavior.Cascade);
-            builder
-                .HasOne(p => p.Doctor).WithMany(d => d.Prescriptions)
-                .HasForeignKey(p => p.DoctorId).OnDelete(DeleteBehavior.ClientSetNull);
+                .HasOne(p => p.Appointment).WithOne(p => p.Prescription)
+                .HasForeignKey<Prescription>(p => p.AppointmentId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
