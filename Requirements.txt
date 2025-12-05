@@ -53,3 +53,16 @@
  - ➕ Add Schedule for Doctors
  - ✏️ Edit Schedule
  - ❌ Delete Schedule
+
+8 Profile 
+  - Show and Edit Profile of Patients
+  - Show and Edit Profile of Doctors
+  - Show and Edit Profile of Receptionists
+
+9 Appointments
+  -
+  -
+  -
+
+10 Prescription
+  - Doctor can Create and Update Prescriptions
