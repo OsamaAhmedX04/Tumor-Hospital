@@ -1,8 +1,13 @@
-﻿using TumorHospital.Domain.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Application.DTOs.Request.User
 {
-    public class UpdatePatientProfileDto
+    public class UpdateReceptionistProfileDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -10,7 +15,5 @@ namespace TumorHospital.Application.DTOs.Request.User
 
         public string Gender { get; set; }
         public string Address { get; set; }
-        public DateTime? DateOfBirth { get; set; }
     }
-
 }

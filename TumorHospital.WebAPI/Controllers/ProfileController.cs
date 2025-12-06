@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Infrastructure.Services;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
 {
@@ -12,10 +14,19 @@ namespace TumorHospital.WebAPI.Controllers
     public class ProfileController : ControllerBase
     {
         private readonly IProfileService _profileService;
+        private readonly IValidator<UpdatePatientProfileDto> _patientValidator;
+        private readonly IValidator<UpdateDoctorProfileDto> _doctorValidator;
+        private readonly IValidator<UpdateReceptionistProfileDto> _receptionistValidator;
 
-        public ProfileController(IProfileService profileSevice)
+        public ProfileController(IProfileService profileSevice,
+            IValidator<UpdatePatientProfileDto> patientValidator,
+            IValidator<UpdateDoctorProfileDto> doctorValidator,
+            IValidator<UpdateReceptionistProfileDto> receptionistValidator)
         {
             _profileService = profileSevice;
+            _patientValidator = patientValidator;
+            _doctorValidator = doctorValidator;
+            _receptionistValidator = receptionistValidator;
         }
 
         [HttpGet("GetPatientProfile/{userId}")]
@@ -30,10 +41,15 @@ namespace TumorHospital.WebAPI.Controllers
         [HttpPut("UpdatePatientProfile/{userId}")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdatePatientProfileDto dto)
         {
-            var success = await _profileService.UpdateProfile(userId, dto);
-            if (!success) return NotFound();
-
-            return Ok("Patient profile updated successfully");
+            var validationResult = await _patientValidator.ValidateAsync(dto);
+            if (validationResult.IsValid)
+            {
+                await _profileService.UpdateProfile(userId, dto);
+                return Ok("Patient profile updated successfully");
+            }
+            foreach (var error in validationResult.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpGet("GetDoctorProfile/{userId}")]
@@ -48,10 +64,38 @@ namespace TumorHospital.WebAPI.Controllers
         [HttpPut("UpdateDoctorProfile/{userId}")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdateDoctorProfileDto dto)
         {
-            var success = await _profileService.UpdateProfile(userId, dto);
-            if (!success) return NotFound();
+            var validationResult = await _doctorValidator.ValidateAsync(dto);
+            if (validationResult.IsValid)
+            {
+                await _profileService.UpdateProfile(userId, dto);
+                return Ok("Doctor profile updated successfully");
+            }
+            foreach (var error in validationResult.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
 
-            return Ok("Doctor profile updated successfully");
+        [HttpGet("GetReceptionistProfile/{userId}")]
+        public async Task<IActionResult> GetReceptionistProfile(string userId)
+        {
+            var result = await _profileService.GetReceptionistProfile(userId);
+            if (result == null) return NotFound();
+            
+            return Ok(result);
+        }
+
+        [HttpPut("UpdateReceptionistProfile/{userId}")]
+        public async Task<IActionResult> UpdateProfile(string userId, UpdateReceptionistProfileDto dto)
+        {
+            var validationResult = await _receptionistValidator.ValidateAsync(dto);
+            if (validationResult.IsValid)
+            {
+                await _profileService.UpdateProfile(userId, dto);
+                return Ok("Receptionist profile updated successfully");
+            }
+            foreach (var error in validationResult.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
     }
 }

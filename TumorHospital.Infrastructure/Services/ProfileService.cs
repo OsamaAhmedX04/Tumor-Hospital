@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +24,13 @@ namespace TumorHospital.Infrastructure.Services
 
         private readonly IFileService _fileService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ProfileService(IFileService fileService, IUnitOfWork unitOfWork)
+        public ProfileService(IFileService fileService, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _fileService = fileService;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public async Task UploadProfilePicture(IFormFile file, string userId)
         {
@@ -58,20 +61,15 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<PatientProfileResponse> GetPatientProfile(string userId)
         {
-            var patient = await _unitOfWork.Patients.GetEnhancedAsync(
-                selector: x => new PatientProfileResponse
-                {
-                    ApplicationUserId = x.ApplicationUserId,
-                    FullName = $"{x.User.FirstName} {x.User.LastName}",
-                    Email = x.User.Email,
-                    Gender = x.Gender,
-                    Address = x.Address,
-                    DateOfBirth = x.DateOfBirth
-                },
-                filter: x => x.ApplicationUserId == userId
+            var patient = await _unitOfWork.Patients.GetAsync(
+                selector: x => x,
+                filter: x => x.ApplicationUserId == userId,
+                Includes: x => x.User
             );
 
-            return patient?? throw new Exception ("Patient not found");
+            if (patient == null) throw new Exception("Patient not found");
+
+            return _mapper.Map<PatientProfileResponse>(patient);
         }
 
         public async Task<bool> UpdateProfile(string userId, UpdatePatientProfileDto dto)
@@ -84,12 +82,8 @@ namespace TumorHospital.Infrastructure.Services
 
             if (patient == null) return false;
 
-            patient.User.FirstName = dto.FirstName;
-            patient.User.LastName = dto.LastName;
-            patient.User.PhoneNumber = dto.PhoneNumber;
-            patient.Gender = dto.Gender;
-            patient.Address = dto.Address;
-            patient.DateOfBirth = dto.DateOfBirth;
+            _mapper.Map(dto, patient);
+            _mapper.Map(dto, patient.User);
 
             _unitOfWork.Patients.Update(patient);
             await _unitOfWork.CompleteAsync();
@@ -99,21 +93,16 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<DoctorProfileResponse> GetDoctorProfile(string userId)
         {
-            var doctor = await _unitOfWork.Doctors.GetEnhancedAsync(
-                selector: x => new DoctorProfileResponse
-                {
-                    ApplicationUserId = x.ApplicationUserId,
-                    FullName = $"{x.User.FirstName} {x.User.LastName}",
-                    Email = x.User.Email,
-                    Gender = x.Gender,
-                    Bio = x.Bio,
-                    ProfilePicturePath = SupabaseConstants.PrefixSupaURL + x.ProfilePicturePath,
-                    SpecializationName = x.Specialization.Name
-                },
-                filter: x => x.ApplicationUserId == userId
+            var doctor = await _unitOfWork.Doctors.GetAsync(
+                selector: x => x,
+                filter: x => x.ApplicationUserId == userId,
+                Includes: x => x.User
             );
 
-            return doctor ?? throw new Exception("Doctor not found");
+
+            if (doctor == null) throw new Exception("Doctor not found");
+
+            return _mapper.Map<DoctorProfileResponse>(doctor);
         }
 
         public async Task<bool> UpdateProfile(string userId, UpdateDoctorProfileDto dto)
@@ -124,16 +113,44 @@ namespace TumorHospital.Infrastructure.Services
                 Includes: x => x.User
             );
 
-            if (doctor == null)
-                return false;
+            if (doctor == null) return false;
 
-            doctor.User.FirstName = dto.FirstName;
-            doctor.User.LastName = dto.LastName;
-            doctor.User.PhoneNumber = dto.PhoneNumber;
-            doctor.Gender = dto.Gender;
-            doctor.Bio = dto.Bio;
+            _mapper.Map(dto, doctor);
+            _mapper.Map(dto, doctor.User);
 
             _unitOfWork.Doctors.Update(doctor);
+            await _unitOfWork.CompleteAsync();
+
+            return true;
+        }
+
+        public async Task<ReceptionistProfileResponse> GetReceptionistProfile(string userId)
+        {
+            var receptionist = await _unitOfWork.Receptionists.GetAsync(
+                selector: x => x,
+                filter: x => x.ApplicationUserId == userId,
+                Includes: x => x.User
+            );
+
+            if (receptionist == null) throw new Exception("Receptionist not found");
+
+            return _mapper.Map<ReceptionistProfileResponse>(receptionist);
+        }
+
+        public async Task<bool> UpdateProfile(string userId, UpdateReceptionistProfileDto dto)
+        {
+            var receptionist = await _unitOfWork.Receptionists.GetAsync(
+                selector: x => x,
+                filter: x => x.ApplicationUserId == userId,
+                Includes: x => x.User
+            );
+
+            if (receptionist == null) return false;
+
+            _mapper.Map(dto, receptionist);
+            _mapper.Map(dto, receptionist.User);
+
+            _unitOfWork.Receptionists.Update(receptionist);
             await _unitOfWork.CompleteAsync();
 
             return true;

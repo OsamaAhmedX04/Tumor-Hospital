@@ -1,4 +1,6 @@
-﻿namespace TumorHospital.Application.DTOs.Request.User
+﻿using TumorHospital.Domain.Enums;
+
+namespace TumorHospital.Application.DTOs.Request.User
 {
     public class UpdateDoctorProfileDto
     {
