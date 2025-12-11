@@ -35,6 +35,7 @@ namespace TumorHospital.WebAPI.Controllers
             var needs = await _donationService.GetAllNeeds(pageSize, pageNumber);
             return Ok(needs);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetNeed([FromQuery] Guid id)
         {
@@ -49,6 +50,7 @@ namespace TumorHospital.WebAPI.Controllers
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
         [HttpGet("Categories")]
         public async Task<IActionResult> GetCategoriesOfNeeds() => Ok(_donationService.GetCategoriesOfNeeds());
 
@@ -66,7 +68,7 @@ namespace TumorHospital.WebAPI.Controllers
             if (validationResult.IsValid)
             {
                 await _donationService.AddNeed(need);
-                return Ok();
+                return Ok(new { Message = "New Need Created Successfully" });
             }
             
             foreach (var error in validationResult.Errors)
@@ -75,6 +77,7 @@ namespace TumorHospital.WebAPI.Controllers
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
         [HttpPost("Donate")]
         public async Task<IActionResult> Donate(VolunteerDto volunteer)
         {
@@ -84,7 +87,7 @@ namespace TumorHospital.WebAPI.Controllers
                 try
                 {
                     await _donationService.Donate(volunteer);
-                    return Ok();
+                    return Ok(new { Message = "Donation Added Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -110,7 +113,7 @@ namespace TumorHospital.WebAPI.Controllers
                 try
                 {
                     await _donationService.UpdateNeed(newNeed, id);
-                    return Ok();
+                    return Ok(new { Message = "Need Updated Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -132,7 +135,7 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 await _donationService.DeleteNeed(id);
-                return Ok();
+                return Ok(new { Message = "Need Deleted Successfully" });
             }
             catch (Exception ex)
             {

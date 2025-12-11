@@ -29,13 +29,14 @@ namespace TumorHospital.WebAPI.Controllers
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> AddSpecializations(SpecializationDto model)
         {
             try
             {
                 await _specializationService.AddSpecialization(model);
-                return Ok();
+                return Ok(new { Message = "Specialization Created Successfully" });
             }
             catch (Exception ex)
             {
@@ -43,13 +44,14 @@ namespace TumorHospital.WebAPI.Controllers
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSpecializations(Guid id, SpecializationDto model)
         {
             try
             {
                 await _specializationService.UpdateSpecialization(id, model);
-                return Ok();
+                return Ok(new { Message = "Specialization Updated Successfully" });
             }
             catch (Exception ex)
             {
@@ -57,13 +59,14 @@ namespace TumorHospital.WebAPI.Controllers
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSpecializations(Guid id)
         {
             try
             {
                 await _specializationService.DeleteSpecialization(id);
-                return Ok();
+                return Ok(new { Message = "Specialization Deleted Successfully" });
             }
             catch (Exception ex)
             {

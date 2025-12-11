@@ -31,6 +31,7 @@ namespace TumorHospital.Infrastructure.Persistence.Context
         public DbSet<MentalHealthSurvey> MentalHealthSurvies { get; set; }
         
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<FAQ> FAQs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

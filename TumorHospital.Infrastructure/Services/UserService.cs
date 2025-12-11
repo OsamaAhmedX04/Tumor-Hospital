@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.Auth;
 using TumorHospital.Application.DTOs.Response.Pagination;
+using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 
@@ -17,89 +18,95 @@ namespace TumorHospital.Infrastructure.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<PageSourcePagination<UserDto>> GetAllAdmins(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<UserWithIdDto>> GetAllAdmins(int pageNumber)
         {
             return await _unitOfWork.Admins.GetAllPaginatedEnhancedAsync(
-                selector: admin => new UserDto
+                selector: admin => new UserWithIdDto
                 {
+                    Id = admin.ApplicationUserId,
                     Name = admin.User.FirstName + " " + admin.User.LastName,
                     Email = admin.User.Email!,
                     Role = "Admin"
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }
 
-        public async Task<PageSourcePagination<UserDto>> GetAllDoctors(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<UserWithIdDto>> GetAllDoctors(int pageNumber)
         {
             return await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
                 filter: doctor => doctor.User.IsActive,
-                selector: doctor => new UserDto
+                selector: doctor => new UserWithIdDto
                 {
+                    Id = doctor.ApplicationUserId,
                     Name = doctor.User.FirstName + " " + doctor.User.LastName,
                     Email = doctor.User.Email!,
                     Role = "Doctor"
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }
 
-        public async Task<PageSourcePagination<UserDto>> GetAllInActiveDoctorRoles(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<UserWithIdDto>> GetAllInActiveDoctorRoles(int pageNumber)
         {
             return await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
                 filter: doctor => !doctor.User.IsActive,
-                selector: doctor => new UserDto
+                selector: doctor => new UserWithIdDto
                 {
+                    Id = doctor.ApplicationUserId,
                     Name = doctor.User.FirstName + " " + doctor.User.LastName,
                     Email = doctor.User.Email!,
                     Role = "InActive Doctor"
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }
 
-        public async Task<PageSourcePagination<UserDto>> GetAllPatients(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<UserWithIdDto>> GetAllPatients(int pageNumber)
         {
             return await _unitOfWork.Patients.GetAllPaginatedEnhancedAsync(
-                selector: patient => new UserDto
+                selector: patient => new UserWithIdDto
                 {
+                    Id = patient.ApplicationUserId,
                     Name = patient.User.FirstName + " " + patient.User.LastName,
                     Email = patient.User.Email!,
                     Role = "Patient"
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }
 
-        public async Task<PageSourcePagination<UserDto>> GetAllReceptionist(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<UserWithIdDto>> GetAllReceptionist(int pageNumber)
         {
             return await _unitOfWork.Receptionists.GetAllPaginatedEnhancedAsync(
                 filter: receptionist => receptionist.User.IsActive,
-                selector: receptionist => new UserDto
+                selector: receptionist => new UserWithIdDto
                 {
+                    Id = receptionist.ApplicationUserId,
                     Name = receptionist.User.FirstName + " " + receptionist.User.LastName,
                     Email = receptionist.User.Email!,
                     Role = "Receptionist"
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }
-        public async Task<PageSourcePagination<UserDto>> GetAllInActiveReceptionistRoles(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<UserWithIdDto>> GetAllInActiveReceptionistRoles(int pageNumber)
         {
             return await _unitOfWork.Receptionists.GetAllPaginatedEnhancedAsync(
                 filter: receptionist => !receptionist.User.IsActive,
-                selector: receptionist => new UserDto
+                selector: receptionist => new UserWithIdDto
                 {
+                    Id = receptionist.ApplicationUserId,
                     Name = receptionist.User.FirstName + " " + receptionist.User.LastName,
                     Email = receptionist.User.Email!,
                     Role = "InActive Receptionist"
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }

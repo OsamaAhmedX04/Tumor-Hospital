@@ -12,8 +12,9 @@ namespace TumorHospital.Application.Intefaces.Services
 
         Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null);
         Task<PageSourcePagination<AppointmentDto>> GetPatientAppointments(int pageNumber, string patientId, string? appointmentReason = null, string? appointmentStatus = null);
+        Task<PageSourcePagination<AppointmentDto>> GetDoctorAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null);
         List<string> AppointmentReasons();
-        Task AcceptAppointment(Guid appointmentId, AppointmentSetterDateTimeDto setter);
+        Task AcceptAppointment(Guid appointmentId);
         Task RejectAppointment(Guid appointmentId);
     }
 }

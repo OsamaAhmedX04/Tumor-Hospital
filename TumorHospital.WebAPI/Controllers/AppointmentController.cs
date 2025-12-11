@@ -18,19 +18,16 @@ namespace TumorHospital.WebAPI.Controllers
         private readonly IValidator<NewConsultationAppointmentDto> _newAppointmentConsultaionValidator;
         private readonly IValidator<NewFollowUpAppointmentDto> _newAppointmentFollowUpValidator;
         private readonly IValidator<NewSurgeryAppointmentDto> _newAppointmentSurgeryValidator;
-        private readonly IValidator<AppointmentSetterDateTimeDto> _appointmentSetterDateTimeDtoValidator;
 
         public AppointmentController(
             IAppointmentService appointmentService,
             IValidator<NewConsultationAppointmentDto> newAppointmentConsultaionValidator,
-            IValidator<AppointmentSetterDateTimeDto> appointmentSetterDateTimeDtoValidator,
             IScheduleService scheduleService,
             IValidator<NewFollowUpAppointmentDto> newAppointmentFollowUpValidator,
             IValidator<NewSurgeryAppointmentDto> newAppointmentSurgeryValidator)
         {
             _appointmentService = appointmentService;
             _newAppointmentConsultaionValidator = newAppointmentConsultaionValidator;
-            _appointmentSetterDateTimeDtoValidator = appointmentSetterDateTimeDtoValidator;
             _scheduleService = scheduleService;
             _newAppointmentFollowUpValidator = newAppointmentFollowUpValidator;
             _newAppointmentSurgeryValidator = newAppointmentSurgeryValidator;
@@ -45,7 +42,7 @@ namespace TumorHospital.WebAPI.Controllers
                 try
                 {
                     await _appointmentService.AppointConsultation(appointmentDto);
-                    return Ok();
+                    return Ok(new { Message = "Appointment Created Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -69,7 +66,7 @@ namespace TumorHospital.WebAPI.Controllers
                 try
                 {
                     await _appointmentService.AppointFollowUp(appointmentDto);
-                    return Ok();
+                    return Ok(new { Message = "Appointment Created Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -93,7 +90,7 @@ namespace TumorHospital.WebAPI.Controllers
                 try
                 {
                     await _appointmentService.AppointSurgery(appointmentDto);
-                    return Ok();
+                    return Ok(new { Message = "Appointment Created Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -126,19 +123,7 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
-        [HttpGet("/api/Appointments/{patientId}")]
-        public async Task<IActionResult> GetAppointments(int pageNumber, string patientId, string? appointmentReason = null, string? appointmentStatus = null)
-        {
-            try
-            {
-                return Ok(await _appointmentService.GetPatientAppointments(pageNumber, patientId, appointmentReason, appointmentStatus));
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("Message", ex.Message);
-                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-            }
-        }
+        
 
         [HttpGet("availble-times")]
         public async Task<IActionResult> GetAvailableSheduleTimes(string doctorId, string day)
@@ -156,34 +141,28 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("accept-appointment")]
-        public async Task<IActionResult> AcceptAppointment(Guid appointmentId, [FromForm]AppointmentSetterDateTimeDto setter)
+        public async Task<IActionResult> AcceptAppointment(Guid appointmentId)
         {
-            var validationResult = await _appointmentSetterDateTimeDtoValidator.ValidateAsync(setter);
-            if (validationResult.IsValid)
+            try
             {
-                try
-                {
-                    await _appointmentService.AcceptAppointment(appointmentId, setter);
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("Identity", ex.Message);
-                }
+                await _appointmentService.AcceptAppointment(appointmentId);
+                return Ok(new { Message = "Appointment Accepted Successfully" });
             }
-            foreach (var error in validationResult.Errors)
+            catch (Exception ex)
             {
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                ModelState.AddModelError("Identity", ex.Message);
             }
+            
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
         [HttpPut("reject-appointment")]
         public async Task<IActionResult> RejectAppointment(Guid appointmentId)
         {
             try
             {
                 await _appointmentService.RejectAppointment(appointmentId);
-                return Ok();
+                return Ok(new { Message = "Appointment Rejected Successfully" });
             }
             catch (Exception ex)
             {

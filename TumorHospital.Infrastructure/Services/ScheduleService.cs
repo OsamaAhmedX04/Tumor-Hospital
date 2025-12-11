@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.User;
+using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.DTOs.Response.Schedule;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
@@ -23,6 +24,32 @@ namespace TumorHospital.Infrastructure.Services
             _unitOfWork = unitOfWork;
         }
 
+
+        public async Task<List<DoctorWorkScheduleDto>> GetDoctorSchedule(string doctorId)
+        {
+            var schedules = await _unitOfWork.DoctorSchedules.GetAllAsIQueryable().AsNoTracking()
+                .Where(ds => ds.DoctorId == doctorId)
+                .Select(ds => new DoctorWorkScheduleDto
+                {
+                    DayOfWeek = ds.DayOfWeek.ToString(),
+                    StartTime = ds.StartTime,
+                    EndTime = ds.EndTime,
+                    appointmentDurations = ds.Doctor.Appointments
+                        .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == ds.DayOfWeek)
+                        .Select(a => new AppointmentDurationDto
+                        {
+                            AppointmentReason = a.Reason.ToString(),
+                            EndTime = a.ToTime!.Value,
+                            StartTime = a.FromTime!.Value,
+                            PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
+                        })
+                        .ToList()
+                })
+                .ToListAsync();
+
+            return schedules;
+
+        }
         public async Task AddSchedule(string doctorId, DoctorScheduleDto doctorSchedule)
         {
             var doctorSchedules = await _unitOfWork.DoctorSchedules

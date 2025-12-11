@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Application.DTOs.Request.User;
+﻿using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.Schedule;
 
 namespace TumorHospital.Application.Intefaces.Services
 {
     public interface IScheduleService
     {
+        Task<List<DoctorWorkScheduleDto>> GetDoctorSchedule(string doctorId);
         Task AddSchedule(string doctorId, DoctorScheduleDto doctorSchedule);
         Task DeleteScheduale(Guid scheduleId);
         Task UpdateScheduale(Guid scheduleId, string doctorId, DoctorScheduleDto schedule);

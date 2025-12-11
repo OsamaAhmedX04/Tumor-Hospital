@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.DTOs.Response.Pagination;
+using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
@@ -114,7 +116,7 @@ namespace TumorHospital.Infrastructure.Services
                 {
                     AppointmentId = a.Id,
                     PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
-                    DoctorName = a.Doctor.User.FirstName + " " + a.Doctor.User.LastName,
+                    DoctorName = a.Doctor!.User.FirstName + " " + a.Doctor.User.LastName,
                     DoctorImagePath = SupabaseConstants.PrefixSupaURL + a.Doctor.ProfilePicturePath,
                     Reason = a.Reason.ToString(),
                     DayOfWeek = a.DayOfWeek.ToString(),
@@ -170,7 +172,7 @@ namespace TumorHospital.Infrastructure.Services
                 {
                     AppointmentId = a.Id,
                     PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
-                    DoctorName = a.Doctor.User.FirstName + " " + a.Doctor.User.LastName,
+                    DoctorName = a.Doctor!.User.FirstName + " " + a.Doctor.User.LastName,
                     DoctorImagePath = SupabaseConstants.PrefixSupaURL + a.Doctor.ProfilePicturePath,
                     Reason = a.Reason.ToString(),
                     DayOfWeek = a.DayOfWeek.ToString(),
@@ -186,22 +188,101 @@ namespace TumorHospital.Infrastructure.Services
 
             return appointments;
         }
+
+        public async Task<PageSourcePagination<AppointmentDto>> GetDoctorAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
+        {
+            Expression<Func<Appointment, bool>>? filter = a => a.DoctorId == doctorId;
+
+            AppointmentReason? reason = null;
+            AppointmentStatus? status = null;
+
+            if (!string.IsNullOrEmpty(appointmentReason))
+            {
+                if (!Enum.TryParse<AppointmentReason>(appointmentReason, out AppointmentReason outReason))
+                    throw new Exception("Invalid Appointment Reason");
+                else
+                {
+                    reason = outReason;
+                    filter = a => a.Reason == reason;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(appointmentStatus))
+            {
+                if (!Enum.TryParse<AppointmentStatus>(appointmentStatus, out AppointmentStatus outStatus))
+                    throw new Exception("Invalid Appointment Reason");
+                else
+                {
+                    status = outStatus;
+                    filter = status != null && reason != null
+                           ? a => a.Reason == reason && a.Status == status
+                           : a => a.Status == status;
+                }
+
+            }
+
+
+            var appointments = await _unitOfWork.Appointments.GetAllPaginatedEnhancedAsync(
+                filter: filter,
+                selector: a => new AppointmentDto
+                {
+                    AppointmentId = a.Id,
+                    PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
+                    DoctorName = a.Doctor!.User.FirstName + " " + a.Doctor.User.LastName,
+                    DoctorImagePath = SupabaseConstants.PrefixSupaURL + a.Doctor.ProfilePicturePath,
+                    Reason = a.Reason.ToString(),
+                    DayOfWeek = a.DayOfWeek.ToString(),
+                    FromTime = a.FromTime,
+                    ToTime = a.ToTime,
+                    Status = a.Status.ToString(),
+                    RequestCreatedAt = a.RequestCreatedAt,
+                    AttendenceDate = a.AttendenceDate
+                },
+                pageSize: 15,
+                pageNumber: pageNumber
+                );
+
+            return appointments;
+        }
+
         public List<string> AppointmentReasons()
         {
             var reasons = Enum.GetNames(typeof(AppointmentReason)).ToList();
             return reasons;
         }
 
-        public async Task AcceptAppointment(Guid appointmentId, AppointmentSetterDateTimeDto setter)
+        public async Task AcceptAppointment(Guid appointmentId)
         {
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
             if (appointment == null)
                 throw new ArgumentException("Appointment not found.");
 
             appointment.Status = AppointmentStatus.Approved;
-            appointment.FromTime = setter.FromTime;
-            appointment.ToTime = setter.FromTime.Add(TimeSpan.FromMinutes(30));
-            appointment.AttendenceDate = GetDateThisWeek(appointment.DayOfWeek);
+
+            var doctorDaySchedule = await _unitOfWork.DoctorSchedules.GetEnhancedAsync(
+                filter: ds => ds.DoctorId == appointment.DoctorId && ds.DayOfWeek == appointment.DayOfWeek,
+                selector: ds => new {
+                    ds.StartTime,
+                    ds.EndTime
+                });
+
+            var lastAppointmentInRequestedDay = await _unitOfWork.Appointments
+                .GetAllAsIQueryable()
+                .AsNoTracking()
+                .LastOrDefaultAsync(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == appointment.DayOfWeek);
+                
+            if(lastAppointmentInRequestedDay is null)
+            {
+                appointment.FromTime = doctorDaySchedule!.StartTime;
+                appointment.ToTime = doctorDaySchedule.StartTime.Add(TimeSpan.FromMinutes(30));
+            }
+            else
+            {
+                appointment.FromTime = lastAppointmentInRequestedDay.ToTime;
+                appointment.ToTime = lastAppointmentInRequestedDay.ToTime!.Value.Add(TimeSpan.FromMinutes(30));
+            }
+
+            appointment.AttendenceDate = DayHelper.GetDateThisWeek(appointment.DayOfWeek);
 
             await _unitOfWork.CompleteAsync();
         }
@@ -214,18 +295,6 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        private DateOnly GetDateThisWeek(Day day)
-        {
-            var targetDay = Enum.Parse<DayOfWeek>(day.ToString());
-            DateTime today = DateTime.Today;
-            int diff = targetDay - today.DayOfWeek;
-            DateTime result = today.AddDays(diff).Date;
-
-            return DateOnly.FromDateTime(result);
-        }
-
-
-
-
+        
     }
 }

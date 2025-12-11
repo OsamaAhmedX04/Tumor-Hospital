@@ -26,6 +26,7 @@ namespace TumorHospital.Application.Intefaces.UOW
         IRepository<Prescription> Prescriptions { get; }
 
         IRepository<Notification> Notifications { get; }
+        IRepository<FAQ> FAQs { get; }
         
         Task<int> CompleteAsync();
     }

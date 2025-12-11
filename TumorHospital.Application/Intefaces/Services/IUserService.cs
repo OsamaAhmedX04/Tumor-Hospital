@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Application.DTOs.Request.Auth;
-using TumorHospital.Application.DTOs.Response.Pagination;
+﻿using TumorHospital.Application.DTOs.Response.Pagination;
+using TumorHospital.Application.DTOs.Response.User;
 
 namespace TumorHospital.Application.Intefaces.Services
 {
     public interface IUserService
     {
-        Task<PageSourcePagination<UserDto>> GetAllDoctors(int pageSize, int pageNumber);
-        Task<PageSourcePagination<UserDto>> GetAllPatients(int pageSize, int pageNumber);
-        Task<PageSourcePagination<UserDto>> GetAllAdmins(int pageSize, int pageNumber);
-        Task<PageSourcePagination<UserDto>> GetAllReceptionist(int pageSize, int pageNumber);
-        Task<PageSourcePagination<UserDto>> GetAllInActiveDoctorRoles(int pageSize, int pageNumber);
-        Task<PageSourcePagination<UserDto>> GetAllInActiveReceptionistRoles(int pageSize, int pageNumber);
+        Task<PageSourcePagination<UserWithIdDto>> GetAllDoctors(int pageNumber);
+        Task<PageSourcePagination<UserWithIdDto>> GetAllPatients(int pageNumber);
+        Task<PageSourcePagination<UserWithIdDto>> GetAllAdmins(int pageNumber);
+        Task<PageSourcePagination<UserWithIdDto>> GetAllReceptionist(int pageNumber);
+        Task<PageSourcePagination<UserWithIdDto>> GetAllInActiveDoctorRoles(int pageNumber);
+        Task<PageSourcePagination<UserWithIdDto>> GetAllInActiveReceptionistRoles(int pageNumber);
     }
 }

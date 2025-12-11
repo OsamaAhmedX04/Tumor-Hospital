@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Infrastructure.Services;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -11,10 +12,12 @@ namespace TumorHospital.WebAPI.Controllers
     {
         private readonly IProfileService _profileService;
         private readonly IDoctorService _doctorService;
-        public DoctorController(IProfileService profileService, IDoctorService doctorService)
+        private readonly IAppointmentService _appointmentService;
+        public DoctorController(IProfileService profileService, IDoctorService doctorService, IAppointmentService appointmentService)
         {
             _profileService = profileService;
             _doctorService = doctorService;
+            _appointmentService = appointmentService;
         }
 
         [HttpPost("Profile-Picture")]
@@ -23,7 +26,7 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 await _profileService.UploadProfilePicture(file, userId);
-                return Ok();
+                return Ok(new { Message = "Profile Picture Uploaded Successfully" });
             }
             catch (Exception ex)
             {
@@ -33,11 +36,11 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("/api/Doctors")]
-        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null)
+        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null)
         {
             try
             {
-                return Ok(await _doctorService.GetDoctors(pageNumber, workDay));
+                return Ok(await _doctorService.GetDoctors(pageNumber, workDay, IsSurgeon));
             }
             catch (Exception ex)
             {
@@ -47,11 +50,25 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDoctors(string id)
+        public async Task<IActionResult> GetDoctor(string id)
         {
             try
             {
                 return Ok(await _doctorService.GetDoctorDetails(id));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
+
+        [HttpGet("Appointments")]
+        public async Task<IActionResult> GetAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
+        {
+            try
+            {
+                return Ok(await _appointmentService.GetDoctorAppointments(pageNumber, doctorId, appointmentReason, appointmentStatus));
             }
             catch (Exception ex)
             {

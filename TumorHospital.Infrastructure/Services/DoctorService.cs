@@ -1,5 +1,6 @@
 ﻿using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
+using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
@@ -28,6 +29,10 @@ namespace TumorHospital.Infrastructure.Services
                     Gender = d.Gender,
                     Bio = d.Bio,
                     Specialization = d.Specialization!.Name,
+                    IsSurgeon = d.IsSurgeon,
+                    ConsultationCost = d.ConsultationCost,
+                    FollowUpCost = d.FollowUpCost,
+                    SurgeryCost = !d.IsSurgeon ? null : d.SurgeryCost,
                     WorkingDays = d.Schedules.Select(s => new DoctorWorkDayDto
                     {
                         Day = s.DayOfWeek.ToString(),
@@ -40,7 +45,8 @@ namespace TumorHospital.Infrastructure.Services
             foreach (var day in doctorDetails.WorkingDays)
             {
                 Day dayEnum = Enum.Parse<Day>(day.Day);
-                day.IsAvailable = await IsAvailableDay(doctorId,dayEnum) && !await IsDayInPast(dayEnum);
+                day.IsAvailable = await IsAvailableDay(doctorId,dayEnum) && !DayHelper.IsDayInPast(dayEnum);
+                day.Date = DayHelper.GetDateThisWeek(dayEnum);
             }
 
             return doctorDetails;
@@ -65,31 +71,16 @@ namespace TumorHospital.Infrastructure.Services
 
             return !isHaveSurgery && !isFullyBooked;
         }
-        private async Task<bool> IsDayInPast(Day dayOfWeek)
-        {
-            var day = DateTime.Now.DayOfWeek switch
-            {
-                DayOfWeek.Saturday => Day.Saturday,
-                DayOfWeek.Sunday => Day.Sunday,
-                DayOfWeek.Monday => Day.Monday,
-                DayOfWeek.Tuesday => Day.Tuesday,
-                DayOfWeek.Wednesday => Day.Wednesday,
-                DayOfWeek.Thursday => Day.Thursday,
-                DayOfWeek.Friday => Day.Friday,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            
-            return dayOfWeek < day || dayOfWeek == day;
-        }
+        
          
 
-        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null)
+        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null)
         {
             PageSourcePagination<DoctorDto> doctors;
             if (string.IsNullOrEmpty(workDay))
             {
                 doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
-                filter: d => d.User.IsActive,
+                filter: d => d.User.IsActive && d.IsSurgeon == IsSurgeon,
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,
@@ -116,7 +107,7 @@ namespace TumorHospital.Infrastructure.Services
                     _ => throw new ArgumentException("Invalid day of the week"),
                 };
                 doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
-                filter: d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive,
+                filter: d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon,
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,

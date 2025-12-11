@@ -17,6 +17,16 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
 
             builder.Property(d => d.Gender).HasMaxLength(10).IsRequired();
             builder.Property(d => d.RegistrationDate).HasDefaultValueSql("GETDATE()");
+            builder.Property(d => d.IsSurgeon).HasDefaultValue(false);
+
+            builder.Property(d => d.ConsultationCost)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+            builder.Property(d => d.FollowUpCost)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+            builder.Property(d => d.SurgeryCost)
+                .HasColumnType("decimal(18,2)");
 
             builder
                 .HasOne(d => d.User).WithMany(u => u.Doctors)

@@ -27,7 +27,7 @@ namespace TumorHospital.Application.Validators.User
                 .NotEmpty().WithMessage("Address is required");
 
             RuleFor(x => x.DateOfBirth)
-                .LessThan(DateTime.Now).WithMessage("Date of birth must be in the past");
+                .LessThan(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Date of birth must be in the past");
         }
     }
 }

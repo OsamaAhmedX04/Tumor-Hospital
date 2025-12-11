@@ -87,7 +87,7 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 await _receptionService
                     .ReceivePayment(billId, receptionistId, billCode);
-                return Ok();
+                return Ok(new { Message = "Payment Received Successfully" });
             }
             catch (Exception ex)
             {

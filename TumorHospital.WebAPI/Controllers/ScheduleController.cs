@@ -21,6 +21,11 @@ namespace TumorHospital.WebAPI.Controllers
             _scheduleValidator = scheduleValidator;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorSchedule(string doctorId)
+            =>Ok(await _scheduleService.GetDoctorSchedule(doctorId));
+        
+
         [HttpPost]
         public async Task<IActionResult> AddSchedule(string doctorId, DoctorScheduleDto schedule)
         {
@@ -30,7 +35,7 @@ namespace TumorHospital.WebAPI.Controllers
                 try
                 {
                     await _scheduleService.AddSchedule(doctorId, schedule);
-                    return Ok();
+                    return Ok(new { Message = "Schedule Created Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -52,7 +57,7 @@ namespace TumorHospital.WebAPI.Controllers
                 try
                 {
                     await _scheduleService.UpdateScheduale(scheduleId, doctorId, schedule);
-                    return Ok();
+                    return Ok(new { Message = "Schedule Updated Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -71,7 +76,7 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 await _scheduleService.DeleteScheduale(scheduleId);
-                return Ok();
+                return Ok(new { Message = "Schedule Deleted Successfully" });
             }
             catch (Exception ex)
             {

@@ -33,7 +33,7 @@ namespace TumorHospital.WebAPI.Controllers
         public async Task<IActionResult> GetPatientProfile(string userId)
         {
             var result = await _profileService.GetPatientProfile(userId);
-            if (result == null) return NotFound();
+            if (result == null) return NotFound(new { Message = "User Not Found" });
 
             return Ok(result);
         }
@@ -56,7 +56,7 @@ namespace TumorHospital.WebAPI.Controllers
         public async Task<IActionResult> GetDoctorProfile(string userId)
         {
             var result = await _profileService.GetDoctorProfile(userId);
-            if (result == null) return NotFound();
+            if (result == null) return NotFound(new { Message = "User Not Found" });
 
             return Ok(result);
         }
@@ -79,7 +79,7 @@ namespace TumorHospital.WebAPI.Controllers
         public async Task<IActionResult> GetReceptionistProfile(string userId)
         {
             var result = await _profileService.GetReceptionistProfile(userId);
-            if (result == null) return NotFound();
+            if (result == null) return NotFound(new { Message = "User Not Found" });
             
             return Ok(result);
         }

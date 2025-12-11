@@ -16,27 +16,27 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("admins")]
-        public async Task<IActionResult> GetAdmins(int pageSize, int pageNumber) 
-            => Ok(await _userService.GetAllAdmins(pageSize, pageNumber));
+        public async Task<IActionResult> GetAdmins(int pageNumber) 
+            => Ok(await _userService.GetAllAdmins(pageNumber));
 
         [HttpGet("patients")]
-        public async Task<IActionResult> GetPatientss(int pageSize, int pageNumber)
-            => Ok(await _userService.GetAllPatients(pageSize, pageNumber));
+        public async Task<IActionResult> GetPatientss( int pageNumber)
+            => Ok(await _userService.GetAllPatients(pageNumber));
 
         [HttpGet("doctors")]
-        public async Task<IActionResult> GetDoctors(int pageSize, int pageNumber)
-            => Ok(await _userService.GetAllDoctors(pageSize, pageNumber));
+        public async Task<IActionResult> GetDoctors(int pageNumber)
+            => Ok(await _userService.GetAllDoctors(pageNumber));
 
         [HttpGet("receptionists")]
-        public async Task<IActionResult> GetReceptionists(int pageSize, int pageNumber)
-            => Ok(await _userService.GetAllReceptionist(pageSize, pageNumber));
+        public async Task<IActionResult> GetReceptionists(int pageNumber)
+            => Ok(await _userService.GetAllReceptionist(pageNumber));
 
         [HttpGet("inactive-doctors")]
-        public async Task<IActionResult> GetInActiveDoctors(int pageSize, int pageNumber)
-            => Ok(await _userService.GetAllInActiveDoctorRoles(pageSize, pageNumber));
+        public async Task<IActionResult> GetInActiveDoctors(int pageNumber)
+            => Ok(await _userService.GetAllInActiveDoctorRoles(pageNumber));
 
         [HttpGet("inactive-receptionists")]
-        public async Task<IActionResult> GetInActiveReceptionists(int pageSize, int pageNumber)
-            => Ok(await _userService.GetAllInActiveReceptionistRoles(pageSize, pageNumber));
+        public async Task<IActionResult> GetInActiveReceptionists(int pageNumber)
+            => Ok(await _userService.GetAllInActiveReceptionistRoles(pageNumber));
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using TumorHospital.Application.DTOs.Request.FAQs;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.WebAPI.Extensions;
@@ -13,6 +14,9 @@ namespace TumorHospital.WebAPI.Controllers
         private readonly IAdminSevice _adminSevice;
         private readonly IValidator<NewDoctorDto> _doctorValidator;
         private readonly IValidator<NewReceptionistDto> _receptionistValidator;
+
+        
+
         public AdminController(
             IAdminSevice adminSevice,
             IValidator<NewDoctorDto> doctorValidator,
@@ -74,7 +78,7 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 await _adminSevice.DeleteDoctor(doctorId);
-                return Ok();
+                return Ok(new { Message = "Doctor Deleted Successfully" });
             }
             catch (Exception ex)
             {
@@ -89,7 +93,7 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 await _adminSevice.DeleteReceptionist(receptionistId);
-                return Ok();
+                return Ok(new { Message = "Receptionist Deleted Successfully" });
             }
             catch (Exception ex)
             {

@@ -10,7 +10,7 @@ namespace TumorHospital.Application.DTOs.Request.User
 
         public string Gender { get; set; }
         public string Address { get; set; }
-        public DateTime? DateOfBirth { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
     }
 
 }
