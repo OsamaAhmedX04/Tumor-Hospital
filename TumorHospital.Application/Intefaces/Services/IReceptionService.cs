@@ -7,13 +7,15 @@ namespace TumorHospital.Application.Intefaces.Services
 {
     public interface IReceptionService
     {
-        Task<PageSourcePagination<ReceptionistDto>> GetAllReceptionists(int pageSize, int PageNumber, string? receptionistName);
+        Task<PageSourcePagination<ReceptionistDto>> GetAllReceptionists(int PageNumber, string? receptionistName);
 
         Task<ReceptionistDetailsDto> GetReceptionist(string id);
 
-        Task<PageSourcePagination<BillDto>> GetAllBills(int pageSize, int pageNumber);
+        //Task<PageSourcePagination<BillDto>> GetAllBills(int pageNumber);
 
-        Task<PageSourcePagination<BillDto>> GetBill(int pageSize, int pageNumber, string patientEmail);
+        Task<PageSourcePagination<BillDto>> GetBills(
+            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null
+            );
 
         Task ReceivePayment(Guid billId, string receptionistId, string billCode);
     }

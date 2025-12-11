@@ -1,9 +1,11 @@
-﻿using TumorHospital.Application.DTOs.Response.Pagination;
+﻿using System.Linq.Expressions;
+using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
+using TumorHospital.Domain.Entities;
 using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Infrastructure.Services
@@ -93,8 +95,11 @@ namespace TumorHospital.Infrastructure.Services
             PageSourcePagination<DoctorDto> doctors;
             if (string.IsNullOrEmpty(workDay))
             {
+                Expression<Func<Doctor, bool>> filter = d => d.User.IsActive;
+                if (IsSurgeon is not null) filter = d => d.User.IsActive && d.IsSurgeon == IsSurgeon;
+
                 doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
-                filter: d => d.User.IsActive && d.IsSurgeon == IsSurgeon,
+                filter: filter,
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,
@@ -120,8 +125,11 @@ namespace TumorHospital.Infrastructure.Services
                     "sunday" => Day.Sunday,
                     _ => throw new ArgumentException("Invalid day of the week"),
                 };
+                Expression<Func<Doctor, bool>> filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive;
+                if (IsSurgeon is not null) filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon;
+
                 doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
-                filter: d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon,
+                filter: filter,
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,

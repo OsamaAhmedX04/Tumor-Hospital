@@ -15,26 +15,31 @@ namespace TumorHospital.Infrastructure.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<PageSourcePagination<BillDto>> GetAllBills(int pageSize, int pageNumber)
-        {
-            return await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(
-                selector: b => new BillDto
-                {
-                    BillId = b.Id,
-                    CreatedAt = b.CreatedAt,
-                    PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.FirstName}",
-                    Status = b.Status,
-                    TotalAmount = b.TotalAmount
-                },
-                pageSize: pageSize,
-                pageNumber: pageNumber
-                );
-        }
+        //public async Task<PageSourcePagination<BillDto>> GetAllBills(int pageSize, int pageNumber)
+        //{
+        //    return await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(
+        //        selector: b => new BillDto
+        //        {
+        //            BillId = b.Id,
+        //            CreatedAt = b.CreatedAt,
+        //            PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.FirstName}",
+        //            Status = b.Status,
+        //            TotalAmount = b.TotalAmount
+        //        },
+        //        pageSize: pageSize,
+        //        pageNumber: pageNumber
+        //        );
+        //}
 
-        public async Task<PageSourcePagination<BillDto>> GetBill(int pageSize, int pageNumber, string patientEmail)
+        public async Task<PageSourcePagination<BillDto>> GetBills(
+            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null)
         {
             return await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(
-                filter: b => b.Patient.User.Email == patientEmail,
+                filter: b => b.Patient.User.Email == patientEmail 
+                ||
+                (b.Patient.User.FirstName + " " + b.Patient.User.LastName).Contains(patientName ?? "")
+                ||
+                b.Code == billCode,
                 selector: b => new BillDto
                 {
                     BillId = b.Id,
@@ -43,7 +48,7 @@ namespace TumorHospital.Infrastructure.Services
                     Status = b.Status,
                     TotalAmount = b.TotalAmount
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }
@@ -65,7 +70,7 @@ namespace TumorHospital.Infrastructure.Services
 
         }
 
-        public async Task<PageSourcePagination<ReceptionistDto>> GetAllReceptionists(int pageSize, int PageNumber, string? receptionistName)
+        public async Task<PageSourcePagination<ReceptionistDto>> GetAllReceptionists(int PageNumber, string? receptionistName)
         {
             return await _unitOfWork.Receptionists.GetAllPaginatedEnhancedAsync(
                 filter: r => ($"{r.User.FirstName} {r.User.LastName}").Contains(receptionistName ?? ""),
@@ -75,7 +80,7 @@ namespace TumorHospital.Infrastructure.Services
                     IsActive = r.User.IsActive,
                     Name = r.User.FirstName + " " + r.User.LastName,
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: PageNumber
                 );
         }

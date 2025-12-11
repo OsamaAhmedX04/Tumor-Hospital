@@ -17,12 +17,12 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("Receptionists")]
-        public async Task<IActionResult> GetAllReceptionists(int pageSize, int pageNumber, string? receptionistName)
+        public async Task<IActionResult> GetAllReceptionists(int pageNumber, string? receptionistName)
         {
             try
             {
                 var receptionists = await _receptionService
-                    .GetAllReceptionists(pageSize, pageNumber, receptionistName);
+                    .GetAllReceptionists(pageNumber, receptionistName);
                 return Ok(receptionists);
             }
             catch (Exception ex)
@@ -48,29 +48,14 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpGet("bills")]
-        public async Task<IActionResult> GetAllBills(int pageSize, int pageNumber)
-        {
-            try
-            {
-                var bills = await _receptionService
-                    .GetAllBills(pageSize, pageNumber);
-                return Ok(bills);
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("Message", ex.Message);
-            }
-            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        }
 
-        [HttpGet("bills/{patientEmail}")]
-        public async Task<IActionResult> GetBill(int pageSize, int pageNumber, string patientEmail)
+        [HttpGet("bills")]
+        public async Task<IActionResult> GetBills(int pageNumber, string? patientEmail, string? patientName, string? billCode)
         {
             try
             {
                 var bills = await _receptionService
-                    .GetBill(pageSize, pageNumber, patientEmail);
+                    .GetBills(pageNumber, patientEmail, patientName);
                 return Ok(bills);
             }
             catch (Exception ex)
