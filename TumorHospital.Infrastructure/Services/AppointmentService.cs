@@ -284,6 +284,33 @@ namespace TumorHospital.Infrastructure.Services
 
             appointment.AttendenceDate = DayHelper.GetDateThisWeek(appointment.DayOfWeek);
 
+            var appointmentCost = await _unitOfWork.Doctors.GetEnhancedAsync(
+                filter: d => d.ApplicationUserId == appointment.DoctorId,
+                selector: d => new
+                {
+                    d.ConsultationCost,
+                    d.FollowUpCost,
+                    d.SurgeryCost
+                });
+
+            var amount = appointment.Reason switch
+            {
+                AppointmentReason.Consultation => appointmentCost!.ConsultationCost,
+                AppointmentReason.FollowUp => appointmentCost!.FollowUpCost,
+                AppointmentReason.Surgery => appointmentCost!.SurgeryCost,
+                _ => 0.00m
+            };
+            var bill = new Bill
+            {
+                PatientId = appointment.PatientId,
+                TotalAmount = amount!.Value,
+                Code = Generator.GenerateRandomBillCode(),
+                Status = BillStatus.Pending,
+                CreatedAt = DateTime.Now
+            };
+
+            await _unitOfWork.Bills.AddAsync(bill);
+
             await _unitOfWork.CompleteAsync();
         }
         public async Task RejectAppointment(Guid appointmentId)

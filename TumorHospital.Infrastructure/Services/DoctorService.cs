@@ -16,7 +16,7 @@ namespace TumorHospital.Infrastructure.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<DoctorDetailsDto> GetDoctorDetails(string doctorId)
+        public async Task<DoctorDetailsDto> GetDoctorDetails(string doctorId, string patientId)
         {
             var doctorDetails = await _unitOfWork.Doctors.GetEnhancedAsync(
                 filter: d => d.ApplicationUserId == doctorId && d.User.IsActive,
@@ -48,6 +48,20 @@ namespace TumorHospital.Infrastructure.Services
                 day.IsAvailable = await IsAvailableDay(doctorId,dayEnum) && !DayHelper.IsDayInPast(dayEnum);
                 day.Date = DayHelper.GetDateThisWeek(dayEnum);
             }
+
+            var isAbleToAppointConsultation = !await _unitOfWork.Appointments.AnyAsync(
+                filter: a => 
+                a.DoctorId == doctorId && a.PatientId == patientId
+                && (a.Status == AppointmentStatus.Approved || a.Status == AppointmentStatus.Pending));
+
+            var isAbleToAppointFollowUp = await _unitOfWork.Appointments.AnyAsync(
+                filter: a =>
+                a.DoctorId == doctorId && a.PatientId == patientId &&
+                a.Reason == AppointmentReason.Consultation && a.Status == AppointmentStatus.Completed);
+
+            doctorDetails.IsAbleToAppointConsultation = isAbleToAppointConsultation;
+            doctorDetails.IsAbleToAppointFollowUp = isAbleToAppointFollowUp;
+
 
             return doctorDetails;
         }

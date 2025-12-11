@@ -49,12 +49,12 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetDoctor(string id)
+        [HttpGet("{doctorId}")]
+        public async Task<IActionResult> GetDoctor(string doctorId, string patientId)
         {
             try
             {
-                return Ok(await _doctorService.GetDoctorDetails(id));
+                return Ok(await _doctorService.GetDoctorDetails(doctorId, patientId));
             }
             catch (Exception ex)
             {
