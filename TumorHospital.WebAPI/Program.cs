@@ -12,12 +12,16 @@ namespace TumorHospital.WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            // Add Endpoint API Explorer
             builder.Services.AddEndpointsApiExplorer();
 
+            // Register Swagger with JWT Auth
             builder.Services.AddSwaggerGenJwtAuth();
+
+            // Register Memory Cache
+            builder.Services.AddMemoryCache();
 
             // Register Application Layer
             builder.Services.AddApplication();
@@ -25,7 +29,7 @@ namespace TumorHospital.WebAPI
             // Register Infrastructure Layer
             builder.Services.AddInfrastructure(builder.Configuration);
 
-
+            // Build The App
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
