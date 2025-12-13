@@ -10,10 +10,12 @@ namespace TumorHospital.WebAPI.Controllers
     public class ReceptionController : ControllerBase
     {
         private readonly IReceptionService _receptionService;
+        private readonly IBillSevice _billService;
 
-        public ReceptionController(IReceptionService receptionService)
+        public ReceptionController(IReceptionService receptionService, IBillSevice billService)
         {
             _receptionService = receptionService;
+            _billService = billService;
         }
 
         [HttpGet("Receptionists")]
@@ -54,7 +56,7 @@ namespace TumorHospital.WebAPI.Controllers
         {
             try
             {
-                var bills = await _receptionService
+                var bills = await _billService
                     .GetBills(pageNumber, patientEmail, patientName);
                 return Ok(bills);
             }
@@ -70,7 +72,7 @@ namespace TumorHospital.WebAPI.Controllers
         {
             try
             {
-                await _receptionService
+                await _billService
                     .ReceivePayment(billId, receptionistId, billCode);
                 return Ok(new { Message = "Payment Received Successfully" });
             }

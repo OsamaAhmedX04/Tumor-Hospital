@@ -11,12 +11,6 @@ namespace TumorHospital.Application.Intefaces.Services
 
         Task<ReceptionistDetailsDto> GetReceptionist(string id);
 
-        //Task<PageSourcePagination<BillDto>> GetAllBills(int pageNumber);
-
-        Task<PageSourcePagination<BillDto>> GetBills(
-            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null
-            );
-
-        Task ReceivePayment(Guid billId, string receptionistId, string billCode);
+        
     }
 }

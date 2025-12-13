@@ -10,9 +10,11 @@ namespace TumorHospital.WebAPI.Controllers
     public class PatientController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
-        public PatientController(IAppointmentService appointmentService)
+        private readonly IBillSevice _billService;
+        public PatientController(IAppointmentService appointmentService, IBillSevice billService)
         {
             _appointmentService = appointmentService;
+            _billService = billService;
         }
 
         [HttpGet("Appointments")]
@@ -21,6 +23,20 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 return Ok(await _appointmentService.GetPatientAppointments(pageNumber, patientId, appointmentReason, appointmentStatus));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
+
+        [HttpGet("Bills")]
+        public async Task<IActionResult> GetBillss(int pageNumber, string patientId)
+        {
+            try
+            {
+                return Ok(await _billService.GetPatientBills(pageNumber, patientId));
             }
             catch (Exception ex)
             {

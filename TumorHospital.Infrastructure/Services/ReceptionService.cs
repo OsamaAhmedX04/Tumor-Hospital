@@ -15,60 +15,7 @@ namespace TumorHospital.Infrastructure.Services
         {
             _unitOfWork = unitOfWork;
         }
-        //public async Task<PageSourcePagination<BillDto>> GetAllBills(int pageSize, int pageNumber)
-        //{
-        //    return await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(
-        //        selector: b => new BillDto
-        //        {
-        //            BillId = b.Id,
-        //            CreatedAt = b.CreatedAt,
-        //            PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.FirstName}",
-        //            Status = b.Status,
-        //            TotalAmount = b.TotalAmount
-        //        },
-        //        pageSize: pageSize,
-        //        pageNumber: pageNumber
-        //        );
-        //}
-
-        public async Task<PageSourcePagination<BillDto>> GetBills(
-            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null)
-        {
-            return await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(
-                filter: b => b.Patient.User.Email == patientEmail 
-                ||
-                (b.Patient.User.FirstName + " " + b.Patient.User.LastName).Contains(patientName ?? "")
-                ||
-                b.Code == billCode,
-                selector: b => new BillDto
-                {
-                    BillId = b.Id,
-                    CreatedAt = b.CreatedAt,
-                    PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.FirstName}",
-                    Status = b.Status,
-                    TotalAmount = b.TotalAmount
-                },
-                pageSize: 20,
-                pageNumber: pageNumber
-                );
-        }
-
-        public async Task ReceivePayment(Guid billId, string receptionistId, string billCode)
-        {
-            var bill = await _unitOfWork.Bills.GetByIdAsync(billId);
-
-            if (bill == null)
-                throw new Exception("This Bill Doesn't Exist");
-            if (bill.Code != billCode)
-                throw new Exception("Code Is Wrong");
-
-            bill.PaymentDate = DateTime.Now;
-            bill.ConfirmedBy = receptionistId;
-            bill.Status = BillStatus.Paid;
-
-            await _unitOfWork.CompleteAsync();
-
-        }
+        
 
         public async Task<PageSourcePagination<ReceptionistDto>> GetAllReceptionists(int PageNumber, string? receptionistName)
         {
