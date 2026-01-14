@@ -13,11 +13,11 @@ namespace TumorHospital.Application.Validators.Appointment
 
             RuleFor(x => x.Medication)
                 .NotEmpty()
-                .MaximumLength(200);
+                .MaximumLength(300);
 
             RuleFor(x => x.Dosage)
                 .NotEmpty()
-                .MaximumLength(100);
+                .MaximumLength(200);
 
             RuleFor(x => x.StartDate)
                 .LessThanOrEqualTo(x => x.EndDate)

@@ -12,16 +12,13 @@ namespace TumorHospital.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly AppointmentTimeService _appointmentTimeService;
 
         public PrescriptionService(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
-            AppointmentTimeService appointmentTimeService)
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _appointmentTimeService = appointmentTimeService;
         }
 
         public async Task<PrescriptionResponseDto> CreateAsync(PrescriptionCreateUpdateDto dto)
@@ -35,7 +32,7 @@ namespace TumorHospital.Infrastructure.Services
             if (appointment == null)
                 throw new Exception("Appointment not found");
 
-            if (!_appointmentTimeService.HasAppointmentHappened(appointment))
+            if (!AppointmentTimeService.HasAppointmentHappened(appointment))
                 throw new Exception("Cannot create prescription before appointment happens");
 
             if (appointment.Prescription != null)
@@ -73,7 +70,7 @@ namespace TumorHospital.Infrastructure.Services
             if (prescription == null)
                 return false;
 
-            if (!_appointmentTimeService.HasAppointmentHappened(prescription.Appointment))
+            if (!AppointmentTimeService.HasAppointmentHappened(prescription.Appointment))
                 throw new Exception("Cannot update prescription before appointment happens");
 
             _mapper.Map(dto, prescription);
@@ -95,7 +92,7 @@ namespace TumorHospital.Infrastructure.Services
             if (prescription == null)
                 return false;
 
-            if (!_appointmentTimeService.HasAppointmentHappened(prescription.Appointment))
+            if (!AppointmentTimeService.HasAppointmentHappened(prescription.Appointment))
                 throw new Exception("Cannot delete prescription before appointment happens");
 
             _unitOfWork.Prescriptions.Delete(id);

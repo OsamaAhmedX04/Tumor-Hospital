@@ -118,7 +118,6 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IFAQSService, FAQSService>();
             services.AddScoped<IBillSevice, BillService>();
-            services.AddScoped<AppointmentTimeService>();
             services.AddScoped<IPrescriptionService, PrescriptionService>();
             #endregion
 

@@ -2,9 +2,9 @@
 
 namespace TumorHospital.Application.Helpers
 {
-    public class AppointmentTimeService
+    public static class AppointmentTimeService
     {
-        public bool HasAppointmentHappened(Appointment appointment)
+        public static bool HasAppointmentHappened(Appointment appointment)
         {
             if (appointment == null)
                 return false;
