@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
 using System.Text;
+using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;
 using TumorHospital.Application.Intefaces.Services;
@@ -117,6 +118,8 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IFAQSService, FAQSService>();
             services.AddScoped<IBillSevice, BillService>();
+            services.AddScoped<AppointmentTimeService>();
+            services.AddScoped<IPrescriptionService, PrescriptionService>();
             #endregion
 
             return services;

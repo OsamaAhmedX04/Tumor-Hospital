@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using TumorHospital.Application.Profiles;
+using TumorHospital.Application.Validators.Appointment;
 using TumorHospital.Application.Validators.Auth;
 using TumorHospital.Application.Validators.User;
 
@@ -22,10 +23,13 @@ namespace TumorHospital.Application
                             .AddValidatorsFromAssemblyContaining<UpdateDoctorProfileDtoValidator>();
             services.AddFluentValidationClientsideAdapters()
                             .AddValidatorsFromAssemblyContaining<UpdateReceptionistProfileDtoValidator>();
+            services.AddFluentValidationClientsideAdapters()
+                            .AddValidatorsFromAssemblyContaining<PrescriptionCreateUpdateDtoValidator>();
 
             // AutoMapper
             services.AddAutoMapper(typeof(DependencyInjection).Assembly);
             services.AddAutoMapper(typeof(ProfileMapping));
+            services.AddAutoMapper(typeof(ReceptionistProfile));
             #endregion
 
             return services;
