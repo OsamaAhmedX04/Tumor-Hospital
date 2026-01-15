@@ -49,14 +49,22 @@ namespace TumorHospital.Infrastructure.Services
         public async Task<PrescriptionResponseDto> GetByAppointmentIdAsync(Guid appointmentId)
         {
             var prescription = await _unitOfWork.Prescriptions.GetAsync(
-                x => x,
+                x => new PrescriptionResponseDto
+                {
+                    Id = x.Id,
+                    AppointmentId = x.AppointmentId,
+                    Medication = x.Medication,
+                    Dosage = x.Dosage,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate
+                },
                 x => x.AppointmentId == appointmentId
             );
 
             if (prescription == null)
                 throw new Exception("Prescription not found");
 
-            return _mapper.Map<PrescriptionResponseDto>(prescription);
+            return prescription;
         }
 
         public async Task<bool> UpdateAsync(Guid id, PrescriptionCreateUpdateDto dto)

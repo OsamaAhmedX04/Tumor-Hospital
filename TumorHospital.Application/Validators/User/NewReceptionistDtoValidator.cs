@@ -22,7 +22,7 @@ namespace TumorHospital.Application.Validators.User
 
             RuleFor(d => d.Gender)
                 .NotEmpty().WithMessage("Please Enter The Gender")
-                .Must(g => g == Gender.Male.ToString() || g == Gender.Male.ToString()).WithMessage("Only Male Or Female");
+                .Must(g => g == Gender.Male.ToString() || g == Gender.Female.ToString()).WithMessage("Only Male Or Female");
 
             RuleFor(d => d.Address)
                 .NotEmpty().WithMessage("Address Is Required")

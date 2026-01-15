@@ -1,4 +1,6 @@
-﻿using TumorHospital.Domain.Entities;
+﻿using TumorHospital.Application.DTOs.Response.Appointment;
+using TumorHospital.Domain.Entities;
+using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Application.Helpers
 {
@@ -12,12 +14,19 @@ namespace TumorHospital.Application.Helpers
             if (appointment.AttendenceDate == null || appointment.FromTime == null)
                 return false;
 
-            var timeOnly = TimeOnly.FromTimeSpan(appointment.FromTime.Value);
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var appointmentDate = appointment.AttendenceDate.Value;
 
-            var appointmentDateTime =
-                appointment.AttendenceDate.Value.ToDateTime(timeOnly);
+            if (appointmentDate > today)
+                return false;
 
-            return appointmentDateTime <= DateTime.Now;
+            if (appointmentDate < today)
+                return true;
+
+            var appointmentTime = TimeOnly.FromTimeSpan(appointment.FromTime.Value);
+            var nowTime = TimeOnly.FromDateTime(DateTime.Now);
+
+            return nowTime >= appointmentTime;
         }
     }
 }

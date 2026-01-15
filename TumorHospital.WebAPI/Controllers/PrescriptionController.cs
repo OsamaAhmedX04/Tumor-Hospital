@@ -44,10 +44,20 @@ namespace TumorHospital.WebAPI.Controllers
 
         [HttpGet("GetPrescription/{appointmentId}")]
         public async Task<IActionResult> Get(Guid appointmentId)
-            => Ok(await _service.GetByAppointmentIdAsync(appointmentId));
+        {
+            try
+            {
+               return Ok(await _service.GetByAppointmentIdAsync(appointmentId));
+            }
+
+            catch(Exception ex)
+            {
+                return NotFound(new {Message = ex.Message});
+            }
+        }
 
         [HttpDelete("DeletePrescription/{id}")]
         public async Task<IActionResult> Delete(Guid id)
-            => await _service.DeleteAsync(id) ? Ok() : NotFound();
+            => await _service.DeleteAsync(id) ? Ok( new { Message = "Prescription has been Deleted" }) : NotFound(new { Message = "Prescription Not Found" });
     }
 }
