@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
 using System.Text;
-using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;
 using TumorHospital.Application.Intefaces.Services;
@@ -119,6 +119,18 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IFAQSService, FAQSService>();
             services.AddScoped<IBillSevice, BillService>();
             services.AddScoped<IPrescriptionService, PrescriptionService>();
+            services.AddScoped<IHospitalService, HospitalService>();
+            #endregion
+
+            #region Hangfire
+            services.AddHangfire(option =>
+            {
+                option
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+            });
+            services.AddHangfireServer();
             #endregion
 
             return services;

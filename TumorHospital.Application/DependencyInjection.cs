@@ -1,10 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using TumorHospital.Application.Profiles;
-using TumorHospital.Application.Validators.Appointment;
 using TumorHospital.Application.Validators.Auth;
-using TumorHospital.Application.Validators.User;
 
 namespace TumorHospital.Application
 {

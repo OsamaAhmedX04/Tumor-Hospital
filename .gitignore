@@ -10,6 +10,6 @@ Debug/
 Release/
 
 # Others
-appsettings.json
+TumorHospital.WebAPI/appsettings.json
 TumorHospital.Infrastructure/Migrations
 

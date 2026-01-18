@@ -1,10 +1,6 @@
-﻿using Amazon.Runtime.Internal.Endpoints.StandardLibrary;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Supabase;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using TumorHospital.Application.Intefaces.ExternalServices;
 //using TumorHospital.Application.Settings;
 using TumorHospital.Domain.Constants;

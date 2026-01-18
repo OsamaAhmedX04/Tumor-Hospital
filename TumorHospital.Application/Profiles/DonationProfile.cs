@@ -10,10 +10,10 @@ namespace TumorHospital.Application.Profiles
     {
         public DonationProfile()
         {
-            CreateMap<NeedDetailsDto,CharityNeed>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src =>  Enum.Parse<CharityCategory>(src.CharityCategory, true)))
+            CreateMap<NeedDetailsDto, CharityNeed>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => Enum.Parse<CharityCategory>(src.CharityCategory, true)))
                 .ReverseMap()
-                .ForMember(dest => dest.CharityCategory,opt => opt.MapFrom(src => src.Category.ToString()));
+                .ForMember(dest => dest.CharityCategory, opt => opt.MapFrom(src => src.Category.ToString()));
 
             CreateMap<NewNeedDto, CharityNeed>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => Enum.Parse<CharityCategory>(src.CharityCategory, true)))

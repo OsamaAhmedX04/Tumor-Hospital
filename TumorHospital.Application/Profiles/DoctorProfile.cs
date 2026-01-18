@@ -10,8 +10,8 @@ namespace TumorHospital.Application.Profiles
         public DoctorProfile()
         {
             CreateMap<NewDoctorDto, Doctor>()
-                .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src =>DateTime.Now))
-                .ForMember(dest => dest.Schedules, opt => opt.MapFrom(src =>src.Schedules))
+                .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.Schedules, opt => opt.MapFrom(src => src.Schedules))
                 .ReverseMap();
 
             CreateMap<DoctorScheduleDto, DoctorSchedule>()

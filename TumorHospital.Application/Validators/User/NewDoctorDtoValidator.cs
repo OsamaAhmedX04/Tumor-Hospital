@@ -37,7 +37,7 @@ namespace TumorHospital.Application.Validators.User
             RuleFor(d => d.FollowUpCost)
                 .GreaterThan(0).WithMessage("Follow Up Cost Must Be Greater Than 0")
                 .LessThanOrEqualTo(d => d.ConsultationCost).WithMessage("Follow Up Cost Must Be Less Than or equal Consultation Cost");
-            
+
             RuleFor(d => d.SurgeryCost)
                 .GreaterThan(0).When(d => d.IsSurgeon)
                 .WithMessage("Surgery Cost Must Be Greater Than Zero")

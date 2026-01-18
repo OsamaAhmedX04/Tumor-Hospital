@@ -38,7 +38,7 @@ namespace TumorHospital.Infrastructure.Services
         public async Task DeleteNeed(Guid id)
         {
             var isExist = await _unitOfWork.CharityNeeds.IsExistAsync(id);
-            if(!isExist)
+            if (!isExist)
                 throw new Exception("Need not found");
 
             _unitOfWork.CharityNeeds.Delete(id);
@@ -116,7 +116,7 @@ namespace TumorHospital.Infrastructure.Services
 
             need.Title = newNeed.Title;
             need.Description = newNeed.Description;
-            need.ImagePath = await _fileService.EditAsync(need.ImagePath,newNeed.Image);
+            need.ImagePath = await _fileService.EditAsync(need.ImagePath, newNeed.Image);
             need.NeedAmount = newNeed.NeedAmount;
             need.Category = Enum.Parse<CharityCategory>(newNeed.CharityCategory);
 
@@ -138,7 +138,7 @@ namespace TumorHospital.Infrastructure.Services
                 },
                 pageSize: pageSize,
                 pageNumber: pageNumber
-                );  
+                );
         }
 
     }

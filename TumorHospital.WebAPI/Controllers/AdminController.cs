@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using TumorHospital.Application.DTOs.Request.FAQs;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.WebAPI.Extensions;
@@ -15,7 +14,7 @@ namespace TumorHospital.WebAPI.Controllers
         private readonly IValidator<NewDoctorDto> _doctorValidator;
         private readonly IValidator<NewReceptionistDto> _receptionistValidator;
 
-        
+
 
         public AdminController(
             IAdminSevice adminSevice,
@@ -30,7 +29,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [HttpPost("new-doctor")]
-        public async Task<IActionResult> CreateNewDoctor([FromBody]NewDoctorDto model)
+        public async Task<IActionResult> CreateNewDoctor([FromBody] NewDoctorDto model)
         {
             var validation = _doctorValidator.Validate(model);
             if (validation.IsValid)

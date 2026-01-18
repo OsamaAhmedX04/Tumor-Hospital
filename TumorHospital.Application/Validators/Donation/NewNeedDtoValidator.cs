@@ -35,7 +35,7 @@ namespace TumorHospital.Application.Validators.Donation
             RuleFor(need => need.Image)
                 .NotEmpty().WithMessage("Image Path is required.")
                 .Must(image => allowedImageExtensions.Contains(Path.GetExtension(image.FileName)))
-                .WithMessage($"Invalid image format. Allowed formats are: {string.Join(',',allowedImageExtensions)}")
+                .WithMessage($"Invalid image format. Allowed formats are: {string.Join(',', allowedImageExtensions)}")
                 .Must(image => image.Length <= maxImageSize).WithMessage("Image size must be less than 1 MB.");
 
 

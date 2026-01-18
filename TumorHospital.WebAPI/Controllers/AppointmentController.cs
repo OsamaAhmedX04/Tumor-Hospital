@@ -1,9 +1,6 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.Appointment;
-using TumorHospital.Application.DTOs.Request.Donation;
-using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.WebAPI.Extensions;
 
@@ -123,7 +120,7 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
-        
+
 
         [HttpGet("availble-times")]
         public async Task<IActionResult> GetAvailableSheduleTimes(string doctorId, string day)
@@ -132,12 +129,12 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 return Ok(await _scheduleService.GetAvailableTimes(doctorId, day));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("Message", ex.Message);
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
-            
+
         }
 
         [HttpPut("accept-appointment")]
@@ -152,7 +149,7 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 ModelState.AddModelError("Identity", ex.Message);
             }
-            
+
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 

@@ -16,10 +16,10 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
 
             builder.Property(n => n.RouteAction)
                 .IsRequired();
-            
+
             builder.Property(n => n.SentAt)
                 .HasDefaultValueSql("GETDATE()");
-            
+
             builder.Property(n => n.IsSeen)
                 .HasDefaultValue(false);
 

@@ -1,9 +1,7 @@
-﻿using TumorHospital.Application.DTOs.Response.Bill;
-using TumorHospital.Application.DTOs.Response.Pagination;
+﻿using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
-using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Infrastructure.Services
 {
@@ -15,7 +13,7 @@ namespace TumorHospital.Infrastructure.Services
         {
             _unitOfWork = unitOfWork;
         }
-        
+
 
         public async Task<PageSourcePagination<ReceptionistDto>> GetAllReceptionists(int PageNumber, string? receptionistName)
         {
@@ -32,7 +30,7 @@ namespace TumorHospital.Infrastructure.Services
                 );
         }
 
-        
+
 
         public async Task<ReceptionistDetailsDto> GetReceptionist(string id)
         {
@@ -50,6 +48,6 @@ namespace TumorHospital.Infrastructure.Services
                 ) ?? new ReceptionistDetailsDto();
         }
 
-        
+
     }
 }

@@ -20,6 +20,8 @@ namespace TumorHospital.Infrastructure.UOW
         public IRepository<Receptionist> Receptionists { get; }
 
 
+        public IRepository<Hospital> Hospitals { get; }
+
         public IRepository<Bill> Bills { get; }
 
         public IRepository<CharityNeed> CharityNeeds { get; }
@@ -50,7 +52,7 @@ namespace TumorHospital.Infrastructure.UOW
         public UnitOfWork(AppDbContext db)
         {
             _db = db;
-            
+
             RefreshTokenAuths = new Repository<RefreshTokenAuth>(_db);
 
             Admins = new Repository<Admin>(_db);
@@ -58,6 +60,7 @@ namespace TumorHospital.Infrastructure.UOW
             Doctors = new Repository<Doctor>(_db);
             Receptionists = new Repository<Receptionist>(_db);
 
+            Hospitals = new Repository<Hospital>(_db);
             Bills = new Repository<Bill>(_db);
             CharityNeeds = new Repository<CharityNeed>(_db);
             VolunteerDonations = new Repository<VolunteerDonation>(_db);
@@ -73,7 +76,7 @@ namespace TumorHospital.Infrastructure.UOW
 
             Notifications = new Repository<Notification>(_db);
             FAQs = new Repository<FAQ>(_db);
-            
+
         }
 
         public async Task<int> CompleteAsync() => await _db.SaveChangesAsync();

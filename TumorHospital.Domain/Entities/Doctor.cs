@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Principal;
 
 namespace TumorHospital.Domain.Entities
 {
@@ -11,8 +10,12 @@ namespace TumorHospital.Domain.Entities
         public string ApplicationUserId { get; set; }
         public ApplicationUser User { get; set; }
 
+        [ForeignKey("Hospital")]
+        public Guid? HospitalId { get; set; }
+        public Hospital? Hospital { get; set; }
+
         public string Gender { get; set; }
-        
+
         [ForeignKey("Specialization")]
         public Guid? SpecializationId { get; set; }
         public Specialization? Specialization { get; set; }

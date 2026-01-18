@@ -1,11 +1,5 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.Donation;
-using TumorHospital.Application.DTOs.Response.Donation;
 
 namespace TumorHospital.Application.Validators.Donation
 {

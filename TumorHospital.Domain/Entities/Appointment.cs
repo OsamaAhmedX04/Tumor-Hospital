@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Security.Principal;
 using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Domain.Entities

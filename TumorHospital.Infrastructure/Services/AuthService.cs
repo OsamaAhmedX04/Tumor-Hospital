@@ -53,7 +53,7 @@ namespace TumorHospital.Infrastructure.Services
                 Email = model.Email,
             };
 
-            
+
 
             var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
@@ -75,9 +75,9 @@ namespace TumorHospital.Infrastructure.Services
             var setterToken = await _db
                 .UserTokens
                 .FirstOrDefaultAsync(u => u.UserId == newUser.Id);
-            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            setterToken.ExpireDate = DateTime.Now.AddHours(1);
             await _db.SaveChangesAsync();
-                
+
 
             //var body = $@"
             //    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
@@ -126,7 +126,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var tokenToCheck = await _db.UserTokens
                 .FirstOrDefaultAsync(u => u.Value == savedToken);
-            var isTokenExpired = tokenToCheck.ExpireDate < DateTime.UtcNow;
+            var isTokenExpired = tokenToCheck.ExpireDate < DateTime.Now;
 
             if (savedToken != model.Token || isTokenExpired) throw new Exception("Invalid Or Expired Token");
             user.EmailConfirmed = true;
@@ -191,7 +191,7 @@ namespace TumorHospital.Infrastructure.Services
             var setterToken = await _db
                 .UserTokens.FirstOrDefaultAsync(
                 u => u.Value == token && u.UserId == user.Id);
-            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            setterToken.ExpireDate = DateTime.Now.AddHours(1);
             await _db.SaveChangesAsync();
 
 
@@ -383,7 +383,7 @@ namespace TumorHospital.Infrastructure.Services
             var setterToken = await _db
                 .UserTokens
                 .FirstOrDefaultAsync(u => u.UserId == user.Id);
-            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            setterToken.ExpireDate = DateTime.Now.AddHours(1);
             await _db.SaveChangesAsync();
 
             var body = $@"
@@ -425,7 +425,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var tokenToCheck = await _db.UserTokens
                 .FirstOrDefaultAsync(u => u.Value == savedToken);
-            var isTokenExpired = tokenToCheck.ExpireDate < DateTime.UtcNow;
+            var isTokenExpired = tokenToCheck.ExpireDate < DateTime.Now;
 
             if (savedToken != model.Token || isTokenExpired) throw new Exception("Invalid Or Expired Token");
 
@@ -452,7 +452,7 @@ namespace TumorHospital.Infrastructure.Services
                 .UserTokens.FirstOrDefaultAsync(
                 u => u.Value == token && u.UserId == user.Id);
 
-            setterToken.ExpireDate = DateTime.UtcNow.AddHours(1);
+            setterToken.ExpireDate = DateTime.Now.AddHours(1);
             await _db.SaveChangesAsync();
 
 
@@ -493,7 +493,7 @@ namespace TumorHospital.Infrastructure.Services
             if (tokenRow == null)
                 throw new Exception("Invalid Refresh Token");
 
-            if (tokenRow.RefreshTokenExpiration <= DateTime.UtcNow)
+            if (tokenRow.RefreshTokenExpiration <= DateTime.Now)
                 throw new Exception("Refresh Token Expired");
 
             var user = await _userManager.FindByIdAsync(tokenRow.UserId);

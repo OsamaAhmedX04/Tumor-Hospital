@@ -17,7 +17,7 @@ namespace TumorHospital.Infrastructure.Persistence.Context
     {
         protected CustomIdentityDbContext(DbContextOptions options) : base(options)
         {
-            
+
         }
     }
 }

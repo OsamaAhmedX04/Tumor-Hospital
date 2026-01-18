@@ -17,6 +17,7 @@ namespace TumorHospital.Infrastructure.Persistence.Context
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Receptionist> Receptionists { get; set; }
 
+        public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Bill> Bills { get; set; }
         public DbSet<CharityNeed> CharityNeeds { get; set; }
         public DbSet<VolunteerDonation> VolunteerDonations { get; set; }
@@ -29,7 +30,7 @@ namespace TumorHospital.Infrastructure.Persistence.Context
         public DbSet<Diagnostic> Diagnostics { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<MentalHealthSurvey> MentalHealthSurvies { get; set; }
-        
+
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<FAQ> FAQs { get; set; }
 

@@ -12,6 +12,7 @@ namespace TumorHospital.Application.Intefaces.UOW
         IRepository<Patient> Patients { get; }
         IRepository<Receptionist> Receptionists { get; }
 
+        IRepository<Hospital> Hospitals { get; }
         IRepository<Bill> Bills { get; }
         IRepository<CharityNeed> CharityNeeds { get; }
         IRepository<VolunteerDonation> VolunteerDonations { get; }
@@ -27,7 +28,7 @@ namespace TumorHospital.Application.Intefaces.UOW
 
         IRepository<Notification> Notifications { get; }
         IRepository<FAQ> FAQs { get; }
-        
+
         Task<int> CompleteAsync();
     }
 }

@@ -33,7 +33,7 @@ namespace TumorHospital.Infrastructure.Services
             _scheduleService = scheduleService;
         }
 
-        
+
 
         public async Task AppointConsultation(NewConsultationAppointmentDto appointment)
         {
@@ -41,7 +41,7 @@ namespace TumorHospital.Infrastructure.Services
                               await _userManager.FindByIdAsync(appointment.DoctorId) != null;
             if (!isUsersExist)
                 throw new ArgumentException("Patient or Doctor does not exist.");
-            if(!await _scheduleService.IsWorkIn(appointment.DoctorId, appointment.DayOfWeek))
+            if (!await _scheduleService.IsWorkIn(appointment.DoctorId, appointment.DayOfWeek))
                 throw new ArgumentException("Doctor is not working on that day.");
 
             var appointmentEntity = _mapper.Map<Appointment>(appointment);
@@ -75,7 +75,7 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        
+
 
         public async Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
@@ -94,7 +94,7 @@ namespace TumorHospital.Infrastructure.Services
                     filter = a => a.Reason == reason;
                 }
             }
-                
+
             if (!string.IsNullOrEmpty(appointmentStatus))
             {
                 if (!Enum.TryParse<AppointmentStatus>(appointmentStatus, out AppointmentStatus outStatus))
@@ -106,9 +106,9 @@ namespace TumorHospital.Infrastructure.Services
                            ? a => a.Reason == reason && a.Status == status
                            : a => a.Status == status;
                 }
-                    
+
             }
-                    
+
 
             var appointments = await _unitOfWork.Appointments.GetAllPaginatedEnhancedAsync(
                 filter: filter,
@@ -261,7 +261,8 @@ namespace TumorHospital.Infrastructure.Services
 
             var doctorDaySchedule = await _unitOfWork.DoctorSchedules.GetEnhancedAsync(
                 filter: ds => ds.DoctorId == appointment.DoctorId && ds.DayOfWeek == appointment.DayOfWeek,
-                selector: ds => new {
+                selector: ds => new
+                {
                     ds.StartTime,
                     ds.EndTime
                 });
@@ -270,8 +271,8 @@ namespace TumorHospital.Infrastructure.Services
                 .GetAllAsIQueryable()
                 .AsNoTracking()
                 .LastOrDefaultAsync(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == appointment.DayOfWeek);
-                
-            if(lastAppointmentInRequestedDay is null)
+
+            if (lastAppointmentInRequestedDay is null)
             {
                 appointment.FromTime = doctorDaySchedule!.StartTime;
                 appointment.ToTime = doctorDaySchedule.StartTime.Add(TimeSpan.FromMinutes(30));
@@ -322,6 +323,6 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        
+
     }
 }

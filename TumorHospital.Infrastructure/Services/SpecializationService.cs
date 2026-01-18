@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Application.DTOs.Request.User;
+﻿using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
@@ -21,7 +16,7 @@ namespace TumorHospital.Infrastructure.Services
         }
         public async Task AddSpecialization(SpecializationDto model)
         {
-            if(string.IsNullOrEmpty(model.Name))
+            if (string.IsNullOrEmpty(model.Name))
                 throw new ArgumentException("Specialization name cannot be empty.");
 
             bool isExisting = await _unitOfWork.Specializations
@@ -72,7 +67,7 @@ namespace TumorHospital.Infrastructure.Services
                 .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
             if (isExisting)
                 throw new InvalidOperationException("Specialization with the same name already exists.");
-            
+
             specialization.Name = model.Name;
             specialization.Description = string.IsNullOrEmpty(model.Description) ? "N/A" : model.Description;
             await _unitOfWork.CompleteAsync();

@@ -1,6 +1,4 @@
-﻿using TumorHospital.Domain.Enums;
-
-namespace TumorHospital.Application.DTOs.Response.User
+﻿namespace TumorHospital.Application.DTOs.Response.User
 {
     public class ReceptionistDetailsDto
     {

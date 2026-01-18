@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Principal;
 using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Domain.Entities
@@ -10,7 +9,7 @@ namespace TumorHospital.Domain.Entities
     {
         [Key]
         public Guid Id { get; set; }
-        
+
         [ForeignKey("Patient")]
         public string PatientId { get; set; }
         public Patient Patient { get; set; }
@@ -26,7 +25,7 @@ namespace TumorHospital.Domain.Entities
     }
 
 
-//    insurance_claim DECIMAL(10,2) DEFAULT 0,
-//    amount_due DECIMAL(10,2) NOT NULL,
+    //    insurance_claim DECIMAL(10,2) DEFAULT 0,
+    //    amount_due DECIMAL(10,2) NOT NULL,
 
 }

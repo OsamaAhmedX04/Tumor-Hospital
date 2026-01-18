@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Domain.Entities;
 
 namespace TumorHospital.Infrastructure.Persistence.Configurations
@@ -15,7 +10,7 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(p => p.Id);
 
-            
+
             builder.Property(p => p.StartDate).IsRequired();
             builder.Property(p => p.EndDate).IsRequired();
 

@@ -11,6 +11,6 @@ namespace TumorHospital.Domain.Entities
         public ApplicationUser User { get; set; }
         public string Token { get; set; }
         public string RefreshToken { get; set; }
-        public DateTime RefreshTokenExpiration { get; set; } = DateTime.UtcNow.AddDays(20);
+        public DateTime RefreshTokenExpiration { get; set; } = DateTime.Now.AddDays(20);
     }
 }

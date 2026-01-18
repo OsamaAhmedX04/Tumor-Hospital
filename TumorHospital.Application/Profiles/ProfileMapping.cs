@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using TumorHospital.Domain.Entities;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Domain.Constants;
+using TumorHospital.Domain.Entities;
 
 namespace TumorHospital.Application.Profiles
 {

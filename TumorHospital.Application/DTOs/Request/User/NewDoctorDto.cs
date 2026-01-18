@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json.Serialization;
-
-namespace TumorHospital.Application.DTOs.Request.User
+﻿namespace TumorHospital.Application.DTOs.Request.User
 {
     public class NewDoctorDto
     {
@@ -10,6 +7,7 @@ namespace TumorHospital.Application.DTOs.Request.User
         public string Email { get; set; }
         public string Gender { get; set; }
         public string SpecializationName { get; set; }
+        public string HospitalName { get; set; }
         public bool IsSurgeon { get; set; }
         public decimal ConsultationCost { get; set; }
         public decimal FollowUpCost { get; set; }

@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
@@ -23,8 +21,8 @@ namespace TumorHospital.WebAPI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetDoctorSchedule(string doctorId)
-            =>Ok(await _scheduleService.GetDoctorSchedule(doctorId));
-        
+            => Ok(await _scheduleService.GetDoctorSchedule(doctorId));
+
 
         [HttpPost]
         public async Task<IActionResult> AddSchedule(string doctorId, DoctorScheduleDto schedule)

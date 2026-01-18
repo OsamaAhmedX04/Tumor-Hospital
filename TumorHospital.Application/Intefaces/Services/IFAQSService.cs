@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TumorHospital.Application.DTOs.Request.FAQs;
+﻿using TumorHospital.Application.DTOs.Request.FAQs;
 
 namespace TumorHospital.Application.Intefaces.Services
 {
@@ -9,7 +6,7 @@ namespace TumorHospital.Application.Intefaces.Services
     {
         Task<List<FAQsDto>> GetAllFAQs();
         Task AddFAQ(NewFAQsDto dto);
-        Task UpdateFAQ(int id,NewFAQsDto dto);
+        Task UpdateFAQ(int id, NewFAQsDto dto);
         Task DeleteFAQ(int id);
     }
 }

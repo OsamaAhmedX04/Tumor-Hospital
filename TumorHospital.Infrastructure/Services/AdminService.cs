@@ -20,7 +20,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public AdminService(IUnitOfWork unitOfWork, IMapper mapper,
             UserManager<ApplicationUser> userManager, IEmailService emailService)
-        { 
+        {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
@@ -36,6 +36,12 @@ namespace TumorHospital.Infrastructure.Services
                 );
             if (specialization is null)
                 throw new Exception("This Specialization Is Not Exist");
+
+            var hospital = await _unitOfWork.Hospitals.FirstOrDefaultAsync(h => h.Name == model.HospitalName);
+            if (hospital is null)
+                throw new Exception("This Hospital Not Exist");
+            if (hospital.Doctors.Count() == hospital.MaxNumberOfDoctors)
+                throw new Exception("This Hospital has Reached the max number of doctors");
 
             var appUser = new ApplicationUser
             {
@@ -57,6 +63,7 @@ namespace TumorHospital.Infrastructure.Services
             var doctor = _mapper.Map<Doctor>(model);
             doctor.ApplicationUserId = createdUser.Id;
             doctor.SpecializationId = specialization.Id;
+            doctor.HospitalId = hospital.Id;
 
             await _unitOfWork.Doctors.AddAsync(doctor);
             await _unitOfWork.CompleteAsync();
@@ -107,6 +114,13 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task CreateNewReceptionist(NewReceptionistDto model)
         {
+
+            var hospital = await _unitOfWork.Hospitals.FirstOrDefaultAsync(h => h.Name == model.HospitalName);
+            if (hospital is null)
+                throw new Exception("This Hospital Not Exist");
+            if (hospital.Receptionists.Count() == hospital.MaxNumberOfReceptionists)
+                throw new Exception("This Hospital has Reached the max number of receptionists");
+
             var appUser = new ApplicationUser
             {
                 FirstName = model.FirstName,
@@ -126,6 +140,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var receptionist = _mapper.Map<Receptionist>(model);
             receptionist.ApplicationUserId = createdUser.Id;
+            receptionist.HospitalId = hospital.Id;
 
             await _unitOfWork.Receptionists.AddAsync(receptionist);
             await _unitOfWork.CompleteAsync();

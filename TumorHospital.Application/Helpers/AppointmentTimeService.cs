@@ -1,6 +1,4 @@
-﻿using TumorHospital.Application.DTOs.Response.Appointment;
-using TumorHospital.Domain.Entities;
-using TumorHospital.Domain.Enums;
+﻿using TumorHospital.Domain.Entities;
 
 namespace TumorHospital.Application.Helpers
 {

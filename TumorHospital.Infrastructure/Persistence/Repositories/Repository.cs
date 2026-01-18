@@ -24,6 +24,9 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
         public async Task<TEntity?> GetByIdAsync(string id) => await _dbSet.FindAsync(id);
         public async Task<TEntity?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
 
+        public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter)
+            => await _dbSet.FirstOrDefaultAsync(filter);
+
         public async Task<List<TEntity>> GetAllAsync()
             => await _dbSet.ToListAsync();
         public async Task<List<TEntity>> GetAllAsNoTrackedAsync()
@@ -80,6 +83,23 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
         }
 
 
+        public async Task<List<TResult>> GetAllAsyncEnhanced<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null) where TResult : class
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (orderBy != null)
+                query = orderBy(query);
+
+            return await query.Select(selector).ToListAsync();
+        }
+
+
         public async Task<PageSourcePagination<TResult>> GetAllPaginatedAsync<TResult>(
             Expression<Func<TEntity, TResult>> selector,
             int pageNumber = 1, int pageSize = 10,
@@ -96,7 +116,7 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
             if (filter != null)
             {
                 //if (exbandable)
-                    //query = query.AsExpandableEFCore().Where(filter);
+                //query = query.AsExpandableEFCore().Where(filter);
                 query = query.Where(filter);
             }
 

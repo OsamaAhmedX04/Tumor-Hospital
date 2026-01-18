@@ -10,6 +10,7 @@ namespace TumorHospital.Application.Intefaces.Repositories
         Task<TEntity?> GetByIdAsync(int id);
         Task<TEntity?> GetByIdAsync(string id);
         Task<TEntity?> GetByIdAsync(Guid id);
+        Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter);
         Task<List<TEntity>> GetAllAsync();
         Task<List<TEntity>> GetAllAsNoTrackedAsync();
         IQueryable<TEntity> GetAllAsIQueryable();
@@ -30,6 +31,12 @@ namespace TumorHospital.Application.Intefaces.Repositories
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             params Expression<Func<TEntity, object>>[] Includes
+            ) where TResult : class;
+
+        Task<List<TResult>> GetAllAsyncEnhanced<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null
             ) where TResult : class;
 
         Task<PageSourcePagination<TResult>> GetAllPaginatedAsync<TResult>(

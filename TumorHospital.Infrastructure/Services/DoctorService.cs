@@ -47,12 +47,12 @@ namespace TumorHospital.Infrastructure.Services
             foreach (var day in doctorDetails.WorkingDays)
             {
                 Day dayEnum = Enum.Parse<Day>(day.Day);
-                day.IsAvailable = await IsAvailableDay(doctorId,dayEnum) && !DayHelper.IsDayInPast(dayEnum);
+                day.IsAvailable = await IsAvailableDay(doctorId, dayEnum) && !DayHelper.IsDayInPast(dayEnum);
                 day.Date = DayHelper.GetDateThisWeek(dayEnum);
             }
 
             var isAbleToAppointConsultation = !await _unitOfWork.Appointments.AnyAsync(
-                filter: a => 
+                filter: a =>
                 a.DoctorId == doctorId && a.PatientId == patientId
                 && (a.Status == AppointmentStatus.Approved || a.Status == AppointmentStatus.Pending));
 
@@ -81,14 +81,14 @@ namespace TumorHospital.Infrastructure.Services
                              a.DayOfWeek == dayOfWeek &&
                              a.Status == AppointmentStatus.Approved &&
                              (a.Reason == AppointmentReason.Consultation || a.Reason == AppointmentReason.FollowUp),
-                selector: a => new { a.Id}
+                selector: a => new { a.Id }
                 );
             var isFullyBooked = appointments.Count() == Appointments.NumberOfConsultationsOrFollowUpsPerDay;
 
             return !isHaveSurgery && !isFullyBooked;
         }
-        
-         
+
+
 
         public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null)
         {

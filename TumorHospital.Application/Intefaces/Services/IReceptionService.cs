@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TumorHospital.Application.DTOs.Response.Bill;
-using TumorHospital.Application.DTOs.Response.Pagination;
+﻿using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
 
 namespace TumorHospital.Application.Intefaces.Services
@@ -11,6 +9,6 @@ namespace TumorHospital.Application.Intefaces.Services
 
         Task<ReceptionistDetailsDto> GetReceptionist(string id);
 
-        
+
     }
 }

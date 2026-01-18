@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Domain.Enums;
-
-namespace TumorHospital.Application.DTOs.Request.User
+﻿namespace TumorHospital.Application.DTOs.Request.User
 {
     public class UpdateReceptionistProfileDto
     {

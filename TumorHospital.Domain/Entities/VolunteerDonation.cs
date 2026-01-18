@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Domain.Entities
 {

@@ -10,7 +10,7 @@ namespace TumorHospital.WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        
+
         private readonly IAuthService _authService;
         private readonly IValidator<RegisterDto> _registerValidator;
         private readonly IValidator<LoginDto> _loginValidator;
@@ -30,7 +30,7 @@ namespace TumorHospital.WebAPI.Controllers
         public async Task<IActionResult> Register(RegisterDto user)
         {
             var result = _registerValidator.Validate(user);
-            if(result.IsValid)
+            if (result.IsValid)
             {
                 try
                 {

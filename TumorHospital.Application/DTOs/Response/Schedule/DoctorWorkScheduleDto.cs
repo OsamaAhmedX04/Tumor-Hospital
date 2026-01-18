@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Application.DTOs.Response.Appointment;
+﻿using TumorHospital.Application.DTOs.Response.Appointment;
 
 namespace TumorHospital.Application.DTOs.Response.Schedule
 {

@@ -39,7 +39,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<PageSourcePagination<PatientBillDto>> GetPatientBills(int pageNumber, string patientId)
         {
-            if(! await _unitOfWork.Patients.IsExistAsync(patientId))
+            if (!await _unitOfWork.Patients.IsExistAsync(patientId))
                 throw new Exception("Patient Not Found");
 
             var bills = await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(

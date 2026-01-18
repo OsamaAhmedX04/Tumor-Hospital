@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Domain.Enums;
+﻿using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Application.DTOs.Response.Bill
 {

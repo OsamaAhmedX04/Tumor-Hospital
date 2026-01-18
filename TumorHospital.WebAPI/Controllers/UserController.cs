@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.Intefaces.Services;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -16,11 +15,11 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("admins")]
-        public async Task<IActionResult> GetAdmins(int pageNumber) 
+        public async Task<IActionResult> GetAdmins(int pageNumber)
             => Ok(await _userService.GetAllAdmins(pageNumber));
 
         [HttpGet("patients")]
-        public async Task<IActionResult> GetPatientss( int pageNumber)
+        public async Task<IActionResult> GetPatientss(int pageNumber)
             => Ok(await _userService.GetAllPatients(pageNumber));
 
         [HttpGet("doctors")]

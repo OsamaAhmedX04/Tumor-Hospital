@@ -1,3 +1,4 @@
+using Hangfire;
 using TumorHospital.Application;
 using TumorHospital.Infrastructure;
 using TumorHospital.WebAPI.Extensions;
@@ -43,6 +44,7 @@ namespace TumorHospital.WebAPI
 
             app.UseAuthorization();
 
+            app.UseHangfireDashboard("/hangfire");
 
             app.MapControllers();
 

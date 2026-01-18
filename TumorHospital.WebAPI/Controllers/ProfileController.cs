@@ -1,10 +1,7 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
-using TumorHospital.Infrastructure.Services;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -80,7 +77,7 @@ namespace TumorHospital.WebAPI.Controllers
         {
             var result = await _profileService.GetReceptionistProfile(userId);
             if (result == null) return NotFound(new { Message = "User Not Found" });
-            
+
             return Ok(result);
         }
 

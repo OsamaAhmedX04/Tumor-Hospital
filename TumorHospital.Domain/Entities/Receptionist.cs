@@ -10,6 +10,10 @@ namespace TumorHospital.Domain.Entities
         public string ApplicationUserId { get; set; }
         public ApplicationUser User { get; set; }
 
+        [ForeignKey("Hospital")]
+        public Guid? HospitalId { get; set; }
+        public Hospital? Hospital { get; set; }
+
         public string Gender { get; set; }
         public string Address { get; set; }
         public DateTime RegistrationDate { get; set; }

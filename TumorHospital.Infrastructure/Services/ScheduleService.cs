@@ -1,10 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.DTOs.Response.Schedule;
@@ -107,27 +101,27 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<bool> IsWorkIn(string doctorId, string day)
         {
-            if(!Enum.TryParse<Day>(day, out _))
+            if (!Enum.TryParse<Day>(day, out _))
                 throw new Exception("Invalid Day Provided");
-            
-                var dayOfWeek = day switch
-                {
-                    "Saturday" => Day.Saturday,
-                    "Sunday" => Day.Sunday,
-                    "Monday" => Day.Monday,
-                    "Tuesday" => Day.Tuesday,
-                    "Wednesday" => Day.Wednesday,
-                    "Thursday" => Day.Thursday,
-                    "Friday" => Day.Friday,
-                    _ => Day.Saturday
-                };
+
+            var dayOfWeek = day switch
+            {
+                "Saturday" => Day.Saturday,
+                "Sunday" => Day.Sunday,
+                "Monday" => Day.Monday,
+                "Tuesday" => Day.Tuesday,
+                "Wednesday" => Day.Wednesday,
+                "Thursday" => Day.Thursday,
+                "Friday" => Day.Friday,
+                _ => Day.Saturday
+            };
             var isWorkIn = await _unitOfWork.DoctorSchedules.AnyAsync(ds =>
                 ds.DoctorId == doctorId && ds.DayOfWeek == dayOfWeek);
 
             return isWorkIn;
         }
 
-        public async Task UpdateScheduale(Guid scheduleId,string doctorId, DoctorScheduleDto schedule)
+        public async Task UpdateScheduale(Guid scheduleId, string doctorId, DoctorScheduleDto schedule)
         {
             var isThereDuplicationDay = await IsDuplicatedDoctorWorkDayAsync(doctorId, schedule.DayOfWeek);
             if (isThereDuplicationDay)
@@ -184,8 +178,8 @@ namespace TumorHospital.Infrastructure.Services
                 }
                 );
 
-            List<DurationTimeAvailabilityDto> availableTimes = GetAvailableTimesDuration(durationTime!,appointmentsTimes);
-            
+            List<DurationTimeAvailabilityDto> availableTimes = GetAvailableTimesDuration(durationTime!, appointmentsTimes);
+
             return availableTimes;
         }
 
@@ -193,14 +187,14 @@ namespace TumorHospital.Infrastructure.Services
         {
             var startTime = durationTime.FromTime;
             var times = new List<TimeSpan>();
-            while(startTime != durationTime.ToTime)
+            while (startTime != durationTime.ToTime)
             {
                 times.Add(startTime);
                 startTime = startTime.Add(TimeSpan.FromMinutes(30));
             }
 
             List<DurationTimeAvailabilityDto> availableTimes = new List<DurationTimeAvailabilityDto>();
-            foreach(var time in times)
+            foreach (var time in times)
             {
                 if (appointmentsTimes.Select(at => at.FromTime).Contains(time))
                     availableTimes.Add(new DurationTimeAvailabilityDto { FromTime = time, IsAvailable = false });
@@ -236,6 +230,6 @@ namespace TumorHospital.Infrastructure.Services
             return doctor.Schedules.Any(s => s.DayOfWeek == day);
         }
 
-        
+
     }
 }

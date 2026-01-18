@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Domain.Entities;
-using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Application.Profiles
 {
@@ -14,7 +13,7 @@ namespace TumorHospital.Application.Profiles
                 .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false))
                 .ReverseMap();
 
-            
+
         }
     }
 }
