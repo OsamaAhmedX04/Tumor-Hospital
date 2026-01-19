@@ -35,6 +35,8 @@ namespace TumorHospital.Infrastructure.Services
             };
             await _unitOfWork.Specializations.AddAsync(specialization);
             await _unitOfWork.CompleteAsync();
+
+            _cache.Remove("SpecializationNames");
         }
 
         public async Task DeleteSpecialization(Guid id)
@@ -68,6 +70,12 @@ namespace TumorHospital.Infrastructure.Services
                 names = await _unitOfWork.Specializations.GetAllAsync(
                     selector: s => s.Name
                     );
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(3)
+                };
+                _cache.Set("SpecializationNames",cacheOptions);
+
                 return names;
             }
                 
