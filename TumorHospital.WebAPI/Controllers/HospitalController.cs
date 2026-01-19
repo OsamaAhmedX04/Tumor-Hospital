@@ -20,7 +20,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("/api/Hospitals")]
         public async Task<IActionResult> GetAllHospitals()
         {
             return Ok(await _hospitalService.GetHospitals());
@@ -39,6 +39,22 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 var doctors = await _hospitalService.GetHospitalDoctors(hospitalId, doctorName, pageNumber);
+                return Ok(doctors);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("System", ex.Message);
+            }
+
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [HttpGet("doctor/{doctorId}")]
+        public async Task<IActionResult> GetAllHospitalDoctors(string doctorId)
+        {
+            try
+            {
+                var doctors = await _hospitalService.GetHospitalDoctor(doctorId);
                 return Ok(doctors);
             }
             catch (Exception ex)

@@ -28,7 +28,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
 
-        [HttpPost("new-doctor")]
+        [HttpPost("create-doctor")]
         public async Task<IActionResult> CreateNewDoctor([FromBody] NewDoctorDto model)
         {
             var validation = _doctorValidator.Validate(model);
@@ -49,7 +49,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpPost("new-receptionist")]
+        [HttpPost("create-receptionist")]
         public async Task<IActionResult> CreateNewReceptionist(NewReceptionistDto model)
         {
             var validation = _receptionistValidator.Validate(model);
@@ -69,6 +69,49 @@ namespace TumorHospital.WebAPI.Controllers
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
+
+        //[HttpPut("update-doctor")]
+        //public async Task<IActionResult> UpdateDoctor([FromBody] UpdateDoctorDto model)
+        //{
+        //    var validation = _doctorValidator.Validate(model);
+        //    if (validation.IsValid)
+        //    {
+        //        try
+        //        {
+        //            await _adminSevice.CreateNewDoctor(model);
+        //            return Ok(new { Message = "New Doctor Account Created Successfully" });
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ModelState.AddModelError("Identity", ex.Message);
+        //        }
+        //    }
+        //    foreach (var error in validation.Errors)
+        //        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        //}
+
+        //[HttpPut("update-receptionist")]
+        //public async Task<IActionResult> UpdateReceptionist(UpdateReceptionistDto model)
+        //{
+        //    var validation = _receptionistValidator.Validate(model);
+        //    if (validation.IsValid)
+        //    {
+        //        try
+        //        {
+        //            await _adminSevice.CreateNewReceptionist(model);
+        //            return Ok(new { Message = "New Receptionist Account Created Successfully" });
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ModelState.AddModelError("Identity", ex.Message);
+        //        }
+        //    }
+        //    foreach (var error in validation.Errors)
+        //        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        //}
 
 
         [HttpDelete("Doctor/{doctorId}")]

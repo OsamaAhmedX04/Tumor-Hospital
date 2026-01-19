@@ -12,6 +12,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task DeleteHospital(Guid id);
 
         Task<PageSourcePagination<DoctorDto>> GetHospitalDoctors(Guid id, string? doctorName = null, int pageNumber = 1);
+        Task<DoctorInformationDto> GetHospitalDoctor(string doctorId);
         Task<PageSourcePagination<ReceptionistDto>> GetHospitalReceptionists(Guid id, string? receptionistName = null, int pageNumber = 1);
         Task<List<HospitalInfoDto>> GetHospitals();
         Task<List<string>> GetHospitalNames();

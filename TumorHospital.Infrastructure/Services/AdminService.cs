@@ -37,10 +37,18 @@ namespace TumorHospital.Infrastructure.Services
             if (specialization is null)
                 throw new Exception("This Specialization Is Not Exist");
 
-            var hospital = await _unitOfWork.Hospitals.FirstOrDefaultAsync(h => h.Name == model.HospitalName);
+            var hospital = await _unitOfWork.Hospitals.GetEnhancedAsync(
+                filter: h => h.Id == model.HospitalId,
+                selector: h => new
+                {
+                    Id = h.Id,
+                    MaxNumberOfDoctors = h.MaxNumberOfDoctors,
+                    NumberOfDoctors = h.Doctors.Count(),
+                }
+                );
             if (hospital is null)
                 throw new Exception("This Hospital Not Exist");
-            if (hospital.Doctors.Count() == hospital.MaxNumberOfDoctors)
+            if (hospital.NumberOfDoctors == hospital.MaxNumberOfDoctors)
                 throw new Exception("This Hospital has Reached the max number of doctors");
 
             var appUser = new ApplicationUser
@@ -68,39 +76,16 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Doctors.AddAsync(doctor);
             await _unitOfWork.CompleteAsync();
 
-
-            //var body = $@"
-            //    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-            //        <h2 style='text-align: center; color: #333;'>Welcome to Our Hospital!</h2>
-
-            //        <p style='font-size: 15px; color: #555;'>
-            //            Dear Dr. {appUser.FirstName} {appUser.LastName},<br/><br/>
-            //            Your account has been successfully created. Below is your temporary password to access your account:
-            //        </p>
-
-            //        <div style='text-align: center; margin: 30px 0;'>
-            //            <span style='display: inline-block; background-color: #28a745; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 2px; border-radius: 6px;'>
-            //                {doctorPassword}
-            //            </span>
-            //        </div>
-
-            //        <p style='font-size: 14px; color: #666;'>
-            //            ⚠️ For security reasons, please <strong>do not share this password with anyone</strong>.<br/>
-            //            You are required to change it after your first login.
-            //        </p>
-
-            //        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-            //            Best regards,<br/>
-            //            <strong>The Hospital Admin Team</strong>
-            //        </p>
-            //    </div>
-            //    ";
-
             await _emailService.SendEmailAsync(
                 appUser.Email,
                 "Doctor Account Activated",
                 EmailBody.GetDoctorEmailCreatedBody(appUser.FirstName, appUser.LastName, doctorPassword));
 
+        }
+
+        public async Task UpdateDoctor(UpdateDoctorDto model)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task DeleteDoctor(string doctorId)
@@ -115,10 +100,18 @@ namespace TumorHospital.Infrastructure.Services
         public async Task CreateNewReceptionist(NewReceptionistDto model)
         {
 
-            var hospital = await _unitOfWork.Hospitals.FirstOrDefaultAsync(h => h.Name == model.HospitalName);
+            var hospital = await _unitOfWork.Hospitals.GetEnhancedAsync(
+                filter: h => h.Id == model.HospitalId,
+                selector: h => new
+                {
+                    Id = h.Id,
+                    MaxNumberOfReceptionists = h.MaxNumberOfReceptionists,
+                    NumberOfReceptionists = h.Receptionists.Count(),
+                }
+                );
             if (hospital is null)
                 throw new Exception("This Hospital Not Exist");
-            if (hospital.Receptionists.Count() == hospital.MaxNumberOfReceptionists)
+            if (hospital.NumberOfReceptionists == hospital.MaxNumberOfReceptionists)
                 throw new Exception("This Hospital has Reached the max number of receptionists");
 
             var appUser = new ApplicationUser
@@ -145,39 +138,16 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Receptionists.AddAsync(receptionist);
             await _unitOfWork.CompleteAsync();
 
-            //var body = $@"
-            //    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-            //        <h2 style='text-align: center; color: #333;'>Welcome to Our Hospital Team!</h2>
-
-            //        <p style='font-size: 15px; color: #555;'>
-            //            Dear {appUser.FirstName} {appUser.LastName},<br/><br/>
-            //            We’re pleased to inform you that your <strong>Receptionist account</strong> has been successfully created.<br/>
-            //            You can now log in to the system using the temporary password below:
-            //        </p>
-
-            //        <div style='text-align: center; margin: 30px 0;'>
-            //            <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 2px; border-radius: 6px;'>
-            //                {receptionistPassword}
-            //            </span>
-            //        </div>
-
-            //        <p style='font-size: 14px; color: #666;'>
-            //            ⚠️ For security reasons, please <strong>do not share this password with anyone</strong>.<br/>
-            //            You are required to change it after your first login.
-            //        </p>
-
-            //        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-            //            Best regards,<br/>
-            //            <strong>The Hospital Admin Team</strong>
-            //        </p>
-            //    </div>
-            //";
-
             await _emailService.SendEmailAsync(
                 appUser.Email,
                 "Receptionist Account Activated",
                 EmailBody.GetReceptionistEmailCreatedBody(appUser.FirstName, appUser.LastName, receptionistPassword));
 
+        }
+
+        public async Task UpdateReceptionist(UpdateReceptionistDto model)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task DeleteReceptionist(string receptionistId)
@@ -189,5 +159,9 @@ namespace TumorHospital.Infrastructure.Services
             receptionist.IsDeleted = true;
             await _unitOfWork.CompleteAsync();
         }
+
+
+
+
     }
 }

@@ -53,8 +53,6 @@ namespace TumorHospital.Infrastructure.Services
                 Email = model.Email,
             };
 
-
-
             var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
                 throw new Exception(result.Errors.FirstOrDefault()?.Description ?? "Unknown error");
@@ -77,32 +75,6 @@ namespace TumorHospital.Infrastructure.Services
                 .FirstOrDefaultAsync(u => u.UserId == newUser.Id);
             setterToken.ExpireDate = DateTime.Now.AddHours(1);
             await _db.SaveChangesAsync();
-
-
-            //var body = $@"
-            //    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-            //        <h2 style='text-align: center; color: #333;'>Confirm Your Email</h2>
-
-            //        <p style='font-size: 15px; color: #555;'>
-            //            Thanks for registering! Please use the code below to confirm your email:
-            //        </p>
-
-            //        <div style='text-align: center; margin: 30px 0;'>
-            //            <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
-            //                {token}
-            //            </span>
-            //        </div>
-
-            //        <p style='font-size: 14px; color: #666;'>
-            //            If you didn’t create this account, you can ignore this email.
-            //        </p>
-
-            //        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-            //            Best regards,<br/>
-            //            <strong>Your App Team</strong>
-            //        </p>
-            //    </div>
-            //    ";
 
             await _emailService.SendEmailAsync(
                 newUser.Email,
@@ -194,36 +166,10 @@ namespace TumorHospital.Infrastructure.Services
             setterToken.ExpireDate = DateTime.Now.AddHours(1);
             await _db.SaveChangesAsync();
 
-
-            var body = $@"
-                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-                    <h2 style='text-align: center; color: #333;'>Confirm Your Email</h2>
-
-                    <p style='font-size: 15px; color: #555;'>
-                        Thanks for registering! Please use the code below to confirm your email:
-                    </p>
-
-                    <div style='text-align: center; margin: 30px 0;'>
-                        <span style='display: inline-block; background-color: #007bff; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
-                            {token}
-                        </span>
-                    </div>
-
-                    <p style='font-size: 14px; color: #666;'>
-                        If you didn’t create this account, you can ignore this email.
-                    </p>
-
-                    <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-                        Best regards,<br/>
-                        <strong>Your App Team</strong>
-                    </p>
-                </div>
-                ";
-
             await _emailService.SendEmailAsync(
                 user.Email,
                 "Email Confirmation",
-                body);
+                EmailBody.GetResendConfirmEmailBody(token));
         }
 
 
@@ -271,6 +217,8 @@ namespace TumorHospital.Infrastructure.Services
             }
 
             await _unitOfWork.CompleteAsync();
+            user.IsActive = true;
+            await _userManager.UpdateAsync(user);
 
             return new AuthModel
             {
@@ -386,32 +334,10 @@ namespace TumorHospital.Infrastructure.Services
             setterToken.ExpireDate = DateTime.Now.AddHours(1);
             await _db.SaveChangesAsync();
 
-            var body = $@"
-                    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-                        <h2 style='text-align: center; color: #333;'>Reset Your Password</h2>
-                        <p style='font-size: 15px; color: #555;'>
-                            We received a request to reset your password. Use the code below to continue:
-                        </p>
-                        <div style='text-align: center; margin: 30px 0;'>
-                            <span style='display: inline-block; background-color: #4CAF50; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
-                                {token}
-                            </span>
-                        </div>
-                        <p style='font-size: 14px; color: #666;'>
-                            If you didn’t request this, you can safely ignore this email.
-                        </p>
-                        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-                            Best regards,<br/>
-                            <strong>Your App Team</strong>
-                        </p>
-                    </div>
-                    ";
             await _emailService.SendEmailAsync(
                 model.Email,
                 "Reset Password",
-                body
-                );
-
+                EmailBody.GetForgetPasswordEmailBody(token));
         }
 
         public async Task ResetPassword(ResetPasswordDto model)
@@ -456,30 +382,11 @@ namespace TumorHospital.Infrastructure.Services
             await _db.SaveChangesAsync();
 
 
-            var body = $@"
-                    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;'>
-                        <h2 style='text-align: center; color: #333;'>Reset Your Password</h2>
-                        <p style='font-size: 15px; color: #555;'>
-                            We received a request to reset your password. Use the code below to continue:
-                        </p>
-                        <div style='text-align: center; margin: 30px 0;'>
-                            <span style='display: inline-block; background-color: #4CAF50; color: white; padding: 14px 28px; font-size: 22px; letter-spacing: 3px; border-radius: 6px;'>
-                                {token}
-                            </span>
-                        </div>
-                        <p style='font-size: 14px; color: #666;'>
-                            If you didn’t request this, you can safely ignore this email.
-                        </p>
-                        <p style='margin-top: 30px; font-size: 14px; color: #333;'>
-                            Best regards,<br/>
-                            <strong>Your App Team</strong>
-                        </p>
-                    </div>
-                    ";
+
             await _emailService.SendEmailAsync(
                 user.Email,
                 "Reset Password",
-                body
+                EmailBody.GetResendResetPasswordEmailBody(token)
                 );
         }
 

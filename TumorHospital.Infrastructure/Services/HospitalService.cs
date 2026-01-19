@@ -4,10 +4,12 @@ using TumorHospital.Application.DTOs.Request.Hospital;
 using TumorHospital.Application.DTOs.Response.Hospital;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
+using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
 using TumorHospital.Domain.Entities;
+using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Infrastructure.Services
 {
@@ -88,6 +90,34 @@ namespace TumorHospital.Infrastructure.Services
                 pageNumber: pageNumber,
                 pageSize: 10
                 );
+        }
+        public async Task<DoctorInformationDto> GetHospitalDoctor(string doctorId)
+        {
+            var doctorDetails = await _unitOfWork.Doctors.GetEnhancedAsync(
+                filter: d => d.ApplicationUserId == doctorId && d.User.IsActive,
+                selector: d => new DoctorInformationDto
+                {
+                    Id = d.ApplicationUserId,
+                    FullName = d.User.FirstName + " " + d.User.LastName,
+                    ProfileImageUrl = d.ProfilePicturePath == null ?
+                                    null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
+                    Gender = d.Gender,
+                    Bio = d.Bio,
+                    Specialization = d.Specialization!.Name,
+                    IsSurgeon = d.IsSurgeon,
+                    ConsultationCost = d.ConsultationCost,
+                    FollowUpCost = d.FollowUpCost,
+                    SurgeryCost = !d.IsSurgeon ? null : d.SurgeryCost,
+                    WorkingDays = d.Schedules.Select(s => new DoctorWorkDayPreifDto
+                    {
+                        Day = s.DayOfWeek.ToString(),
+                        FromTime = s.StartTime,
+                        ToTime = s.EndTime
+                    }).ToList()
+                }
+                ) ?? throw new Exception("Doctor Not Found");
+
+            return doctorDetails;
         }
 
         public async Task<PageSourcePagination<ReceptionistDto>> GetHospitalReceptionists(Guid id, string? receptionistName = null, int pageNumber = 1)

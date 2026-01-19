@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -6,6 +7,7 @@ using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Helpers;
+using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
@@ -20,17 +22,19 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IScheduleService _scheduleService;
+        private readonly IEmailService _emailService;
         public AppointmentService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
-            IScheduleService scheduleService
-            )
+            IScheduleService scheduleService,
+            IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
             _scheduleService = scheduleService;
+            _emailService = emailService;
         }
 
 
@@ -313,6 +317,45 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Bills.AddAsync(bill);
 
             await _unitOfWork.CompleteAsync();
+
+            var appointmentInfo = await _unitOfWork.Appointments.GetEnhancedAsync(
+                filter: a => a.Id == appointment.Id,
+                selector: a => new
+                {
+                    PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
+                    PatientEmail = a.Patient.User.Email,
+                    HospitalName = a.Doctor!.Hospital!.Name,
+                    Location = a.Doctor.Hospital.Government + " - " + a.Doctor.Hospital.Address
+                }
+                );
+
+            BackgroundJob.Enqueue<IEmailService>(
+                service => service.SendEmailAsync(
+                    appointmentInfo!.PatientEmail!,
+                    "Appointment has been Accepted",
+                    EmailBody.GetAppointmentAcceptedEmailBody(
+                        appointmentInfo.PatientName,
+                        appointmentInfo.HospitalName,
+                        appointmentInfo.Location,
+                        appointment.AttendenceDate.ToString()!,
+                        appointment.FromTime.ToString()!
+                        )
+                ));
+
+            BackgroundJob.Schedule<IEmailService>(
+                service => service.SendEmailAsync(
+                    appointmentInfo!.PatientEmail!,
+                    "Appointment has been Accepted",
+                    EmailBody.GetAppointmentReminderEmailBody(
+                        appointmentInfo.PatientName,
+                        appointmentInfo.HospitalName,
+                        appointmentInfo.Location,
+                        appointment.AttendenceDate.ToString()!,
+                        appointment.FromTime.ToString()!
+                        )
+                ),
+                TimeSpan.FromHours(10));
+
         }
         public async Task RejectAppointment(Guid appointmentId)
         {
