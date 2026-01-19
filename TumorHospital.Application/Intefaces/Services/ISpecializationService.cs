@@ -9,5 +9,6 @@ namespace TumorHospital.Application.Intefaces.Services
         Task UpdateSpecialization(Guid id, SpecializationDto model);
         Task DeleteSpecialization(Guid id);
         Task<List<SpecializationDetailsDto>> GetSpecializations();
+        Task<List<string>> GetSpecializationNames();
     }
 }

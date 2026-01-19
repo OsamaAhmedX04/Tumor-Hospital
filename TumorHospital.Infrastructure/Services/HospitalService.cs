@@ -152,28 +152,6 @@ namespace TumorHospital.Infrastructure.Services
                 );
         }
 
-        public async Task<List<string>> GetHospitalNames()
-        {
-            if (_cache.TryGetValue("HospitalNames", out List<string>? names))
-                return names!;
-
-            else
-            {
-                names = await _unitOfWork.Hospitals.GetAllAsyncEnhanced(
-                    selector: h => h.Name
-                    );
-
-                var cacheOptions = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(200)
-                };
-                _cache.Set("HospitalNames", names, cacheOptions);
-                return names;
-            }
-        }
-
-
-
         private async Task<bool> IsDuplicatedAddress(string address)
             => await _unitOfWork.Hospitals.AnyAsync(h => h.Address == address);
         private async Task<bool> IsDuplicatedName(string name)

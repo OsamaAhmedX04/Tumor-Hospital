@@ -1,4 +1,5 @@
-﻿using TumorHospital.Application.DTOs.Request.User;
+﻿using Microsoft.Extensions.Caching.Memory;
+using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
@@ -10,9 +11,11 @@ namespace TumorHospital.Infrastructure.Services
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        public SpecializationService(IUnitOfWork unitOfWork)
+        private readonly IMemoryCache _cache;
+        public SpecializationService(IUnitOfWork unitOfWork, IMemoryCache cache)
         {
             _unitOfWork = unitOfWork;
+            _cache = cache;
         }
         public async Task AddSpecialization(SpecializationDto model)
         {
@@ -53,6 +56,23 @@ namespace TumorHospital.Infrastructure.Services
                     CreatedAt = s.CreatedAt
                 }
                 );
+
+        public async Task<List<string>> GetSpecializationNames()
+        {
+            if(_cache.TryGetValue("SpecializationNames", out List<string> names))
+            {
+                return names;
+            }
+            else
+            {
+                names = await _unitOfWork.Specializations.GetAllAsync(
+                    selector: s => s.Name
+                    );
+                return names;
+            }
+                
+        }
+            
 
         public async Task UpdateSpecialization(Guid id, SpecializationDto model)
         {

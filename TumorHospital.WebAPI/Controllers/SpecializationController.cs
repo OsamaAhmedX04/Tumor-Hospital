@@ -30,6 +30,10 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
+        [HttpGet("Specialization-names")]
+        public async Task<IActionResult> GetSpecializationNames()
+               => Ok(await _specializationService.GetSpecializationNames());
+
         [HttpPost]
         public async Task<IActionResult> AddSpecializations(SpecializationDto model)
         {

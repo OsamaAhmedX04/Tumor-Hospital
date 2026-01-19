@@ -15,6 +15,5 @@ namespace TumorHospital.Application.Intefaces.Services
         Task<DoctorInformationDto> GetHospitalDoctor(string doctorId);
         Task<PageSourcePagination<ReceptionistDto>> GetHospitalReceptionists(Guid id, string? receptionistName = null, int pageNumber = 1);
         Task<List<HospitalInfoDto>> GetHospitals();
-        Task<List<string>> GetHospitalNames();
     }
 }

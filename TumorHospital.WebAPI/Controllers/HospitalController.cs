@@ -26,13 +26,6 @@ namespace TumorHospital.WebAPI.Controllers
             return Ok(await _hospitalService.GetHospitals());
         }
 
-        [HttpGet("hospital-names")]
-        public async Task<IActionResult> GetHospitalNames()
-        {
-            return Ok(await _hospitalService.GetHospitalNames());
-        }
-
-
         [HttpGet("{hospitalId}/doctors")]
         public async Task<IActionResult> GetAllHospitalDoctors(Guid hospitalId, string doctorName, int pageNumber)
         {
