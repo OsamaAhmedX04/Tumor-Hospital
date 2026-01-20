@@ -1,4 +1,6 @@
 using Hangfire;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TumorHospital.Application;
 using TumorHospital.Infrastructure;
 using TumorHospital.WebAPI.Extensions;
@@ -41,6 +43,11 @@ namespace TumorHospital.WebAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
 
             app.UseAuthorization();
 

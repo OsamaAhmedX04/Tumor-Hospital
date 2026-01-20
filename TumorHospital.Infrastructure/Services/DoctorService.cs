@@ -99,7 +99,7 @@ namespace TumorHospital.Infrastructure.Services
                 Expression<Func<Doctor, bool>> filter = d => d.User.IsActive;
                 if (IsSurgeon is not null) filter = d => d.User.IsActive && d.IsSurgeon == IsSurgeon;
 
-                if(government is not null)
+                if (government is not null)
                     filter = d => d.User.IsActive && d.IsSurgeon == IsSurgeon && d.Hospital!.Government == government;
 
 
@@ -133,7 +133,7 @@ namespace TumorHospital.Infrastructure.Services
                 Expression<Func<Doctor, bool>> filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive;
                 if (IsSurgeon is not null) filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon;
 
-                if(government is not null)
+                if (government is not null)
                     filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon && d.Hospital!.Government == government;
 
                 doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(

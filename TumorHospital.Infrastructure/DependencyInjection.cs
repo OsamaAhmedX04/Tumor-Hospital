@@ -136,6 +136,15 @@ namespace TumorHospital.Infrastructure
             services.AddHangfireServer();
             #endregion
 
+
+            #region Health Check
+
+            services.AddHealthChecks()
+                .AddSqlServer(configuration.GetConnectionString("DefaultConnection")!)
+                .AddSendGrid(configuration["SendGridSettings:ApiKey"]!);
+
+            #endregion
+
             return services;
         }
     }
