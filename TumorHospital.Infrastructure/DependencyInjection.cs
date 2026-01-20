@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
@@ -29,7 +30,9 @@ namespace TumorHospital.Infrastructure
             #region DBContext And Identity
             // Register DbContext
             services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
+            //options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
+            ));
 
             // Register Identity
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -140,7 +143,12 @@ namespace TumorHospital.Infrastructure
             #region Health Check
 
             services.AddHealthChecks()
-                .AddSqlServer(configuration.GetConnectionString("DefaultConnection")!)
+                .AddSqlServer(
+                    configuration.GetConnectionString("DefaultConnection")!,
+                    name: "Development-Database")
+                .AddSqlServer(
+                    configuration.GetConnectionString("ProductionConnection")!,
+                    name: "Production-Database")
                 .AddSendGrid(configuration["SendGridSettings:ApiKey"]!);
 
             #endregion
