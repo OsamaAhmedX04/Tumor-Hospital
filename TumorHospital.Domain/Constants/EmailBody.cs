@@ -169,7 +169,7 @@
         }
 
 
-        public static string GetAppointmentAcceptedEmailBody(string userName,string hospitalName, string hospitalLocation, string appointmentDate,string appointmentTime)
+        public static string GetAppointmentAcceptedEmailBody(string userName, string hospitalName, string hospitalLocation, string appointmentDate, string appointmentTime)
         {
             var body = $@"
         <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px;
@@ -217,7 +217,7 @@
             return body;
         }
 
-        public static string GetAppointmentReminderEmailBody(string userName,string hospitalName, string hospitalLocation, string appointmentDate,string appointmentTime)
+        public static string GetAppointmentReminderEmailBody(string userName, string hospitalName, string hospitalLocation, string appointmentDate, string appointmentTime)
         {
             var body = $@"
         <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px;

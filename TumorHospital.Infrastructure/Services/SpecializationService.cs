@@ -61,7 +61,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<List<string>> GetSpecializationNames()
         {
-            if(_cache.TryGetValue("SpecializationNames", out List<string> names))
+            if (_cache.TryGetValue("SpecializationNames", out List<string> names))
             {
                 return names;
             }
@@ -74,13 +74,13 @@ namespace TumorHospital.Infrastructure.Services
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(3)
                 };
-                _cache.Set("SpecializationNames",cacheOptions);
+                _cache.Set("SpecializationNames", cacheOptions);
 
                 return names;
             }
-                
+
         }
-            
+
 
         public async Task UpdateSpecialization(Guid id, SpecializationDto model)
         {

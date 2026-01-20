@@ -81,8 +81,11 @@ namespace TumorHospital.Infrastructure
             #endregion
 
             #region EmailService
-            // Register EmailService
+            // Register SMTP
             services.Configure<SMTPSettings>(configuration.GetSection("SmtpSettings"));
+
+            // Register SendGrid
+            services.Configure<SendGridSettings>(configuration.GetSection("SendGridSettings"));
             services.AddScoped<IEmailService, EmailService>();
             #endregion
 

@@ -76,6 +76,10 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+        [HttpGet("governments")]
+        public async Task<IActionResult> GetHospitalGovernmentsExistance()
+            => Ok(await _hospitalService.GetHospitalGovernments());
+
         [HttpPost]
         public async Task<IActionResult> AddHospitals(HospitalDto model)
         {

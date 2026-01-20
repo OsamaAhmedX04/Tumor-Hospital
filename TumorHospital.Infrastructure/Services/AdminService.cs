@@ -83,11 +83,6 @@ namespace TumorHospital.Infrastructure.Services
 
         }
 
-        public async Task UpdateDoctor(UpdateDoctorDto model)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task DeleteDoctor(string doctorId)
         {
             var doctor = await _userManager.FindByIdAsync(doctorId);
@@ -143,11 +138,6 @@ namespace TumorHospital.Infrastructure.Services
                 "Receptionist Account Activated",
                 EmailBody.GetReceptionistEmailCreatedBody(appUser.FirstName, appUser.LastName, receptionistPassword));
 
-        }
-
-        public async Task UpdateReceptionist(UpdateReceptionistDto model)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task DeleteReceptionist(string receptionistId)

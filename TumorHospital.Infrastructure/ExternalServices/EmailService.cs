@@ -1,36 +1,45 @@
 ﻿using Microsoft.Extensions.Options;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System.Net;
-using System.Net.Mail;
+using System.Text.RegularExpressions;
 using TumorHospital.Application.Intefaces.ExternalServices;
-//using TumorHospital.Application.Settings;
 using TumorHospital.Infrastructure.Settings;
 
 namespace TumorHospital.Infrastructure.ExternalServices
 {
     public class EmailService : IEmailService
     {
-        private readonly SMTPSettings _smtp;
-        public EmailService(IOptions<SMTPSettings> smtpOptions)
+        private readonly SendGridSettings _settings;
+        public EmailService(IOptions<SendGridSettings> settings)
         {
-            _smtp = smtpOptions.Value;
+            _settings = settings.Value;
         }
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            using var message = new MailMessage();
-            message.To.Add(toEmail);
-            message.Subject = subject;
-            message.Body = body;
-            message.IsBodyHtml = true;
-
-            message.From = new MailAddress(_smtp.UserName, _smtp.DisplayName);
-
-            using var smtpClient = new SmtpClient(_smtp.Host, _smtp.Port)
-            {
-                Credentials = new NetworkCredential(_smtp.UserName, _smtp.Password),
-                EnableSsl = true
-            };
-
-            await smtpClient.SendMailAsync(message);
+            var client = new SendGridClient(_settings.ApiKey);
+            var from = new EmailAddress(_settings.EmailSender, "Tumor Hospital");
+            var to = new EmailAddress(toEmail, "user");
+            var plainTextContent = HtmlToPlainTextPreserveLinks(body);
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, body);
+            await client.SendEmailAsync(msg);
         }
+
+
+        private static string HtmlToPlainTextPreserveLinks(string html)
+        {
+            // Convert links to: text (url)
+            html = Regex.Replace(
+                html,
+                "<a\\s+(?:[^>]*?\\s+)?href=\"([^\"]*)\"[^>]*>(.*?)</a>",
+                "$2 ($1)",
+                RegexOptions.IgnoreCase);
+
+            // Remove remaining HTML tags
+            html = Regex.Replace(html, "<.*?>", string.Empty);
+
+            return WebUtility.HtmlDecode(html).Trim();
+        }
+
     }
 }

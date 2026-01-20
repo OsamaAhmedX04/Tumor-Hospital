@@ -35,6 +35,7 @@ namespace TumorHospital.Infrastructure.Services
                     ConsultationCost = d.ConsultationCost,
                     FollowUpCost = d.FollowUpCost,
                     SurgeryCost = !d.IsSurgeon ? null : d.SurgeryCost,
+                    Location = d.Hospital!.Address + " - " + d.Hospital.Government,
                     WorkingDays = d.Schedules.Select(s => new DoctorWorkDayDto
                     {
                         Day = s.DayOfWeek.ToString(),
@@ -90,13 +91,17 @@ namespace TumorHospital.Infrastructure.Services
 
 
 
-        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null)
+        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null)
         {
             PageSourcePagination<DoctorDto> doctors;
             if (string.IsNullOrEmpty(workDay))
             {
                 Expression<Func<Doctor, bool>> filter = d => d.User.IsActive;
                 if (IsSurgeon is not null) filter = d => d.User.IsActive && d.IsSurgeon == IsSurgeon;
+
+                if(government is not null)
+                    filter = d => d.User.IsActive && d.IsSurgeon == IsSurgeon && d.Hospital!.Government == government;
+
 
                 doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
                 filter: filter,
@@ -127,6 +132,9 @@ namespace TumorHospital.Infrastructure.Services
                 };
                 Expression<Func<Doctor, bool>> filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive;
                 if (IsSurgeon is not null) filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon;
+
+                if(government is not null)
+                    filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon && d.Hospital!.Government == government;
 
                 doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
                 filter: filter,

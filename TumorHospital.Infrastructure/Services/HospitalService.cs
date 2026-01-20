@@ -4,12 +4,10 @@ using TumorHospital.Application.DTOs.Request.Hospital;
 using TumorHospital.Application.DTOs.Response.Hospital;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
-using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
 using TumorHospital.Domain.Entities;
-using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Infrastructure.Services
 {
@@ -151,6 +149,9 @@ namespace TumorHospital.Infrastructure.Services
                 orderBy: h => h.OrderBy(h => h.Name)
                 );
         }
+
+        public async Task<List<string>> GetHospitalGovernments()
+            => await _unitOfWork.Hospitals.GetAllAsync(selector: h => h.Government);
 
         private async Task<bool> IsDuplicatedAddress(string address)
             => await _unitOfWork.Hospitals.AnyAsync(h => h.Address == address);

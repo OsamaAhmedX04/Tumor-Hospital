@@ -1,0 +1,36 @@
+﻿using Microsoft.Extensions.Options;
+using System.Net;
+using System.Net.Mail;
+using TumorHospital.Application.Intefaces.ExternalServices;
+//using TumorHospital.Application.Settings;
+using TumorHospital.Infrastructure.Settings;
+
+namespace TumorHospital.Infrastructure.ExternalServices
+{
+    public class EmailServiceSMTP : IEmailService
+    {
+        private readonly SMTPSettings _smtp;
+        public EmailServiceSMTP(IOptions<SMTPSettings> smtpOptions)
+        {
+            _smtp = smtpOptions.Value;
+        }
+        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        {
+            using var message = new MailMessage();
+            message.To.Add(toEmail);
+            message.Subject = subject;
+            message.Body = body;
+            message.IsBodyHtml = true;
+
+            message.From = new MailAddress(_smtp.UserName, _smtp.DisplayName);
+
+            using var smtpClient = new SmtpClient(_smtp.Host, _smtp.Port)
+            {
+                Credentials = new NetworkCredential(_smtp.UserName, _smtp.Password),
+                EnableSsl = true
+            };
+
+            await smtpClient.SendMailAsync(message);
+        }
+    }
+}
