@@ -17,14 +17,16 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
+        private readonly IFileService _fileService;
 
         public AdminService(IUnitOfWork unitOfWork, IMapper mapper,
-            UserManager<ApplicationUser> userManager, IEmailService emailService)
+            UserManager<ApplicationUser> userManager, IEmailService emailService, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
+            _fileService = fileService;
         }
 
         public async Task CreateNewDoctor(NewDoctorDto model)
@@ -88,6 +90,15 @@ namespace TumorHospital.Infrastructure.Services
             var doctor = await _userManager.FindByIdAsync(doctorId);
             if (doctor == null)
                 throw new Exception("This User Not Exist");
+
+            string? doctorImagePath = await _unitOfWork.Doctors.GetEnhancedAsync
+                (
+                filter: d => d.ApplicationUserId == doctorId,
+                selector: d => d.ProfilePicturePath ?? "N/A"
+                );
+
+            if (doctorImagePath == "N/A")
+                await _fileService.DeleteAsync(SupabaseConstants.PrefixSupaURL + doctorImagePath);
 
             await _userManager.DeleteAsync(doctor);
         }
