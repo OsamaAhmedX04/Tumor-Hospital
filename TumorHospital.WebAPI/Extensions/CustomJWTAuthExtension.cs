@@ -33,6 +33,8 @@ namespace TumorHospital.WebAPI.Extensions
         {
             services.AddSwaggerGen(o =>
             {
+                o.EnableAnnotations();
+
                 o.SwaggerDoc("v1", new OpenApiInfo()
                 {
                     Version = "v1",

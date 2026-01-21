@@ -1,7 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.Auth;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
+using TumorHospital.WebAPI.Documentation.Authentication;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -26,6 +30,7 @@ namespace TumorHospital.WebAPI.Controllers
             _ChangePasswordValidator = changePasswordValidator;
         }
 
+        [SwaggerOperation(Summary = AuthDocs.RegisterSummary, Description = AuthDocs.RegisterDescription)]
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterDto user)
         {
@@ -50,6 +55,9 @@ namespace TumorHospital.WebAPI.Controllers
 
         }
 
+
+
+        [SwaggerOperation(Summary = AuthDocs.ConfirmEmailSummary, Description = AuthDocs.ConfirmEmailDescription)]
         [HttpPost("Confirm-Email")]
         public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto model)
         {
@@ -65,6 +73,9 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
+        [SwaggerOperation(Summary = AuthDocs.ResetConfirmEmailTokenSummary, Description = AuthDocs.ResetConfirmEmailTokenDescription)]
         [HttpPut("Resend-Confirm-Email-Token")]
         public async Task<IActionResult> ResetConfirmEmailToken(EmailDto model)
         {
@@ -80,6 +91,9 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
+        [SwaggerOperation(Summary = AuthDocs.LoginSummary, Description = AuthDocs.LoginDescription)]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto user)
         {
@@ -103,6 +117,10 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
+        [SwaggerOperation(Summary = AuthDocs.LogoutSummary, Description = AuthDocs.LogoutDescription)]
+        [Authorize(Roles = SystemRole.ActiveRole)]
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout(string userId)
         {
@@ -110,6 +128,10 @@ namespace TumorHospital.WebAPI.Controllers
             return Ok(new { Message = "Loged Out" });
         }
 
+
+
+
+        [Authorize(Roles = SystemRole.Patient)]
         [HttpPut("Change-Password")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
         {
@@ -133,6 +155,10 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
+
+        [Authorize(Roles = SystemRole.InActiveRole)]
         [HttpPut("Change-InActiveRole-Password")]
         public async Task<IActionResult> ChangeInActiveRolePassword(ChangePasswordDto model)
         {
@@ -156,6 +182,8 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
         [HttpPost("Forgot-Password")]
         public async Task<IActionResult> ForgotPassword(EmailDto model)
         {
@@ -170,6 +198,8 @@ namespace TumorHospital.WebAPI.Controllers
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
+
 
         [HttpPost("Reset-Password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
@@ -186,6 +216,9 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
+
         [HttpPut("Resend-Reset-Password-Token")]
         public async Task<IActionResult> ResetResetPasswordToken(EmailDto model)
         {
@@ -200,6 +233,9 @@ namespace TumorHospital.WebAPI.Controllers
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
+
+
 
         [HttpPost("Refresh-Token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
