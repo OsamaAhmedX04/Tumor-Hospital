@@ -343,43 +343,59 @@
         public const string LogoutDescription =
             @"
 <b>Purpose:</b><br/>
-- Logs out a user by deleting their Refresh Token from the system.<br/>
-- Ensures the user cannot use the previous Refresh Token to get a new JWT.<br/><br/>
+- Logs out the currently authenticated user.<br/>
+- Invalidates the refresh token so the user cannot get a new JWT without logging in again.<br/><br/>
+
+<b>Authentication Required:</b><br/>
+- <b>This endpoint is protected.</b><br/>
+- You <b>must</b> send a valid JWT token in the request header.<br/><br/>
+
+<b>How to send the JWT:</b><br/>
+- Add the token to the <b>Authorization</b> header like this:<br/>
+<pre>
+Authorization: Bearer &lt;JWT_TOKEN&gt;
+</pre><br/>
 
 <b>Who can access:</b><br/>
-- Authenticated users with any of the active roles: <b>Doctor, Patient, Admin</b>.<br/>
-- <b>Important:</b> This endpoint requires a valid JWT token in the <b>Authorization header</b> of the request.<br/>
-  Example:<br/>
-  <pre>Authorization: Bearer &lt;JWT Token&gt;</pre><br/><br/>
+- Authenticated users with active roles only:<br/>
+  <b>Doctor, Patient, Admin</b>.<br/><br/>
 
 <b>Request Parameters:</b><br/>
-- <b>userId</b> (string, required, query or route): The unique identifier of the user to log out.<br/><br/>
+- <b>userId</b> (string, required): The ID of the currently logged-in user.<br/><br/>
 
 <b>Business Logic:</b><br/>
-1. Retrieve the Refresh Token record associated with the given userId.<br/>
-2. If a token exists, delete it from the database.<br/>
-3. Commit changes to the database.<br/><br/>
+1. Find the refresh token related to the given userId.<br/>
+2. If found, delete it from the database.<br/>
+3. Save changes.<br/><br/>
 
 <b>Success Response (200 OK):</b><br/>
 <pre>
 {
-    ""Message"": ""Logged Out""
+    ""Message"": ""Loged Out""
 }
 </pre><br/>
 
-<b>Possible Errors (400 Bad Request):</b><br/>
-- None explicitly in current implementation. If userId does not exist or no token is found, the endpoint still returns 200 OK.<br/><br/>
+<b>Authentication Errors:</b><br/>
+- <b>401 Unauthorized</b>:<br/>
+  - JWT token is missing.<br/>
+  - JWT token is invalid or expired.<br/><br/>
 
-<b>Exceptions:</b><br/>
-- Any unexpected errors during database operations will return 500 Internal Server Error.<br/><br/>
+- <b>403 Forbidden</b>:<br/>
+  - JWT token is valid, but the user role is not allowed to access this endpoint.<br/><br/>
+
+<b>Other Errors:</b><br/>
+- <b>500 Internal Server Error</b>:<br/>
+  - Unexpected error while deleting refresh token.<br/><br/>
 
 <b>Side Effects:</b><br/>
-- User's Refresh Token is deleted, preventing token refresh.<br/>
-- User must log in again to get a new JWT.<br/><br/>
+- Refresh token is removed from the database.<br/>
+- User must login again to obtain a new JWT.<br/><br/>
 
 <b>HTTP Status Codes:</b><br/>
 - 200 OK → Logout successful.<br/>
-- 500 Internal Server Error → Unexpected database errors (rare).<br/>
+- 401 Unauthorized → Missing / invalid / expired JWT.<br/>
+- 403 Forbidden → User role not allowed.<br/>
+- 500 Internal Server Error → Unexpected server error.<br/>
 ";
 
         #endregion
