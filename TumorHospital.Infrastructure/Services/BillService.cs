@@ -28,7 +28,7 @@ namespace TumorHospital.Infrastructure.Services
                 {
                     BillId = b.Id,
                     CreatedAt = b.CreatedAt,
-                    PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.FirstName}",
+                    PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.LastName}",
                     Status = b.Status,
                     TotalAmount = b.TotalAmount
                 },

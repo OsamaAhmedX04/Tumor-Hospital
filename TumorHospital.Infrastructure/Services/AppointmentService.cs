@@ -272,9 +272,11 @@ namespace TumorHospital.Infrastructure.Services
                 });
 
             var lastAppointmentInRequestedDay = await _unitOfWork.Appointments
-                .GetAllAsIQueryable()
-                .AsNoTracking()
-                .LastOrDefaultAsync(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == appointment.DayOfWeek);
+            .GetAllAsIQueryable()
+            .AsNoTracking()
+            .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == appointment.DayOfWeek)
+            .OrderBy(a => a.FromTime) // order by start time
+            .LastOrDefaultAsync();
 
             if (lastAppointmentInRequestedDay is null)
             {

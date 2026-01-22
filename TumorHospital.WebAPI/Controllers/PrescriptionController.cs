@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
 {
@@ -26,10 +27,21 @@ namespace TumorHospital.WebAPI.Controllers
         public async Task<IActionResult> Create(PrescriptionCreateUpdateDto dto)
         {
             var validation = await _validator.ValidateAsync(dto);
-            if (!validation.IsValid)
-                return BadRequest(validation.Errors);
-
-            return Ok(await _service.CreateAsync(dto));
+            if (validation.IsValid)
+            {
+                try
+                {
+                    await _service.CreateAsync(dto);
+                    return Ok(new { Message = "New Prescription Has Created Successfully" });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("DateConflict", ex.Message);
+                }
+            }
+            foreach (var error in validation.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpPut("UpdatePrescription/{id}")]
