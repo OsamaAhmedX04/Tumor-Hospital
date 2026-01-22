@@ -143,5 +143,11 @@ namespace TumorHospital.WebAPI.Controllers
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDashboard()
+        {
+            return Ok(await _adminSevice.GetDashboardDataAsync());
+        }
     }
 }

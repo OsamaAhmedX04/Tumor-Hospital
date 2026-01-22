@@ -139,7 +139,6 @@ namespace TumorHospital.Infrastructure
             services.AddHangfireServer();
             #endregion
 
-
             #region Health Check
 
             services.AddHealthChecks()

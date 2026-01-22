@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.Intefaces.Services;
 
 namespace TumorHospital.WebAPI.Controllers
 {
+    [EnableRateLimiting("strict")]
     [ApiController]
     [Route("api/prescriptions")]
     public class PrescriptionController : ControllerBase

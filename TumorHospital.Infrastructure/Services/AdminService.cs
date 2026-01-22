@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using TumorHospital.Application.DTOs.Request.User;
+using TumorHospital.Application.DTOs.Response.Admin;
 using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
@@ -161,8 +162,38 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
+        public async Task<AdminDashboardResponse> GetDashboardDataAsync()
+        {
+            var totalPatients = await _unitOfWork.Patients.Count();
+            var totalDoctors = await _unitOfWork.Doctors.Count();
+            var totalReceptionists = await _unitOfWork.Receptionists.Count();
+            var totalAppointments = await _unitOfWork.Appointments.Count();
+            var totalBills = await _unitOfWork.Bills.Count();
+            var totalCharityNeeds = await _unitOfWork.CharityNeeds.Count();
 
+            var paidBills = await _unitOfWork.Bills.GetAllAsync(b => b, b => b.Status == Domain.Enums.BillStatus.Paid);
+            var totalRevenue = paidBills.Sum(b => b.TotalAmount);
 
+            var pendingBills = await _unitOfWork.Bills.GetAllAsync(b => b, b => b.Status == Domain.Enums.BillStatus.Pending);
+            var pendingBillsCount = pendingBills.Count;
 
+            var completedCharity = await _unitOfWork.CharityNeeds.GetAllAsync(c => c, c => c.IsCompleted);
+            var completedCharityCount = completedCharity.Count;
+
+            var response = new AdminDashboardResponse
+            {
+                TotalPatients = totalPatients,
+                TotalDoctors = totalDoctors,
+                TotalReceptionists = totalReceptionists,
+                TotalAppointments = totalAppointments,
+                TotalBills = totalBills,
+                TotalRevenue = totalRevenue,
+                PendingBills = pendingBillsCount,
+                TotalCharityNeeds = totalCharityNeeds,
+                CompletedCharityNeeds = completedCharityCount
+            };
+
+            return response;
+        }
     }
 }

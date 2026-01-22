@@ -1,4 +1,5 @@
 ﻿using TumorHospital.Application.DTOs.Request.User;
+using TumorHospital.Application.DTOs.Response.Admin;
 
 namespace TumorHospital.Application.Intefaces.Services
 {
@@ -8,5 +9,6 @@ namespace TumorHospital.Application.Intefaces.Services
         Task DeleteDoctor(string doctorId);
         Task CreateNewReceptionist(NewReceptionistDto model);
         Task DeleteReceptionist(string receptionistId);
+        Task<AdminDashboardResponse> GetDashboardDataAsync();
     }
 }

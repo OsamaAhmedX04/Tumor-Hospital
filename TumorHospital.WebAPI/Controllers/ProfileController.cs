@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.WebAPI.Extensions;
@@ -36,6 +37,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("UpdatePatientProfile/{userId}")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdatePatientProfileDto dto)
         {
             var validationResult = await _patientValidator.ValidateAsync(dto);
@@ -59,6 +61,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("UpdateDoctorProfile/{userId}")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdateDoctorProfileDto dto)
         {
             var validationResult = await _doctorValidator.ValidateAsync(dto);
@@ -82,6 +85,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("UpdateReceptionistProfile/{userId}")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdateReceptionistProfileDto dto)
         {
             var validationResult = await _receptionistValidator.ValidateAsync(dto);

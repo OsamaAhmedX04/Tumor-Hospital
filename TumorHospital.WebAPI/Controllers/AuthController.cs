@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.Auth;
 using TumorHospital.Application.Intefaces.Services;
@@ -32,6 +33,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = AuthDocs.RegisterSummary, Description = AuthDocs.RegisterDescription)]
         [HttpPost("Register")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> Register(RegisterDto user)
         {
             var result = _registerValidator.Validate(user);
@@ -92,9 +94,9 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
-
         [SwaggerOperation(Summary = AuthDocs.LoginSummary, Description = AuthDocs.LoginDescription)]
         [HttpPost("Login")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> Login(LoginDto user)
         {
             var result = _loginValidator.Validate(user);
@@ -133,6 +135,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [Authorize(Roles = SystemRole.Patient)]
         [HttpPut("Change-Password")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
         {
             var result = _ChangePasswordValidator.Validate(model);
@@ -185,6 +188,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [HttpPost("Forgot-Password")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> ForgotPassword(EmailDto model)
         {
             try
