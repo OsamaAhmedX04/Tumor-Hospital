@@ -132,7 +132,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
 
-
+        [SwaggerOperation(Summary = AuthDocs.ChangePasswordSummary, Description = AuthDocs.ChangePasswordDescription)]
         [Authorize(Roles = SystemRole.Patient)]
         [HttpPut("Change-Password")]
         [EnableRateLimiting("strict")]
@@ -160,7 +160,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
 
-
+        [SwaggerOperation(Summary = AuthDocs.ChangeInActiveRolePasswordSummary, Description = AuthDocs.ChangeInActiveRolePasswordDescription)]
         [Authorize(Roles = SystemRole.InActiveRole)]
         [HttpPut("Change-InActiveRole-Password")]
         public async Task<IActionResult> ChangeInActiveRolePassword(ChangePasswordDto model)
@@ -186,7 +186,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
-
+        [SwaggerOperation(Summary = AuthDocs.ForgotPasswordSummary, Description = AuthDocs.ForgotPasswordDescription)]
         [HttpPost("Forgot-Password")]
         [EnableRateLimiting("strict")]
         public async Task<IActionResult> ForgotPassword(EmailDto model)
@@ -204,7 +204,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
-
+        [SwaggerOperation(Summary = AuthDocs.ResetPasswordSummary, Description = AuthDocs.ResetPasswordDescription)]
         [HttpPost("Reset-Password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
         {
@@ -222,8 +222,9 @@ namespace TumorHospital.WebAPI.Controllers
 
 
 
-
+        [SwaggerOperation(Summary = AuthDocs.ResendResetPasswordTokenSummary, Description = AuthDocs.ResendResetPasswordTokenDescription)]
         [HttpPut("Resend-Reset-Password-Token")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> ResetResetPasswordToken(EmailDto model)
         {
             try
@@ -239,9 +240,10 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
-
-
+        [SwaggerOperation(Summary = AuthDocs.RefreshTokenSummary, Description = AuthDocs.RefreshTokenDescription)]
+        [Authorize(Roles = SystemRole.InActiveRole+","+SystemRole.ActiveRole)]
         [HttpPost("Refresh-Token")]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
         {
             try
