@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.Intefaces.BackgroundServices;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Enums;

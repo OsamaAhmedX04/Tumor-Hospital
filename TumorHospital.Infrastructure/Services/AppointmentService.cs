@@ -369,7 +369,7 @@ namespace TumorHospital.Infrastructure.Services
                 ),
                 TimeSpan.FromHours(24));
             }
-                
+
 
         }
         public async Task RejectAppointment(Guid appointmentId)
@@ -401,6 +401,6 @@ namespace TumorHospital.Infrastructure.Services
                 .ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Rejected));
         }
 
-        
+
     }
 }
