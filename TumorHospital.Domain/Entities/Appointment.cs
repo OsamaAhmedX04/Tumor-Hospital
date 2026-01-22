@@ -25,5 +25,6 @@ namespace TumorHospital.Domain.Entities
         public DateTime RequestCreatedAt { get; set; }
         public DateOnly? AttendenceDate { get; set; }
         public Prescription? Prescription { get; set; }
+        public Bill? Bill { get; set; }
     }
 }

@@ -10,9 +10,11 @@ namespace TumorHospital.Infrastructure.Services
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        public BillService(IUnitOfWork unitOfWork)
+        private readonly IAppointmentService _appointmentService;
+        public BillService(IUnitOfWork unitOfWork, IAppointmentService appointmentService)
         {
             _unitOfWork = unitOfWork;
+            _appointmentService = appointmentService;
         }
 
         public async Task<PageSourcePagination<BillDto>> GetBills(
@@ -28,8 +30,9 @@ namespace TumorHospital.Infrastructure.Services
                 {
                     BillId = b.Id,
                     CreatedAt = b.CreatedAt,
+                    AppointmentDate = b.Appointment!.AttendenceDate!.Value,
                     PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.LastName}",
-                    Status = b.Status,
+                    Status = b.Status.ToString(),
                     TotalAmount = b.TotalAmount
                 },
                 pageSize: 20,
@@ -49,6 +52,7 @@ namespace TumorHospital.Infrastructure.Services
                     BillId = b.Id,
                     CreatedAt = b.CreatedAt,
                     PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.LastName}",
+                    AppointmentDate = b.Appointment!.AttendenceDate!.Value,
                     Status = b.Status,
                     TotalAmount = b.TotalAmount,
                     BillCode = b.Code
@@ -72,6 +76,8 @@ namespace TumorHospital.Infrastructure.Services
             bill.PaymentDate = DateTime.Now;
             bill.ConfirmedBy = receptionistId;
             bill.Status = BillStatus.Paid;
+
+            await _appointmentService.AttendPatientToAppointment(bill.PatientId, bill.AppointmentId!.Value);
 
             await _unitOfWork.CompleteAsync();
 

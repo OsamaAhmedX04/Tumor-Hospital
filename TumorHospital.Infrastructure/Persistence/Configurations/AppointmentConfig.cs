@@ -36,8 +36,6 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
-
-
         }
     }
 }

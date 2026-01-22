@@ -167,5 +167,20 @@ namespace TumorHospital.WebAPI.Controllers
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
         }
+
+        [HttpPut("attend-appointment")]
+        public async Task<IActionResult> AttendAppointment(string patientId, Guid appointmentId)
+        {
+            try
+            {
+                await _appointmentService.AttendPatientToAppointment(patientId, appointmentId);
+                return Ok(new { Message = "Appointment Attended Successfully" });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
     }
 }

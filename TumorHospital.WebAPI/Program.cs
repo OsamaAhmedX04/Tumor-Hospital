@@ -106,12 +106,15 @@ namespace TumorHospital.WebAPI
 
             app.UseRateLimiter();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseHangfireDashboard("/hangfire");
 
             app.MapControllers();
+
+            app.AddBackgroundJobs();
 
             app.Run();
         }

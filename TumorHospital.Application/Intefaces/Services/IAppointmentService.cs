@@ -16,5 +16,6 @@ namespace TumorHospital.Application.Intefaces.Services
         List<string> AppointmentReasons();
         Task AcceptAppointment(Guid appointmentId);
         Task RejectAppointment(Guid appointmentId);
+        Task AttendPatientToAppointment(string patientId, Guid appointmentId);
     }
 }

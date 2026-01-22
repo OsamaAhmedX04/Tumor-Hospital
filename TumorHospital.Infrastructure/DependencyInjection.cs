@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,11 +10,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
 using System.Text;
+using TumorHospital.Application.Intefaces.BackgroundServices;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Entities;
+using TumorHospital.Infrastructure.BackgroundJobs.BackgroundServices;
 using TumorHospital.Infrastructure.ExternalServices;
 using TumorHospital.Infrastructure.Persistence.Context;
 using TumorHospital.Infrastructure.Persistence.Repositories;
@@ -128,6 +131,12 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IHospitalService, HospitalService>();
             #endregion
 
+            #region BackgroundServices
+
+            services.AddScoped<IBackgroundAppointment, BackgroundAppointment>();
+
+            #endregion
+
             #region Hangfire
             services.AddHangfire(option =>
             {
@@ -153,6 +162,20 @@ namespace TumorHospital.Infrastructure
             #endregion
 
             return services;
+        }
+
+
+        public static void AddBackgroundJobs(this IApplicationBuilder app)
+        {
+            RecurringJob.AddOrUpdate<IBackgroundAppointment>(
+                "ResetAppointmentsWeekly",
+                job => job.SetApprovedAppointmentsStatusToAbsent(),
+                "0 2 * * *",
+                new RecurringJobOptions
+                {
+                    TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time"),
+                }
+               );
         }
     }
 }

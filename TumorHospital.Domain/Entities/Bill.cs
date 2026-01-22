@@ -13,6 +13,11 @@ namespace TumorHospital.Domain.Entities
         [ForeignKey("Patient")]
         public string PatientId { get; set; }
         public Patient Patient { get; set; }
+
+        [ForeignKey("Appointment")]
+        public Guid? AppointmentId { get; set; }
+        public Appointment? Appointment { get; set; }
+
         public decimal TotalAmount { get; set; }
         public string Code { get; set; }
         public BillStatus Status { get; set; }
@@ -23,9 +28,4 @@ namespace TumorHospital.Domain.Entities
         public DateTime? PaymentDate { get; set; }
         public DateTime CreatedAt { get; set; }
     }
-
-
-    //    insurance_claim DECIMAL(10,2) DEFAULT 0,
-    //    amount_due DECIMAL(10,2) NOT NULL,
-
 }

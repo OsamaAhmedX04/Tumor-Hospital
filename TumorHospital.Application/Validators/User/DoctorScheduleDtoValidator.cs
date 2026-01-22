@@ -15,7 +15,9 @@ namespace TumorHospital.Application.Validators.User
                 .Must(dayOfWeek => AvailableDays.Contains(dayOfWeek)).WithMessage("Please Enter Day Of week");
 
             RuleFor(d => d.StartTime)
-                .NotEmpty().WithMessage("Please Enter Start Time");
+                .NotEmpty().WithMessage("Please Enter Start Time")
+                .GreaterThanOrEqualTo(new TimeSpan(6,0,0)).WithMessage("Hospital Start Time in 6 AM")
+                .LessThanOrEqualTo(new TimeSpan(17,0,0)).WithMessage("Hospital Close At 1 and Doctors work time is 8 hours");
         }
     }
 }

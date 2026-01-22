@@ -287,6 +287,9 @@ namespace TumorHospital.Infrastructure.Services
             {
                 appointment.FromTime = lastAppointmentInRequestedDay.ToTime;
                 appointment.ToTime = lastAppointmentInRequestedDay.ToTime!.Value.Add(TimeSpan.FromMinutes(30));
+
+                if (appointment.ToTime == doctorDaySchedule!.EndTime)
+                    await RejectRestOfAppointments(appointment.DoctorId!);
             }
 
             appointment.AttendenceDate = DayHelper.GetDateThisWeek(appointment.DayOfWeek);
@@ -310,6 +313,7 @@ namespace TumorHospital.Infrastructure.Services
             var bill = new Bill
             {
                 PatientId = appointment.PatientId,
+                AppointmentId = appointment.Id,
                 TotalAmount = amount!.Value,
                 Code = Generator.GenerateRandomBillCode(),
                 Status = BillStatus.Pending,
@@ -344,7 +348,14 @@ namespace TumorHospital.Infrastructure.Services
                         )
                 ));
 
-            BackgroundJob.Schedule<IEmailService>(
+
+            var dateTimeOfAppointment = appointment.AttendenceDate.Value
+                            .ToDateTime(new TimeOnly(0, 0))
+                            .Add(appointment.FromTime!.Value);
+            var hours = DateTime.Now.Subtract(dateTimeOfAppointment).Hours;
+            if (hours > 24)
+            {
+                BackgroundJob.Schedule<IEmailService>(
                 service => service.SendEmailAsync(
                     appointmentInfo!.PatientEmail!,
                     "Appointment has been Accepted",
@@ -356,7 +367,9 @@ namespace TumorHospital.Infrastructure.Services
                         appointment.FromTime.ToString()!
                         )
                 ),
-                TimeSpan.FromHours(10));
+                TimeSpan.FromHours(24));
+            }
+                
 
         }
         public async Task RejectAppointment(Guid appointmentId)
@@ -368,6 +381,26 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
+        public async Task AttendPatientToAppointment(string patientId, Guid appointmentId)
+        {
+            if (await _unitOfWork.Patients.IsExistAsync(patientId))
+                throw new Exception("Patient with this id does not exist");
+            if (await _unitOfWork.Appointments.IsExistAsync(appointmentId))
+                throw new Exception("Appointment with this id does not exist");
 
+            await _unitOfWork.Appointments
+                .GetAllAsIQueryable()
+                .Where(a => a.Status == AppointmentStatus.Approved && a.Id == appointmentId && a.PatientId == patientId)
+                .ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Completed));
+        }
+
+        private async Task RejectRestOfAppointments(string doctorId)
+        {
+            await _unitOfWork.Appointments.GetAllAsIQueryable()
+                .Where(a => a.Status == AppointmentStatus.Pending && a.DoctorId == doctorId)
+                .ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Rejected));
+        }
+
+        
     }
 }

@@ -37,6 +37,12 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .HasOne(b => b.Receptionist).WithMany(r => r.Bills)
                 .HasForeignKey(b => b.ConfirmedBy)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder
+                .HasOne(b => b.Appointment)
+                .WithOne(a => a.Bill)
+                .HasForeignKey<Bill>(b => b.AppointmentId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }
