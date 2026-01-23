@@ -89,11 +89,11 @@ namespace TumorHospital.WebAPI
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            //if (app.Environment.IsDevelopment())
+            //{
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            //}
 
             app.UseForwardedHeaders();
 
@@ -113,6 +113,8 @@ namespace TumorHospital.WebAPI
             app.UseHangfireDashboard("/hangfire");
 
             app.MapControllers();
+
+
 
             app.AddBackgroundJobs();
 
