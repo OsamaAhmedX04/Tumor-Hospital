@@ -11,5 +11,7 @@ Release/
 
 # Others
 TumorHospital.WebAPI/appsettings.json
+TumorHospital.WebAPI/dotnet-tools.json
+TumorHospital.WebAPI/Properties/PublishProfiles
 TumorHospital.Infrastructure/Migrations
 
