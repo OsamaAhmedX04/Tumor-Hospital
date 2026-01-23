@@ -1,7 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.Hospital;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
+using TumorHospital.WebAPI.Documentation.Authentication;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -19,13 +23,16 @@ namespace TumorHospital.WebAPI.Controllers
             _hospitalValidator = hospitalValidator;
         }
 
-
+        [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalsSummary, Description = HospitalDocs.GetAllHospitalsDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpGet("/api/Hospitals")]
         public async Task<IActionResult> GetAllHospitals()
         {
             return Ok(await _hospitalService.GetHospitals());
         }
 
+        [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalDoctorsSummary, Description = HospitalDocs.GetAllHospitalDoctorsDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/doctors")]
         public async Task<IActionResult> GetAllHospitalDoctors(Guid hospitalId, string doctorName, int pageNumber)
         {
@@ -42,8 +49,11 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+        [SwaggerOperation(Summary = HospitalDocs.GetHospitalDoctorSummary, Description = HospitalDocs.GetHospitalDoctorDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpGet("doctor/{doctorId}")]
-        public async Task<IActionResult> GetAllHospitalDoctors(string doctorId)
+        public async Task<IActionResult> GetHospitalDoctor(string doctorId)
         {
             try
             {
@@ -59,6 +69,8 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+        [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalReceptionistsSummary, Description = HospitalDocs.GetAllHospitalReceptionistsDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/receptionists")]
         public async Task<IActionResult> GetAllHospitalReceptionists(Guid hospitalId, string receptionistName, int pageNumber)
         {
@@ -76,12 +88,16 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+        [SwaggerOperation(Summary = HospitalDocs.GetHospitalGovernmentsExistanceSummary, Description = HospitalDocs.GetHospitalGovernmentsExistanceDescription)]
         [HttpGet("governments")]
         public async Task<IActionResult> GetHospitalGovernmentsExistance()
             => Ok(await _hospitalService.GetHospitalGovernments());
 
+
+        [SwaggerOperation(Summary = HospitalDocs.AddHospitalSummary, Description = HospitalDocs.AddHospitalDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
-        public async Task<IActionResult> AddHospitals(HospitalDto model)
+        public async Task<IActionResult> AddHospital(HospitalDto model)
         {
             var validation = _hospitalValidator.Validate(model);
             if (validation.IsValid)
@@ -102,6 +118,9 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+        [SwaggerOperation(Summary = HospitalDocs.UpdateHospitalSummary, Description = HospitalDocs.UpdateHospitalDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{hospitalId}")]
         public async Task<IActionResult> UpdateHospital(Guid hospitalId, HospitalDto model)
         {
@@ -124,6 +143,9 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+        [SwaggerOperation(Summary = HospitalDocs.DeleteHospitalSummary, Description = HospitalDocs.DeleteHospitalDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpDelete("{hospitalId}")]
         public async Task<IActionResult> DeleteHospital(Guid hospitalId)
         {

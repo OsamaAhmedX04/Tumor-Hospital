@@ -33,6 +33,13 @@
 - Password: required, must satisfy complexity policy.<br/>
 - Gender: required, only 'Male' or 'Female'.<br/><br/>
 
+<b>Password Policies:</b><br/>
+- Digit<br/>
+- Uppercase<br/>
+- Lowercase<br/>
+- 8 chars at least<br/>
+- NonAlphaNumeric.<br/><br/>
+
 <b>Business Logic:</b><br/>
 1. Create a new ApplicationUser.<br/>
 2. Assign the role <b>Patient</b>.<br/>
@@ -443,6 +450,14 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
 - New password is required.<br/>
 - New password must be different from the old password.<br/><br/>
 
+<b>Password Policies:</b><br/>
+- Digit<br/>
+- Uppercase<br/>
+- Lowercase<br/>
+- 8 chars at least<br/>
+- NonAlphaNumeric.<br/><br/>
+
+
 <b>Business Logic:</b><br/>
 1. Find user by email.<br/>
 2. Verify old password.<br/>
@@ -523,6 +538,13 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
 - Old password is required.<br/>
 - New password is required.<br/>
 - New password must be different from the old password.<br/><br/>
+
+<b>Password Policies:</b><br/>
+- Digit<br/>
+- Uppercase<br/>
+- Lowercase<br/>
+- 8 chars at least<br/>
+- NonAlphaNumeric.<br/><br/>
 
 <b>Business Logic:</b><br/>
 1. Find user by email.<br/>
@@ -681,6 +703,13 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
   - Token is expired.<br/>
   - Failed to remove old password.<br/>
   - Failed to set new password.<br/><br/>
+
+<b>Password Policies:</b><br/>
+- Digit<br/>
+- Uppercase<br/>
+- Lowercase<br/>
+- 8 chars at least<br/>
+- NonAlphaNumeric.<br/><br/>
 
 <b>Security Notes:</b><br/>
 - Token is <b>single-use</b>.<br/>

@@ -21,11 +21,11 @@ namespace TumorHospital.Application.Validators.Hospital
 
             RuleFor(x => x.MaxNumberOfDoctors)
                 .GreaterThan(0).WithMessage("Max number of doctors must be greater than zero.")
-                .LessThan(200).WithMessage("Max number of doctors must be less than 200.");
+                .LessThanOrEqualTo(200).WithMessage("Max number of doctors must be less than 200.");
 
             RuleFor(x => x.MaxNumberOfReceptionists)
                 .GreaterThan(0).WithMessage("Max number of receptionists must be greater than zero.")
-                .LessThan(200).WithMessage("Max number of receptionists must be less than 200.");
+                .LessThanOrEqualTo(200).WithMessage("Max number of receptionists must be less than 200.");
         }
     }
 }
