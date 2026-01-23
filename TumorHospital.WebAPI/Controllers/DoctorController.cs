@@ -34,11 +34,11 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("/api/Doctors")]
-        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null)
+        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null)
         {
             try
             {
-                return Ok(await _doctorService.GetDoctors(pageNumber, workDay, IsSurgeon));
+                return Ok(await _doctorService.GetDoctors(pageNumber, workDay, IsSurgeon, government));
             }
             catch (Exception ex)
             {
