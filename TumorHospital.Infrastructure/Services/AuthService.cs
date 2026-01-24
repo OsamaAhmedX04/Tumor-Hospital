@@ -18,7 +18,6 @@ namespace TumorHospital.Infrastructure.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
         private readonly JWTService _jwtService;
@@ -27,7 +26,6 @@ namespace TumorHospital.Infrastructure.Services
         public AuthService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            RoleManager<IdentityRole> roleManager,
             IUnitOfWork unitOfWork,
             IEmailService emailService,
             JWTService jwtService,
@@ -36,7 +34,6 @@ namespace TumorHospital.Infrastructure.Services
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
             _unitOfWork = unitOfWork;
             _emailService = emailService;
             _jwtService = jwtService;

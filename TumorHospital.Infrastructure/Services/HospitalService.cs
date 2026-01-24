@@ -34,6 +34,9 @@ namespace TumorHospital.Infrastructure.Services
             var hospital = _mapper.Map<Hospital>(model);
             await _unitOfWork.Hospitals.AddAsync(hospital);
             await _unitOfWork.CompleteAsync();
+
+            _cache.Remove("HospitalsNames");
+            _cache.Remove("HospitalsGovernments");
         }
 
         public async Task DeleteHospital(Guid id)
@@ -53,6 +56,8 @@ namespace TumorHospital.Infrastructure.Services
 
             _unitOfWork.Hospitals.Delete(id);
             await _unitOfWork.CompleteAsync();
+            _cache.Remove("HospitalsNames");
+            _cache.Remove("HospitalsGovernments");
         }
 
         public async Task UpdateHospital(Guid id, HospitalDto model)
@@ -72,6 +77,8 @@ namespace TumorHospital.Infrastructure.Services
             hospital.MaxNumberOfReceptionists = model.MaxNumberOfReceptionists;
 
             await _unitOfWork.CompleteAsync();
+            _cache.Remove("HospitalsNames");
+            _cache.Remove("HospitalsGovernments");
         }
 
         public async Task<PageSourcePagination<DoctorDto>> GetHospitalDoctors(Guid id, string? doctorName = null, int pageNumber = 1)

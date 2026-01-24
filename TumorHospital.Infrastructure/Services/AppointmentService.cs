@@ -22,19 +22,16 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IScheduleService _scheduleService;
-        private readonly IEmailService _emailService;
         public AppointmentService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
-            IScheduleService scheduleService,
-            IEmailService emailService)
+            IScheduleService scheduleService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
             _scheduleService = scheduleService;
-            _emailService = emailService;
         }
 
 

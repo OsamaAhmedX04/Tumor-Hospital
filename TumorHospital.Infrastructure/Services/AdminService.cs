@@ -41,7 +41,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception("This Specialization Is Not Exist");
 
             var hospital = await _unitOfWork.Hospitals.GetEnhancedAsync(
-                filter: h => h.Id == model.HospitalId,
+                filter: h => h.Name == model.HospitalName,
                 selector: h => new
                 {
                     Id = h.Id,
@@ -108,7 +108,7 @@ namespace TumorHospital.Infrastructure.Services
         {
 
             var hospital = await _unitOfWork.Hospitals.GetEnhancedAsync(
-                filter: h => h.Id == model.HospitalId,
+                filter: h => h.Name == model.HospitalName,
                 selector: h => new
                 {
                     Id = h.Id,

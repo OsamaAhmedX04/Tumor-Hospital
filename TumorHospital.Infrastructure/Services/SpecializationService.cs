@@ -39,6 +39,27 @@ namespace TumorHospital.Infrastructure.Services
             _cache.Remove("SpecializationNames");
         }
 
+
+        public async Task UpdateSpecialization(Guid id, SpecializationDto model)
+        {
+            var specialization = await _unitOfWork.Specializations.GetByIdAsync(id);
+            if (specialization == null)
+                throw new KeyNotFoundException("Specialization not found.");
+
+            if (string.IsNullOrEmpty(model.Name))
+                throw new ArgumentException("Specialization name cannot be empty.");
+
+            bool isExisting = await _unitOfWork.Specializations
+                .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
+            if (isExisting)
+                throw new InvalidOperationException("Specialization with the same name already exists.");
+
+            specialization.Name = model.Name;
+            specialization.Description = string.IsNullOrEmpty(model.Description) ? "N/A" : model.Description;
+            await _unitOfWork.CompleteAsync();
+            _cache.Remove("SpecializationNames");
+        }
+
         public async Task DeleteSpecialization(Guid id)
         {
             bool isExisting = await _unitOfWork.Specializations.IsExistAsync(id);
@@ -46,6 +67,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new KeyNotFoundException("Specialization not found.");
             _unitOfWork.Specializations.Delete(id);
             await _unitOfWork.CompleteAsync();
+            _cache.Remove("SpecializationNames");
         }
 
         public async Task<List<SpecializationDetailsDto>> GetSpecializations()
@@ -82,23 +104,6 @@ namespace TumorHospital.Infrastructure.Services
         }
 
 
-        public async Task UpdateSpecialization(Guid id, SpecializationDto model)
-        {
-            var specialization = await _unitOfWork.Specializations.GetByIdAsync(id);
-            if (specialization == null)
-                throw new KeyNotFoundException("Specialization not found.");
-
-            if (string.IsNullOrEmpty(model.Name))
-                throw new ArgumentException("Specialization name cannot be empty.");
-
-            bool isExisting = await _unitOfWork.Specializations
-                .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
-            if (isExisting)
-                throw new InvalidOperationException("Specialization with the same name already exists.");
-
-            specialization.Name = model.Name;
-            specialization.Description = string.IsNullOrEmpty(model.Description) ? "N/A" : model.Description;
-            await _unitOfWork.CompleteAsync();
-        }
+        
     }
 }
