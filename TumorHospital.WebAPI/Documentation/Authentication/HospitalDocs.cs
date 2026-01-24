@@ -31,15 +31,10 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
 - Hospital Name<br/>
 - Government (Governorate)<br/>
 - Address<br/>
-- Maximum number of doctors allowed<br/>
-- Maximum number of receptionists allowed<br/>
-- Current number of doctors<br/>
-- Current number of receptionists<br/><br/>
 
 <b>Business Logic:</b><br/>
 1. Fetch all hospitals from database.<br/>
 2. Project hospital entities into <b>HospitalInfoDto</b>.<br/>
-3. Count doctors and receptionists for each hospital.<br/>
 4. Sort hospitals alphabetically by name.<br/><br/>
 
 <b>Success Response (200 OK):</b><br/>
@@ -50,10 +45,6 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
     ""name"": ""Cairo Oncology Hospital"",
     ""government"": ""Cairo"",
     ""address"": ""Nasr City"",
-    ""maxNumberOfDoctors"": 50,
-    ""maxNumberOfReceptionists"": 20,
-    ""numberOfDoctors"": 35,
-    ""numberOfReceptionists"": 15
   }
 ]
 </pre><br/>
@@ -76,6 +67,69 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
 
 <b>HTTP Status Codes:</b><br/>
 - 200 OK → Hospitals retrieved successfully.<br/>
+- 401 Unauthorized → Missing / invalid / expired JWT.<br/>
+- 403 Forbidden → User role not allowed.<br/>
+- 500 Internal Server Error → Unexpected server error.<br/>
+";
+
+        #endregion
+
+
+        #region GetHospitalDashboard
+        public const string GetHospitalDashboardSummary = "Get hospital dashboard statistics";
+        public const string GetHospitalDashboardDescription =
+            @"
+<b>Purpose:</b><br/>
+- Retrieves dashboard statistics for a specific hospital.<br/>
+- Used by admin to monitor hospital capacity and current staff numbers.<br/><br/>
+
+<b>Authentication Required:</b><br/>
+- <b>This endpoint is protected.</b><br/>
+- You <b>must</b> send a valid JWT token in the request header.<br/><br/>
+
+<b>How to send the JWT:</b><br/>
+<pre>
+Authorization: Bearer &lt;JWT_TOKEN&gt;
+</pre><br/>
+
+<b>Who can access:</b><br/>
+- Only users with <b>Admin</b> role.<br/><br/>
+
+<b>Request Parameters:</b><br/>
+- <b>hospitalId</b> (GUID, required): The ID of the hospital whose dashboard data is required.<br/><br/>
+
+<b>Business Logic:</b><br/>
+1. Check if the hospital exists using the provided <b>hospitalId</b>.<br/>
+2. If found, calculate current numbers of doctors and receptionists.<br/>
+3. Return hospital capacity limits and current usage.<br/><br/>
+
+<b>Success Response (200 OK):</b><br/>
+<pre>
+{
+    ""maxNumberOfDoctors"": 50,
+    ""maxNumberOfReceptionists"": 20,
+    ""numberOfDoctors"": 35,
+    ""numberOfReceptionists"": 12
+}
+</pre><br/>
+
+<b>Business Errors (400 Bad Request):</b><br/>
+- <b>Hospital Not Exist</b>: No hospital found with the given ID.<br/><br/>
+
+<b>Authentication Errors:</b><br/>
+- <b>401 Unauthorized</b>:<br/>
+  - JWT token is missing.<br/>
+  - JWT token is invalid or expired.<br/><br/>
+
+- <b>403 Forbidden</b>:<br/>
+  - JWT token is valid but user role is not <b>Admin</b>.<br/><br/>
+
+<b>Other Errors:</b><br/>
+- <b>500 Internal Server Error</b>: Unexpected server error.<br/><br/>
+
+<b>HTTP Status Codes:</b><br/>
+- 200 OK → Dashboard data retrieved successfully.<br/>
+- 400 Bad Request → Hospital does not exist.<br/>
 - 401 Unauthorized → Missing / invalid / expired JWT.<br/>
 - 403 Forbidden → User role not allowed.<br/>
 - 500 Internal Server Error → Unexpected server error.<br/>
@@ -309,41 +363,104 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
         public const string GetHospitalGovernmentsExistanceDescription =
             @"
 <b>Purpose:</b><br/>
-- Retrieves a list of all hospital governments (regions) that exist in the system.<br/>
-- Useful for populating dropdowns or filters in the frontend.<br/><br/>
+- Retrieves a list of all governments where hospitals exist.<br/>
+- Used for filtering hospitals by location (government), dropdowns, and search forms in the frontend.<br/><br/>
 
 <b>Authentication Required:</b><br/>
 - <b>No authentication required.</b><br/>
-- This endpoint is public and can be accessed by anyone.<br/><br/>
+- This endpoint is <b>public</b> and does not require a JWT token.<br/><br/>
 
 <b>Request Parameters:</b><br/>
-- None<br/><br/>
+- None.<br/><br/>
 
 <b>Business Logic:</b><br/>
-1. Fetch all hospitals from the database.<br/>
-2. Select only the <b>Government</b> field.<br/>
-3. Return the list of strings representing hospital governments.<br/><br/>
+1. Check if hospital governments exist in the in-memory cache (<b>HospitalsGovernments</b>).<br/>
+2. If cached data exists, return it immediately.<br/>
+3. If not cached:<br/>
+   - Fetch hospital governments from the database.<br/>
+   - Store them in memory cache for <b>3 days</b>.<br/>
+4. Return the list of governments.<br/><br/>
 
 <b>Success Response (200 OK):</b><br/>
 <pre>
 [
-  ""Cairo"",
-  ""Giza"",
-  ""Alexandria"",
-  ""Aswan""
+    ""Cairo"",
+    ""Giza"",
+    ""Alexandria"",
+    ""Dakahlia""
 ]
 </pre><br/>
 
-<b>Other Errors (400 / 500):</b><br/>
-- <b>500 Internal Server Error</b> → Unexpected error while fetching the data.<br/><br/>
+<b>Empty Response Case:</b><br/>
+- If no hospitals exist, an empty array will be returned:<br/>
+<pre>
+[]
+</pre><br/><br/>
 
-<b>Notes for Frontend:</b><br/>
-- Response is a simple array of strings.<br/>
-- No pagination is applied.<br/>
-- Can be used to populate dropdowns or filters when adding or searching hospitals.<br/><br/>
+<b>Performance Notes:</b><br/>
+- Uses <b>in-memory caching</b> to reduce database load.<br/>
+- Cache duration: <b>3 days</b>.<br/>
+- Safe to be called frequently by the frontend.<br/><br/>
+
+<b>Errors:</b><br/>
+- <b>500 Internal Server Error</b>: Unexpected server error while fetching governments.<br/><br/>
 
 <b>HTTP Status Codes:</b><br/>
-- 200 OK → List retrieved successfully.<br/>
+- 200 OK → Governments retrieved successfully.<br/>
+- 500 Internal Server Error → Unexpected server error.<br/>
+";
+
+        #endregion
+
+
+        #region GetHospitalsNames
+        public const string GetHospitalsNamesSummary = "Get all hospital names";
+        public const string GetHospitalsNamesDescription =
+            @"
+<b>Purpose:</b><br/>
+- Retrieves a list of all hospital names only.<br/>
+- Used mainly for dropdowns, filters, search inputs, and autocomplete fields in the frontend.<br/><br/>
+
+<b>Authentication Required:</b><br/>
+- <b>No authentication required.</b><br/>
+- This endpoint is <b>public</b> and does not require a JWT token.<br/><br/>
+
+<b>Request Parameters:</b><br/>
+- None.<br/><br/>
+
+<b>Business Logic:</b><br/>
+1. Check if hospital names exist in the in-memory cache (<b>HospitalsNames</b>).<br/>
+2. If cached data exists, return it directly (fast response).<br/>
+3. If not cached:<br/>
+   - Fetch hospital names from the database.<br/>
+   - Store them in memory cache for <b>3 days</b>.<br/>
+4. Return the list of hospital names.<br/><br/>
+
+<b>Success Response (200 OK):</b><br/>
+<pre>
+[
+    ""Cairo Oncology Hospital"",
+    ""Alexandria Cancer Center"",
+    ""Giza Medical Institute""
+]
+</pre><br/>
+
+<b>Empty Response Case:</b><br/>
+- If no hospitals exist, an empty array will be returned:<br/>
+<pre>
+[]
+</pre><br/>
+
+<b>Performance Notes:</b><br/>
+- Uses <b>in-memory caching</b> to reduce database load.<br/>
+- Cache duration: <b>3 days</b>.<br/>
+- Ideal for frequent frontend calls.<br/><br/>
+
+<b>Errors:</b><br/>
+- <b>500 Internal Server Error</b>: Unexpected server error while fetching hospital names.<br/><br/>
+
+<b>HTTP Status Codes:</b><br/>
+- 200 OK → Hospital names retrieved successfully.<br/>
 - 500 Internal Server Error → Unexpected server error.<br/>
 ";
 
