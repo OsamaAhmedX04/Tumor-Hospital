@@ -31,6 +31,30 @@ namespace TumorHospital.WebAPI.Controllers
             return Ok(await _hospitalService.GetHospitals());
         }
 
+
+
+
+        [SwaggerOperation(Summary = HospitalDocs.GetHospitalDashboardSummary, Description = HospitalDocs.GetHospitalDashboardDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
+        [HttpGet("dashboard/{hospitalId}")]
+        public async Task<IActionResult> GetHospitalDashboard(Guid hospitalId)
+        {
+            try
+            {
+                var dashboard = await _hospitalService.GetHospitalDashboard(hospitalId);
+                return Ok(dashboard);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("NotFound", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+
+        }
+
+
+
+
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalDoctorsSummary, Description = HospitalDocs.GetAllHospitalDoctorsDescription)]
         [Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/doctors")]
@@ -48,6 +72,9 @@ namespace TumorHospital.WebAPI.Controllers
 
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
+
+
 
 
         [SwaggerOperation(Summary = HospitalDocs.GetHospitalDoctorSummary, Description = HospitalDocs.GetHospitalDoctorDescription)]
@@ -69,6 +96,8 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+
+
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalReceptionistsSummary, Description = HospitalDocs.GetAllHospitalReceptionistsDescription)]
         [Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/receptionists")]
@@ -88,10 +117,21 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+
+
         [SwaggerOperation(Summary = HospitalDocs.GetHospitalGovernmentsExistanceSummary, Description = HospitalDocs.GetHospitalGovernmentsExistanceDescription)]
         [HttpGet("governments")]
         public async Task<IActionResult> GetHospitalGovernmentsExistance()
             => Ok(await _hospitalService.GetHospitalGovernments());
+
+
+
+        [SwaggerOperation(Summary = HospitalDocs.GetHospitalsNamesSummary, Description = HospitalDocs.GetHospitalsNamesDescription)]
+        [HttpGet("hospital-names")]
+        public async Task<IActionResult> GetHospitalsNames()
+            => Ok(await _hospitalService.GetHospitalsNames());
+
+
 
 
         [SwaggerOperation(Summary = HospitalDocs.AddHospitalSummary, Description = HospitalDocs.AddHospitalDescription)]
@@ -119,6 +159,8 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+
+
         [SwaggerOperation(Summary = HospitalDocs.UpdateHospitalSummary, Description = HospitalDocs.UpdateHospitalDescription)]
         [Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{hospitalId}")]
@@ -142,6 +184,8 @@ namespace TumorHospital.WebAPI.Controllers
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
+
 
 
         [SwaggerOperation(Summary = HospitalDocs.DeleteHospitalSummary, Description = HospitalDocs.DeleteHospitalDescription)]

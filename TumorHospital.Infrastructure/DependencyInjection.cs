@@ -119,7 +119,7 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IReceptionService, ReceptionService>();
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddScoped<IDonationService, DonationService>();
+            services.AddScoped<INeedService, NeedService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISpecializationService, SpecializationService>();
             services.AddScoped<IDoctorService, DoctorService>();
@@ -128,6 +128,8 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IBillSevice, BillService>();
             services.AddScoped<IPrescriptionService, PrescriptionService>();
             services.AddScoped<IHospitalService, HospitalService>();
+            services.AddScoped<IVolunteerService, VolunteerService>();
+            services.AddScoped<IDonationService, DonationService>();
             #endregion
 
             #region BackgroundServices

@@ -141,23 +141,60 @@ namespace TumorHospital.Infrastructure.Services
                     Name = h.Name,
                     Government = h.Government,
                     Address = h.Address,
-                    MaxNumberOfDoctors = h.MaxNumberOfDoctors,
-                    MaxNumberOfReceptionists = h.MaxNumberOfReceptionists,
-                    NumberOfDoctors = h.Doctors.Count(),
-                    NumberOfReceptionists = h.Receptionists.Count(),
                 },
                 orderBy: h => h.OrderBy(h => h.Name)
                 );
         }
 
+        public async Task<HospitalDashboardDto> GetHospitalDashboard(Guid id)
+        {
+            return await _unitOfWork.Hospitals.GetEnhancedAsync(
+                filter: h => h.Id == id,
+                selector: h => new HospitalDashboardDto
+                {
+                    MaxNumberOfDoctors = h.MaxNumberOfDoctors,
+                    MaxNumberOfReceptionists = h.MaxNumberOfReceptionists,
+                    NumberOfDoctors = h.Doctors.Count(),
+                    NumberOfReceptionists = h.Receptionists.Count(),
+                }
+                ) ?? throw new Exception("Hospital Not Exist");
+        }
+
+        public async Task<List<string>> GetHospitalsNames()
+        {
+            if(!_cache.TryGetValue("HospitalsNames", out List<string>? names))
+            {
+                names = await _unitOfWork.Hospitals.GetAllAsync(selector: h => h.Name);
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(3)
+                };
+                _cache.Set("HospitalsNames", names);
+            }
+            return names ?? new List<string>();
+                
+        }
+
         public async Task<List<string>> GetHospitalGovernments()
-            => await _unitOfWork.Hospitals.GetAllAsync(selector: h => h.Government);
+        {
+            if (!_cache.TryGetValue("HospitalsGovernments", out List<string>? governments))
+            {
+                governments = await _unitOfWork.Hospitals.GetAllAsync(selector: h => h.Government);
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(3)
+                };
+                _cache.Set("HospitalsGovernments", governments);
+            }
+            return governments ?? new List<string>();
+
+        }
 
         private async Task<bool> IsDuplicatedAddress(string address)
             => await _unitOfWork.Hospitals.AnyAsync(h => h.Address == address);
         private async Task<bool> IsDuplicatedName(string name)
             => await _unitOfWork.Hospitals.AnyAsync(h => h.Name == name);
 
-
+        
     }
 }

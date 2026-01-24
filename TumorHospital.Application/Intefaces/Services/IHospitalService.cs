@@ -11,10 +11,12 @@ namespace TumorHospital.Application.Intefaces.Services
         Task UpdateHospital(Guid id, HospitalDto model);
         Task DeleteHospital(Guid id);
 
+        Task<List<HospitalInfoDto>> GetHospitals();
+        Task<HospitalDashboardDto> GetHospitalDashboard(Guid id);
         Task<PageSourcePagination<DoctorDto>> GetHospitalDoctors(Guid id, string? doctorName = null, int pageNumber = 1);
         Task<DoctorInformationDto> GetHospitalDoctor(string doctorId);
         Task<PageSourcePagination<ReceptionistDto>> GetHospitalReceptionists(Guid id, string? receptionistName = null, int pageNumber = 1);
-        Task<List<HospitalInfoDto>> GetHospitals();
         Task<List<string>> GetHospitalGovernments();
+        Task<List<string>> GetHospitalsNames();
     }
 }
