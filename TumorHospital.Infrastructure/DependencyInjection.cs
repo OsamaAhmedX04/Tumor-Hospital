@@ -172,7 +172,7 @@ namespace TumorHospital.Infrastructure
             RecurringJob.AddOrUpdate<IBackgroundAppointment>(
                 "ResetAppointmentsWeekly",
                 job => job.SetApprovedAppointmentsStatusToAbsent(),
-                "0 2 * * *",
+                "0 0 * * *", // every day at 12 AM
                 new RecurringJobOptions
                 {
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time"),

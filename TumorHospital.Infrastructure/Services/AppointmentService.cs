@@ -38,6 +38,8 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task AppointConsultation(NewConsultationAppointmentDto appointment)
         {
+            if (IsInValidTimeToAppoint())
+                throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
             var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
                               await _userManager.FindByIdAsync(appointment.DoctorId) != null;
             if (!isUsersExist)
@@ -51,6 +53,8 @@ namespace TumorHospital.Infrastructure.Services
         }
         public async Task AppointFollowUp(NewFollowUpAppointmentDto appointment)
         {
+            if (IsInValidTimeToAppoint())
+                throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
             var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
                               await _userManager.FindByIdAsync(appointment.DoctorId) != null;
             if (!isUsersExist)
@@ -64,6 +68,8 @@ namespace TumorHospital.Infrastructure.Services
         }
         public async Task AppointSurgery(NewSurgeryAppointmentDto appointment)
         {
+            if (IsInValidTimeToAppoint())
+                throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
             var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
                               await _userManager.FindByIdAsync(appointment.DoctorId) != null;
             if (!isUsersExist)
@@ -397,6 +403,9 @@ namespace TumorHospital.Infrastructure.Services
                 .Where(a => a.Status == AppointmentStatus.Pending && a.DoctorId == doctorId)
                 .ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Rejected));
         }
+
+        private bool IsInValidTimeToAppoint()
+            => DateTime.Now.Hour >= 0 && DateTime.Now.Hour <= 5;
 
 
     }
