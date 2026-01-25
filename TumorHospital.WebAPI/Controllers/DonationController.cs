@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.Donation;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -19,6 +21,7 @@ namespace TumorHospital.WebAPI.Controllers
             _volunteerValidator = volunteerValidator;
         }
 
+        [SwaggerOperation(Summary = DonationDocs.DonateSummary, Description = DonationDocs.DonateDescription)]
         [HttpPost("Donate")]
         public async Task<IActionResult> Donate(VolunteerDto volunteer)
         {

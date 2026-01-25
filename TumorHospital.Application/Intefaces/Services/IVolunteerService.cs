@@ -5,7 +5,7 @@ namespace TumorHospital.Application.Intefaces.Services
 {
     public interface IVolunteerService
     {
-        Task<PageSourcePagination<VolunteerInfoDto>> GetAllVolunteers(int pageSize, int pageNumber);
+        Task<PageSourcePagination<VolunteerInfoDto>> GetAllVolunteers(int pageNumber);
 
     }
 }

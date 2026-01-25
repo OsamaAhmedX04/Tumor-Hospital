@@ -1,4 +1,4 @@
-﻿namespace TumorHospital.WebAPI.Documentation.Authentication
+﻿namespace TumorHospital.WebAPI.Documentation
 {
     public static class AdminDocs
     {
@@ -8,50 +8,96 @@
         public const string CreateNewDoctorSummary = "Create a new doctor account";
         public const string CreateNewDoctorDescription =
             @"
-<b>Access Control:</b><br/>
-- Requires <b>Admin</b> role.<br/>
-- JWT token must be provided with Admin privileges.<br/><br/>
+<b>Authentication:</b><br/>
+- <b>JWT authentication required.</b><br/>
+- Accessible only by users with the <b>Admin</b> role.<br/><br/>
 
 <b>Purpose:</b><br/>
-- Creates a new doctor account and links it to a hospital and specialization.<br/>
-- Generates a random password and sends it to the doctor via email.<br/><br/>
+- Creates a new doctor account in the system.<br/>
+- Links the doctor to an existing <b>Hospital</b> and <b>Specialization</b>.<br/>
+- Generates a random password and sends it to the doctor's email.<br/>
+- Doctor is created with <b>InActiveDoctor</b> role by default.<br/><br/>
 
-<b>Request Body Validation Rules:</b><br/>
+<b>Request Type:</b><br/>
+- HTTP POST<br/><br/>
 
-<b>Personal Information:</b><br/>
-- <b>FirstName</b>: Required, max length 30 characters.<br/>
-- <b>LastName</b>: Required, max length 30 characters.<br/>
-- <b>Email</b>: Required, must be a valid email format, must be unique.<br/>
-- <b>Gender</b>: Required, allowed values: <b>Male</b> or <b>Female</b> only.<br/><br/>
+<b>Request Body:</b><br/>
+- <b>NewDoctorDto</b> object containing personal, professional, financial and schedule information.<br/><br/>
 
-<b>Professional Information:</b><br/>
-- <b>SpecializationName</b>: Required, must exist in the system.<br/>
-- <b>HospitalName</b>: Required, must exist in the system.<br/>
-- Hospital must not exceed its maximum allowed number of doctors.<br/><br/>
+<b>Personal Information Validation:</b><br/>
+<ul>
+  <li><b>FirstName</b>: Required, max length 30.</li>
+  <li><b>LastName</b>: Required, max length 30.</li>
+  <li><b>Email</b>: Required, valid email format, must be unique.</li>
+  <li><b>Gender</b>: Required, allowed values: <b>Male</b> or <b>Female</b>.</li>
+</ul><br/>
+
+<b>Professional Information Validation:</b><br/>
+<ul>
+  <li><b>SpecializationName</b>: Required, must exist in the system.</li>
+  <li><b>HospitalName</b>: Required, must exist in the system.</li>
+  <li>Hospital must not exceed its maximum number of doctors.</li>
+</ul><br/>
 
 <b>Financial Rules:</b><br/>
-- <b>ConsultationCost</b>: Must be greater than 0.<br/>
-- <b>FollowUpCost</b>: Must be greater than 0 and less than or equal to ConsultationCost.<br/>
-- <b>IsSurgeon</b>: Required (true or false).<br/>
-- <b>SurgeryCost</b>:<br/>
-&nbsp;&nbsp;• Required only if IsSurgeon = true.<br/>
-&nbsp;&nbsp;• Must be greater than ConsultationCost.<br/>
-&nbsp;&nbsp;• Must be greater than FollowUpCost.<br/><br/>
+<ul>
+  <li><b>ConsultationCost</b>: Must be greater than 0.</li>
+  <li><b>FollowUpCost</b>: Must be greater than 0 and less than or equal to ConsultationCost.</li>
+  <li><b>IsSurgeon</b>: Required.</li>
+  <li><b>SurgeryCost</b>:
+    <ul>
+      <li>Required only if IsSurgeon = true.</li>
+      <li>Must be greater than ConsultationCost.</li>
+      <li>Must be greater than FollowUpCost.</li>
+    </ul>
+  </li>
+</ul><br/>
 
 <b>Schedules Rules:</b><br/>
-- <b>Schedules</b>: Required.<br/>
-- Must contain between <b>3 and 5</b> working days per week.<br/>
-- Duplicate days are not allowed.<br/>
-- Each schedule item must pass its own validation rules (DoctorScheduleDtoValidator).<br/><br/>
+<ul>
+  <li><b>Schedules</b>: Required.</li>
+  <li>Must contain between <b>3 and 5</b> working days.</li>
+  <li>Duplicate days are not allowed.</li>
+  <li>Each schedule item must pass <b>DoctorScheduleDtoValidator</b>.</li>
+    <b>Validation Rules:</b><br/>
 
-<b>Business Logic:</b><br/>
-1. Validate request body using FluentValidation.<br/>
-2. Ensure specialization exists.<br/>
-3. Ensure hospital exists and has available doctor slots.<br/>
-4. Create Identity user with a generated random password.<br/>
-5. Assign the user to <b>InActiveDoctor</b> role.<br/>
-6. Create doctor record and link it to hospital and specialization.<br/>
-7. Send login credentials to doctor's email.<br/><br/>
+<b>dayOfWeek:</b><br/>
+<ul>
+  <li>Required.</li>
+  <li>Friday is <b>not allowed</b> (official holiday).</li>
+  <li>Allowed values only:
+    <ul>
+      <li>Saturday</li>
+      <li>Sunday</li>
+      <li>Monday</li>
+      <li>Tuesday</li>
+      <li>Wednesday</li>
+      <li>Thursday</li>
+    </ul>
+  </li>
+  <li>Doctor cannot have duplicate schedules for the same day.</li>
+</ul><br/>
+
+<b>startTime:</b><br/>
+<ul>
+  <li>Required.</li>
+  <li>Must be greater than or equal to <b>06:00 AM</b>.</li>
+  <li>Must be less than or equal to <b>04:00 PM</b>.</li>
+  <li>End time is calculated automatically as <b>startTime + 8 hours</b>.</li>
+</ul><br/>
+
+</ul><br/>
+
+<b>Business Logic Flow:</b><br/>
+<ol>
+  <li>Validate request body using FluentValidation.</li>
+  <li>Ensure specialization exists.</li>
+  <li>Ensure hospital exists and has available doctor slots.</li>
+  <li>Create Identity user with a generated random password.</li>
+  <li>Assign user to <b>InActiveDoctor</b> role.</li>
+  <li>Create doctor entity and link it to hospital and specialization.</li>
+  <li>Send login credentials to doctor's email.</li>
+</ol><br/>
 
 <b>Success Response (200 OK):</b><br/>
 <pre>
@@ -60,15 +106,26 @@
 }
 </pre><br/>
 
-<b>Validation Error Response (400 Bad Request):</b><br/>
-- Returned when request validation fails or business rules are violated.<br/>
-- Response contains a list of field-specific errors.<br/><br/>
+<b>Error Responses:</b><br/>
+<ul>
+  <li><b>400 Bad Request</b>:
+    <ul>
+      <li>Validation errors.</li>
+      <li>Specialization or hospital does not exist.</li>
+      <li>Hospital reached max number of doctors.</li>
+    </ul>
+  </li>
+  <li><b>401 Unauthorized</b>: Missing or invalid JWT.</li>
+  <li><b>403 Forbidden</b>: User is not Admin.</li>
+  <li><b>500 Internal Server Error</b>: Unexpected server error.</li>
+</ul><br/>
 
-<b>Possible Errors:</b><br/>
-- Specialization does not exist.<br/>
-- Hospital does not exist.<br/>
-- Hospital has reached maximum number of doctors.<br/>
-- Identity creation failure (email already exists, password rules, etc).<br/>
+<b>Frontend Notes:</b><br/>
+<ul>
+  <li>Validate schedules count (3–5) before sending request.</li>
+  <li>Prevent duplicate working days.</li>
+  <li>Display API validation messages directly to the user.</li>
+</ul>
 ";
 
         #endregion

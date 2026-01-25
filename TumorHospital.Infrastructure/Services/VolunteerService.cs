@@ -14,7 +14,7 @@ namespace TumorHospital.Infrastructure.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<PageSourcePagination<VolunteerInfoDto>> GetAllVolunteers(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<VolunteerInfoDto>> GetAllVolunteers(int pageNumber)
         {
             return await _unitOfWork.VolunteerDonations.GetAllPaginatedEnhancedAsync(
                 selector: volunteer => new VolunteerInfoDto
@@ -26,7 +26,7 @@ namespace TumorHospital.Infrastructure.Services
                     CharityNeedCategory = volunteer.CharityNeed!.Category.ToString(),
                     DonationDate = volunteer.DonationDate
                 },
-                pageSize: pageSize,
+                pageSize: 20,
                 pageNumber: pageNumber
                 );
         }

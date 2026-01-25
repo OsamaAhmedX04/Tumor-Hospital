@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Domain.Constants;
-using TumorHospital.WebAPI.Documentation.Authentication;
+using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -30,7 +30,6 @@ namespace TumorHospital.WebAPI.Controllers
             _doctorValidator = doctorValidator;
             _receptionistValidator = receptionistValidator;
         }
-
 
         [SwaggerOperation(Summary = AdminDocs.CreateNewDoctorSummary, Description = AdminDocs.CreateNewDoctorDescription)]
         [HttpPost("create-doctor")]

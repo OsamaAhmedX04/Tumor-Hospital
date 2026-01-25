@@ -1,4 +1,4 @@
-﻿namespace TumorHospital.WebAPI.Documentation.Authentication
+﻿namespace TumorHospital.WebAPI.Documentation
 {
     public static class SpecializationDocs
     {
