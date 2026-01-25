@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
+using TumorHospital.WebAPI.Documentation.Authentication;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -16,6 +20,9 @@ namespace TumorHospital.WebAPI.Controllers
             _specializationService = specializationService;
         }
 
+
+        [SwaggerOperation(Summary = SpecializationDocs.GetSpecializationsSummary, Description = SpecializationDocs.GetSpecializationsDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpGet]
         public async Task<IActionResult> GetSpecializations()
         {
@@ -30,10 +37,17 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
+
+
+        [SwaggerOperation(Summary = SpecializationDocs.GetSpecializationNamesSummary, Description = SpecializationDocs.GetSpecializationNamesDescription)]
         [HttpGet("Specialization-names")]
         public async Task<IActionResult> GetSpecializationNames()
                => Ok(await _specializationService.GetSpecializationNames());
 
+
+
+        [SwaggerOperation(Summary = SpecializationDocs.AddSpecializationsSummary, Description = SpecializationDocs.AddSpecializationsDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddSpecializations(SpecializationDto model)
         {
@@ -49,6 +63,10 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
+
+
+        [SwaggerOperation(Summary = SpecializationDocs.UpdateSpecializationsSummary, Description = SpecializationDocs.UpdateSpecializationsDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSpecializations(Guid id, SpecializationDto model)
         {
@@ -64,6 +82,10 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
+
+
+        [SwaggerOperation(Summary = SpecializationDocs.DeleteSpecializationsSummary, Description = SpecializationDocs.DeleteSpecializationsDescription)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSpecializations(Guid id)
         {

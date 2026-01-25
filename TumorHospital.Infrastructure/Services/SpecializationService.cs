@@ -21,6 +21,8 @@ namespace TumorHospital.Infrastructure.Services
         {
             if (string.IsNullOrEmpty(model.Name))
                 throw new ArgumentException("Specialization name cannot be empty.");
+            if (model.Name.Length > 50)
+                throw new ArgumentException("Specialization name Length Can not excced 50 char");
 
             bool isExisting = await _unitOfWork.Specializations
                 .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
@@ -48,6 +50,8 @@ namespace TumorHospital.Infrastructure.Services
 
             if (string.IsNullOrEmpty(model.Name))
                 throw new ArgumentException("Specialization name cannot be empty.");
+            if (model.Name.Length > 50)
+                throw new ArgumentException("Specialization name Length Can not excced 50 char");
 
             bool isExisting = await _unitOfWork.Specializations
                 .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
