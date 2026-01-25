@@ -1,6 +1,4 @@
-﻿using TumorHospital.Domain.Enums;
-
-namespace TumorHospital.Application.DTOs.Response.Bill
+﻿namespace TumorHospital.Application.DTOs.Response.Bill
 {
     public class PatientBillDto
     {

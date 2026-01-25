@@ -169,7 +169,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<List<string>> GetHospitalsNames()
         {
-            if(!_cache.TryGetValue("HospitalsNames", out List<string>? names))
+            if (!_cache.TryGetValue("HospitalsNames", out List<string>? names))
             {
                 names = await _unitOfWork.Hospitals.GetAllAsync(selector: h => h.Name);
                 var cacheOptions = new MemoryCacheEntryOptions
@@ -179,7 +179,7 @@ namespace TumorHospital.Infrastructure.Services
                 _cache.Set("HospitalsNames", names);
             }
             return names ?? new List<string>();
-                
+
         }
 
         public async Task<List<string>> GetHospitalGovernments()
@@ -202,6 +202,6 @@ namespace TumorHospital.Infrastructure.Services
         private async Task<bool> IsDuplicatedName(string name)
             => await _unitOfWork.Hospitals.AnyAsync(h => h.Name == name);
 
-        
+
     }
 }

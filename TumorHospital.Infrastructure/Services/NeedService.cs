@@ -45,7 +45,7 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        
+
 
         public async Task<PageSourcePagination<NeedDto>> GetAllNeeds(int pageSize, int pageNumber)
         {
@@ -112,7 +112,7 @@ namespace TumorHospital.Infrastructure.Services
         }
 
 
-        
+
 
     }
 }

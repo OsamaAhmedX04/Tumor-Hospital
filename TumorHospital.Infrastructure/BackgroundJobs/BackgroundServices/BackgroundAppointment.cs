@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 using TumorHospital.Application.Intefaces.BackgroundServices;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Enums;
@@ -18,7 +17,7 @@ namespace TumorHospital.Infrastructure.BackgroundJobs.BackgroundServices
         public async Task SetApprovedAppointmentsStatusToAbsent()
         {
             DayOfWeek today = DateTime.Now.DayOfWeek;
-            
+
             // Previous day
             DayOfWeek previousDay = (DayOfWeek)(((int)today + 6) % 7);
 
@@ -38,7 +37,7 @@ namespace TumorHospital.Infrastructure.BackgroundJobs.BackgroundServices
                 .GetAllAsIQueryable()
                 .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == prevDay);
 
-            if(appointments is not null)
+            if (appointments is not null)
             {
                 await appointments.ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Absent));
 

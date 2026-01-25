@@ -241,7 +241,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = AuthDocs.RefreshTokenSummary, Description = AuthDocs.RefreshTokenDescription)]
-        [Authorize(Roles = SystemRole.InActiveRole+","+SystemRole.ActiveRole)]
+        [Authorize(Roles = SystemRole.InActiveRole + "," + SystemRole.ActiveRole)]
         [HttpPost("Refresh-Token")]
         [EnableRateLimiting("strict")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)

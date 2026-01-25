@@ -117,12 +117,12 @@ namespace TumorHospital.WebAPI.Controllers
         [HttpGet("Categories")]
         public async Task<IActionResult> GetCategoriesOfNeeds() => Ok(_needService.GetCategoriesOfNeeds());
 
-        
 
-        
 
-        
 
-        
+
+
+
+
     }
 }

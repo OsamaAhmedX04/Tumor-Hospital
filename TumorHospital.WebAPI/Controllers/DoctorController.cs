@@ -57,7 +57,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = DoctorDocs.GetDoctorSummary, Description = DoctorDocs.GetDoctorDescription)]
-        [Authorize(Roles =SystemRole.Patient)]
+        [Authorize(Roles = SystemRole.Patient)]
         [HttpGet("{doctorId}")]
         public async Task<IActionResult> GetDoctor(string doctorId, string patientId)
         {

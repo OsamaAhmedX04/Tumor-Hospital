@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.DTOs.Response.Schedule;
@@ -102,7 +101,7 @@ namespace TumorHospital.Infrastructure.Services
                 );
             var isThereAnyAppointmentsInThatDay = await _unitOfWork.Appointments
                 .AnyAsync(
-                a => a.DoctorId == doctorId 
+                a => a.DoctorId == doctorId
                 && a.DayOfWeek == day!.Name
                 && (a.Status == AppointmentStatus.Approved || a.Status == AppointmentStatus.Pending));
 
