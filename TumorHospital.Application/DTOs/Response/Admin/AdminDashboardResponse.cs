@@ -7,6 +7,7 @@
         public int TotalReceptionists { get; set; }
         public int TotalAppointments { get; set; }
         public int PendingBills { get; set; }
+        public int CancelledBills { get; set; }
         public int TotalBills { get; set; }
         public decimal TotalRevenue { get; set; }
         public int TotalCharityNeeds { get; set; }

@@ -177,6 +177,9 @@ namespace TumorHospital.Infrastructure.Services
             var pendingBills = await _unitOfWork.Bills.GetAllAsync(b => b, b => b.Status == Domain.Enums.BillStatus.Pending);
             var pendingBillsCount = pendingBills.Count;
 
+            var cancelledBills = await _unitOfWork.Bills.GetAllAsync(b => b, b => b.Status == Domain.Enums.BillStatus.Cancelled);
+            var cancelledBillsCount = pendingBills.Count;
+
             var completedCharity = await _unitOfWork.CharityNeeds.GetAllAsync(c => c, c => c.IsCompleted);
             var completedCharityCount = completedCharity.Count;
 
@@ -189,6 +192,7 @@ namespace TumorHospital.Infrastructure.Services
                 TotalBills = totalBills,
                 TotalRevenue = totalRevenue,
                 PendingBills = pendingBillsCount,
+                CancelledBills = cancelledBillsCount,
                 TotalCharityNeeds = totalCharityNeeds,
                 CompletedCharityNeeds = completedCharityCount
             };
