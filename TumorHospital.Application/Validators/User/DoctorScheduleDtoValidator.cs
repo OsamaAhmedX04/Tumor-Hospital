@@ -17,7 +17,7 @@ namespace TumorHospital.Application.Validators.User
             RuleFor(d => d.StartTime)
                 .NotEmpty().WithMessage("Please Enter Start Time")
                 .GreaterThanOrEqualTo(new TimeSpan(6, 0, 0)).WithMessage("Hospital Start Time in 6 AM")
-                .LessThanOrEqualTo(new TimeSpan(17, 0, 0)).WithMessage("Hospital Close At 1 and Doctors work time is 8 hours");
+                .LessThanOrEqualTo(new TimeSpan(16, 0, 0)).WithMessage("Hospital Close At 12 AM and Doctors work time is 8 hours");
         }
     }
 }
