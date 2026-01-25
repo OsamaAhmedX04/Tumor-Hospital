@@ -10,6 +10,6 @@ namespace TumorHospital.Application.DTOs.Response.Bill
         public decimal TotalAmount { get; set; }
         public DateOnly AppointmentDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public BillStatus Status { get; set; }
+        public string Status { get; set; }
     }
 }

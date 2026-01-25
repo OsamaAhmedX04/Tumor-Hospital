@@ -53,7 +53,7 @@ namespace TumorHospital.Infrastructure.Services
                     CreatedAt = b.CreatedAt,
                     PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.LastName}",
                     AppointmentDate = b.Appointment!.AttendenceDate!.Value,
-                    Status = b.Status,
+                    Status = b.Status.ToString(),
                     TotalAmount = b.TotalAmount,
                     BillCode = b.Code
                 },
