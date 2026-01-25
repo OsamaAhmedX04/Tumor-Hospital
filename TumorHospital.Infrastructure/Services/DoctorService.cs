@@ -111,7 +111,8 @@ namespace TumorHospital.Infrastructure.Services
                     FullName = d.User.FirstName + " " + d.User.LastName,
                     ProfileImageUrl = d.ProfilePicturePath == null ?
                                     null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
-                    Gender = d.Gender
+                    Gender = d.Gender,
+                    IsActive = true
                 },
                 pageSize: 15,
                 pageNumber: pageNumber
@@ -144,7 +145,8 @@ namespace TumorHospital.Infrastructure.Services
                     FullName = d.User.FirstName + " " + d.User.LastName,
                     ProfileImageUrl = d.ProfilePicturePath == null ?
                                     null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
-                    Gender = d.Gender
+                    Gender = d.Gender,
+                    IsActive = true
                 },
                 pageSize: 15,
                 pageNumber: pageNumber

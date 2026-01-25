@@ -90,7 +90,8 @@ namespace TumorHospital.Infrastructure.Services
                     Id = d.ApplicationUserId,
                     FullName = d.User.FirstName + " " + d.User.LastName,
                     Gender = d.Gender,
-                    ProfileImageUrl = SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath
+                    ProfileImageUrl = SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
+                    IsActive = d.User.IsActive
                 },
                 pageNumber: pageNumber,
                 pageSize: 10
