@@ -7,7 +7,7 @@ namespace TumorHospital.Application.Intefaces.Services
     {
         Task<List<DoctorWorkScheduleDto>> GetDoctorSchedule(string doctorId);
         Task AddSchedule(string doctorId, DoctorScheduleDto doctorSchedule);
-        Task DeleteScheduale(Guid scheduleId);
+        Task DeleteScheduale(Guid scheduleId, string doctorId);
         Task UpdateScheduale(Guid scheduleId, string doctorId, DoctorScheduleDto schedule);
         Task<bool> IsWorkIn(string doctorId, string day);
         Task<List<DurationTimeAvailabilityDto>> GetAvailableTimes(string doctorId, string day);

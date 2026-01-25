@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.Appointment;
 using TumorHospital.Application.DTOs.Response.Schedule;
@@ -85,7 +86,7 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task DeleteScheduale(Guid scheduleId)
+        public async Task DeleteScheduale(Guid scheduleId, string doctorId)
         {
             var numberOfDoctorWorkDays = await _unitOfWork.DoctorSchedules
                 .GetAllAsIQueryable()
@@ -94,6 +95,19 @@ namespace TumorHospital.Infrastructure.Services
                 .FirstOrDefaultAsync();
             if (numberOfDoctorWorkDays <= 3)
                 throw new Exception("Each Doctor Must have at least 3 days of work");
+
+            var day = await _unitOfWork.DoctorSchedules.GetEnhancedAsync(
+                filter: ds => ds.Id == scheduleId,
+                selector: ds => new { Name = ds.DayOfWeek }
+                );
+            var isThereAnyAppointmentsInThatDay = await _unitOfWork.Appointments
+                .AnyAsync(
+                a => a.DoctorId == doctorId 
+                && a.DayOfWeek == day!.Name
+                && (a.Status == AppointmentStatus.Approved || a.Status == AppointmentStatus.Pending));
+
+            if (isThereAnyAppointmentsInThatDay)
+                throw new Exception("There is Appointments with this doctor at that day , You Can Delete Schedule Between 12AM and 5AM or After That Day");
 
             _unitOfWork.DoctorSchedules.Delete(scheduleId);
             await _unitOfWork.CompleteAsync();
@@ -123,6 +137,19 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task UpdateScheduale(Guid scheduleId, string doctorId, DoctorScheduleDto schedule)
         {
+            var day = await _unitOfWork.DoctorSchedules.GetEnhancedAsync(
+                filter: ds => ds.Id == scheduleId,
+                selector: ds => new { Name = ds.DayOfWeek }
+                );
+            var isThereAnyAppointmentsInThatDay = await _unitOfWork.Appointments
+                .AnyAsync(
+                a => a.DoctorId == doctorId
+                && a.DayOfWeek == day!.Name
+                && (a.Status == AppointmentStatus.Approved || a.Status == AppointmentStatus.Pending));
+
+            if (isThereAnyAppointmentsInThatDay)
+                throw new Exception("There is Appointments with this doctor at that day , You Can Update Schedule Between 12AM and 5AM OR After That Day");
+
             var isThereDuplicationDay = await IsDuplicatedDoctorWorkDayAsync(doctorId, schedule.DayOfWeek);
             if (isThereDuplicationDay)
                 throw new Exception("This Doctor Already Work On This Day");

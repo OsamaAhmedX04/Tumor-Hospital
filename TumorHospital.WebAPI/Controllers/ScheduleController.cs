@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -19,11 +21,15 @@ namespace TumorHospital.WebAPI.Controllers
             _scheduleValidator = scheduleValidator;
         }
 
+
+        [Authorize(Roles = SystemRole.Admin + "," + SystemRole.Doctor)]
         [HttpGet]
         public async Task<IActionResult> GetDoctorSchedule(string doctorId)
             => Ok(await _scheduleService.GetDoctorSchedule(doctorId));
 
 
+
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddSchedule(string doctorId, DoctorScheduleDto schedule)
         {
@@ -46,6 +52,9 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPut]
         public async Task<IActionResult> UpdateSchedule(Guid scheduleId, string doctorId, DoctorScheduleDto schedule)
         {
@@ -68,12 +77,15 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpDelete]
-        public async Task<IActionResult> DeleteSchedule(Guid scheduleId)
+        public async Task<IActionResult> DeleteSchedule(Guid scheduleId, string doctorId)
         {
             try
             {
-                await _scheduleService.DeleteScheduale(scheduleId);
+                await _scheduleService.DeleteScheduale(scheduleId, doctorId);
                 return Ok(new { Message = "Schedule Deleted Successfully" });
             }
             catch (Exception ex)
