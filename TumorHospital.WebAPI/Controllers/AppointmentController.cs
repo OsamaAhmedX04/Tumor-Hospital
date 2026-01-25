@@ -41,6 +41,10 @@ namespace TumorHospital.WebAPI.Controllers
                     await _appointmentService.AppointConsultation(appointmentDto);
                     return Ok(new { Message = "Appointment Created Successfully" });
                 }
+                catch (ApplicationException ex)
+                {
+                    ModelState.AddModelError("Time", ex.Message);
+                }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("Identity", ex.Message);
@@ -65,6 +69,10 @@ namespace TumorHospital.WebAPI.Controllers
                     await _appointmentService.AppointFollowUp(appointmentDto);
                     return Ok(new { Message = "Appointment Created Successfully" });
                 }
+                catch (ApplicationException ex)
+                {
+                    ModelState.AddModelError("Time", ex.Message);
+                }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("Identity", ex.Message);
@@ -88,6 +96,10 @@ namespace TumorHospital.WebAPI.Controllers
                 {
                     await _appointmentService.AppointSurgery(appointmentDto);
                     return Ok(new { Message = "Appointment Created Successfully" });
+                }
+                catch (ApplicationException ex)
+                {
+                    ModelState.AddModelError("Time", ex.Message);
                 }
                 catch (Exception ex)
                 {
