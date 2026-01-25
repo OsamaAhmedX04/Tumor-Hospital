@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
+using TumorHospital.WebAPI.Documentation.Authentication;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -18,6 +22,8 @@ namespace TumorHospital.WebAPI.Controllers
             _appointmentService = appointmentService;
         }
 
+        [SwaggerOperation(Summary = DoctorDocs.UploadProfilePictureSummary, Description = DoctorDocs.UploadProfilePictureDescription)]
+        [Authorize(Roles = SystemRole.Doctor)]
         [HttpPost("Profile-Picture")]
         public async Task<IActionResult> UploadProfilePicture(IFormFile file, string userId)
         {
@@ -33,6 +39,8 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
+
+        [SwaggerOperation(Summary = DoctorDocs.GetDoctorsSummary, Description = DoctorDocs.GetDoctorsDescription)]
         [HttpGet("/api/Doctors")]
         public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null)
         {
@@ -47,6 +55,9 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
+
+        [SwaggerOperation(Summary = DoctorDocs.GetDoctorSummary, Description = DoctorDocs.GetDoctorDescription)]
+        [Authorize(Roles =SystemRole.Patient)]
         [HttpGet("{doctorId}")]
         public async Task<IActionResult> GetDoctor(string doctorId, string patientId)
         {
@@ -61,8 +72,11 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
+
+        [SwaggerOperation(Summary = DoctorDocs.GetDoctorAppointmentsSummary, Description = DoctorDocs.GetDoctorAppointmentsDescription)]
+        [Authorize(Roles = SystemRole.Doctor)]
         [HttpGet("Appointments")]
-        public async Task<IActionResult> GetAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<IActionResult> GetDoctorAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
         {
             try
             {
