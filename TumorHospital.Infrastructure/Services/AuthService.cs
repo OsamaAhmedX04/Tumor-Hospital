@@ -108,6 +108,7 @@ namespace TumorHospital.Infrastructure.Services
             var userRoles = await _userManager.GetRolesAsync(user);
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
+                Id = user.Id,
                 Email = user.Email!,
                 Name = user.FirstName + " " + user.LastName,
                 Role = userRoles[0]
@@ -188,6 +189,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
+                Id = user.Id,
                 Email = user.Email!,
                 Name = user.FirstName + " " + user.LastName,
                 Role = userRoles[0]
@@ -274,6 +276,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
+                Id = user.Id,
                 Email = user.Email!,
                 Name = user.FirstName + " " + user.LastName,
                 Role = isInActiveDoctor ? Role.Doctor.ToString() : Role.Receptionist.ToString()
@@ -408,6 +411,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
+                Id = user.Id,
                 Email = user.Email!,
                 Name = user.FirstName + " " + user.LastName,
                 Role = userRoles.FirstOrDefault()!
