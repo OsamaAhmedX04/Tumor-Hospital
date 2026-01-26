@@ -21,7 +21,7 @@ namespace TumorHospital.Infrastructure.ExternalServices
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Name, user.Name),
+                new Claim("UserId", user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
