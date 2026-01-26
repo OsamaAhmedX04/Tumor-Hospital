@@ -84,6 +84,8 @@ namespace TumorHospital.Infrastructure.Services
 
 
 
+
+
         public async Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
             Expression<Func<Appointment, bool>>? filter = null;
@@ -261,6 +263,9 @@ namespace TumorHospital.Infrastructure.Services
             return reasons;
         }
 
+
+
+
         public async Task AcceptAppointment(Guid appointmentId)
         {
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
@@ -378,6 +383,7 @@ namespace TumorHospital.Infrastructure.Services
 
 
         }
+
         public async Task RejectAppointment(Guid appointmentId)
         {
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
