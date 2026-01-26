@@ -33,7 +33,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = FAQsDocs.AddFAQSummary, Description = FAQsDocs.AddFAQDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddFAQ([FromBody] NewFAQsDto dto)
         {
@@ -57,7 +57,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = FAQsDocs.UpdateFAQSummary, Description = FAQsDocs.UpdateFAQDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateFAQ(int id, [FromBody] NewFAQsDto dto)
         {
@@ -81,7 +81,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = FAQsDocs.DeleteFAQSummary, Description = FAQsDocs.DeleteFAQDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFAQ(int id)
         {

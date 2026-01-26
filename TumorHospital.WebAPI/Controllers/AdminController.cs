@@ -10,7 +10,7 @@ using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
 {
-    [Authorize(Roles = SystemRole.Admin)]
+    //[Authorize(Roles = SystemRole.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase

@@ -23,7 +23,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = DoctorDocs.UploadProfilePictureSummary, Description = DoctorDocs.UploadProfilePictureDescription)]
-        [Authorize(Roles = SystemRole.Doctor)]
+        //[Authorize(Roles = SystemRole.Doctor)]
         [HttpPost("Profile-Picture")]
         public async Task<IActionResult> UploadProfilePicture(IFormFile file, string userId)
         {
@@ -57,7 +57,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = DoctorDocs.GetDoctorSummary, Description = DoctorDocs.GetDoctorDescription)]
-        [Authorize(Roles = SystemRole.Patient)]
+        //[Authorize(Roles = SystemRole.Patient)]
         [HttpGet("{doctorId}")]
         public async Task<IActionResult> GetDoctor(string doctorId, string patientId)
         {
@@ -74,7 +74,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = DoctorDocs.GetDoctorAppointmentsSummary, Description = DoctorDocs.GetDoctorAppointmentsDescription)]
-        [Authorize(Roles = SystemRole.Doctor)]
+        //[Authorize(Roles = SystemRole.Doctor)]
         [HttpGet("Appointments")]
         public async Task<IActionResult> GetDoctorAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
         {

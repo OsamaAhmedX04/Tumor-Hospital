@@ -24,7 +24,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalsSummary, Description = HospitalDocs.GetAllHospitalsDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet("/api/Hospitals")]
         public async Task<IActionResult> GetAllHospitals()
         {
@@ -35,7 +35,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = HospitalDocs.GetHospitalDashboardSummary, Description = HospitalDocs.GetHospitalDashboardDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet("dashboard/{hospitalId}")]
         public async Task<IActionResult> GetHospitalDashboard(Guid hospitalId)
         {
@@ -56,7 +56,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalDoctorsSummary, Description = HospitalDocs.GetAllHospitalDoctorsDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/doctors")]
         public async Task<IActionResult> GetAllHospitalDoctors(Guid hospitalId, string doctorName, int pageNumber)
         {
@@ -78,7 +78,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = HospitalDocs.GetHospitalDoctorSummary, Description = HospitalDocs.GetHospitalDoctorDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet("doctor/{doctorId}")]
         public async Task<IActionResult> GetHospitalDoctor(string doctorId)
         {
@@ -99,7 +99,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalReceptionistsSummary, Description = HospitalDocs.GetAllHospitalReceptionistsDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/receptionists")]
         public async Task<IActionResult> GetAllHospitalReceptionists(Guid hospitalId, string receptionistName, int pageNumber)
         {
@@ -135,7 +135,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = HospitalDocs.AddHospitalSummary, Description = HospitalDocs.AddHospitalDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddHospital(HospitalDto model)
         {
@@ -162,7 +162,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = HospitalDocs.UpdateHospitalSummary, Description = HospitalDocs.UpdateHospitalDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{hospitalId}")]
         public async Task<IActionResult> UpdateHospital(Guid hospitalId, HospitalDto model)
         {
@@ -189,7 +189,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = HospitalDocs.DeleteHospitalSummary, Description = HospitalDocs.DeleteHospitalDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpDelete("{hospitalId}")]
         public async Task<IActionResult> DeleteHospital(Guid hospitalId)
         {

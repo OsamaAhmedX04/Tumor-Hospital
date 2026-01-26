@@ -25,7 +25,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = ScheduleDocs.GetDoctorScheduleSummary, Description = ScheduleDocs.GetDoctorScheduleDescription)]
-        [Authorize(Roles = SystemRole.Admin + "," + SystemRole.Doctor)]
+        //[Authorize(Roles = SystemRole.Admin + "," + SystemRole.Doctor)]
         [HttpGet]
         public async Task<IActionResult> GetDoctorSchedule(string doctorId)
             => Ok(await _scheduleService.GetDoctorSchedule(doctorId));
@@ -33,7 +33,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = ScheduleDocs.AddScheduleSummary, Description = ScheduleDocs.AddScheduleDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddSchedule(string doctorId, DoctorScheduleDto schedule)
         {
@@ -58,7 +58,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = ScheduleDocs.UpdateScheduleSummary, Description = ScheduleDocs.UpdateScheduleDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut]
         public async Task<IActionResult> UpdateSchedule(Guid scheduleId, string doctorId, DoctorScheduleDto schedule)
         {
@@ -83,7 +83,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = ScheduleDocs.DeleteScheduleSummary, Description = ScheduleDocs.DeleteScheduleDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpDelete]
         public async Task<IActionResult> DeleteSchedule(Guid scheduleId, string doctorId)
         {

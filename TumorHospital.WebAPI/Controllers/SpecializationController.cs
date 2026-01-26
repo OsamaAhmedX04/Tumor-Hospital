@@ -22,7 +22,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = SpecializationDocs.GetSpecializationsSummary, Description = SpecializationDocs.GetSpecializationsDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet]
         public async Task<IActionResult> GetSpecializations()
         {
@@ -47,7 +47,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = SpecializationDocs.AddSpecializationsSummary, Description = SpecializationDocs.AddSpecializationsDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddSpecializations(SpecializationDto model)
         {
@@ -66,7 +66,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = SpecializationDocs.UpdateSpecializationsSummary, Description = SpecializationDocs.UpdateSpecializationsDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSpecializations(Guid id, SpecializationDto model)
         {
@@ -85,7 +85,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = SpecializationDocs.DeleteSpecializationsSummary, Description = SpecializationDocs.DeleteSpecializationsDescription)]
-        [Authorize(Roles = SystemRole.Admin)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSpecializations(Guid id)
         {
