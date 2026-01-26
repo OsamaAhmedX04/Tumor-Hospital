@@ -69,6 +69,13 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception("This Address Already Exist");
             if (await IsDuplicatedName(model.Name))
                 throw new Exception("This Name Already Exist");
+            var numberOfCurrentDoctors = await _unitOfWork.Doctors.Count(d => d.HospitalId == id);
+            var numberOfCurrentReceptionist = await _unitOfWork.Receptionists.Count(r => r.HospitalId == id);
+
+            if (model.MaxNumberOfDoctors < numberOfCurrentDoctors)
+                throw new Exception($"There is {numberOfCurrentDoctors} currently so you can go with only {model.MaxNumberOfDoctors}");
+            if (model.MaxNumberOfReceptionists < numberOfCurrentReceptionist)
+                throw new Exception($"There is {numberOfCurrentReceptionist} currently so you can go with only {model.MaxNumberOfReceptionists}");
 
             hospital.Name = model.Name;
             hospital.Government = model.Government;
