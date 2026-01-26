@@ -60,6 +60,7 @@ namespace TumorHospital.Infrastructure.Services
                 LastName = model.LastName,
                 UserName = model.Email,
                 EmailConfirmed = true,
+                IsActive = false,
                 Email = model.Email,
             };
             string doctorPassword = Generator.GenerateRandomPassword();

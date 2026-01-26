@@ -251,10 +251,10 @@ namespace TumorHospital.Infrastructure.Services
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) throw new Exception("User Not Exist");
-
+            
             var isInActiveDoctor = await _userManager.IsInRoleAsync(user, Role.InActiveDoctorRole.ToString());
             var isInActiveReceptionist = await _userManager.IsInRoleAsync(user, Role.InActiveReceptionistRole.ToString());
-            if (!isInActiveDoctor || !isInActiveReceptionist) throw new Exception("User Already Active");
+            if (!isInActiveDoctor && !isInActiveReceptionist) throw new Exception("User Already Active");
 
             var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
