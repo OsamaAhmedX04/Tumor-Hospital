@@ -130,6 +130,7 @@ namespace TumorHospital.Infrastructure.Services
                     FromTime = a.FromTime,
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
+                    IsPrescriptionExist = a.Prescription != null,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
@@ -186,6 +187,7 @@ namespace TumorHospital.Infrastructure.Services
                     FromTime = a.FromTime,
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
+                    IsPrescriptionExist = a.Prescription != null,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
@@ -242,6 +244,7 @@ namespace TumorHospital.Infrastructure.Services
                     FromTime = a.FromTime,
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
+                    IsPrescriptionExist = a.Prescription != null,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
@@ -292,7 +295,7 @@ namespace TumorHospital.Infrastructure.Services
                 appointment.ToTime = lastAppointmentInRequestedDay.ToTime!.Value.Add(TimeSpan.FromMinutes(30));
 
                 if (appointment.ToTime == doctorDaySchedule!.EndTime)
-                    await RejectRestOfAppointments(appointment.DoctorId!);
+                    await RejectRestOfAppointments(appointment.DoctorId!,appointment.DayOfWeek);
             }
 
             appointment.AttendenceDate = DayHelper.GetDateThisWeek(appointment.DayOfWeek);
@@ -397,10 +400,10 @@ namespace TumorHospital.Infrastructure.Services
                 .ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Completed));
         }
 
-        private async Task RejectRestOfAppointments(string doctorId)
+        private async Task RejectRestOfAppointments(string doctorId, Day day)
         {
             await _unitOfWork.Appointments.GetAllAsIQueryable()
-                .Where(a => a.Status == AppointmentStatus.Pending && a.DoctorId == doctorId)
+                .Where(a => a.Status == AppointmentStatus.Pending && a.DoctorId == doctorId && a.DayOfWeek == day)
                 .ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Rejected));
         }
 
