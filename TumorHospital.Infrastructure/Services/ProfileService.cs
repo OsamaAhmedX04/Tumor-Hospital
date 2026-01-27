@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
+using TumorHospital.Domain.Entities;
 
 namespace TumorHospital.Infrastructure.Services
 {
@@ -87,7 +89,11 @@ namespace TumorHospital.Infrastructure.Services
             var doctor = await _unitOfWork.Doctors.GetAsync(
                 selector: x => x,
                 filter: x => x.ApplicationUserId == userId,
-                Includes: x => x.User
+                Includes: new Expression<Func<Doctor, object>>[]
+                {
+                    d => d.User,
+                    d => d.Specialization
+                }
             );
 
 
