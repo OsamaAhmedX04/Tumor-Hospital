@@ -131,6 +131,9 @@ Authorization: Bearer {JWT_TOKEN}
   - Filters doctors by hospital government name.<br/>
   - Example: Cairo, Giza, Alexandria.<br/><br/>
 
+- <b>specializationName</b> (string, optional):<br/>
+  - Filters doctors by specialization name.<br/>
+
 <b>Filtering Rules:</b><br/>
 - Only <b>active doctors</b> are returned.<br/>
 - If <b>workDay</b> is provided, only doctors who work on that day are returned.<br/>

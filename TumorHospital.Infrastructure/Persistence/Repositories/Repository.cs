@@ -26,7 +26,6 @@ namespace TumorHospital.Infrastructure.Persistence.Repositories
 
         public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter)
             => await _dbSet.FirstOrDefaultAsync(filter);
-
         public async Task<List<TEntity>> GetAllAsync()
             => await _dbSet.ToListAsync();
         public async Task<List<TEntity>> GetAllAsNoTrackedAsync()

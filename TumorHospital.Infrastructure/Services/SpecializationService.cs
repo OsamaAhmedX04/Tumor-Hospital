@@ -79,18 +79,25 @@ namespace TumorHospital.Infrastructure.Services
         {
             var doctor = await _unitOfWork.Doctors.GetAsync(
                 filter: d => d.ApplicationUserId == doctorId,
-                selector: d => d,
-                Includes: d => d.Specialization
+                selector: d => d
                 );
 
             if (doctor is null)
                 throw new Exception("Doctor not exist");
 
-            var specializations = await GetSpecializationNames();
-            if (!specializations.Contains(specializationName))
+            var specialization = await _unitOfWork.Specializations.GetAsync(
+                filter: s => s.Name == specializationName,
+                selector: s => new { 
+                    Id = s.Id,
+                    Name = s.Name
+                }
+                );
+
+            if (specialization == null || specialization.Name != specializationName)
                 throw new BadHttpRequestException("This Specialization not exist");
 
-            doctor.Specialization!.Name = specializationName;
+            doctor.SpecializationId = specialization.Id;
+
             await _unitOfWork.CompleteAsync();
         }
 

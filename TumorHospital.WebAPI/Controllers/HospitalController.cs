@@ -58,11 +58,11 @@ namespace TumorHospital.WebAPI.Controllers
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalDoctorsSummary, Description = HospitalDocs.GetAllHospitalDoctorsDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/doctors")]
-        public async Task<IActionResult> GetAllHospitalDoctors(Guid hospitalId, string doctorName, int pageNumber)
+        public async Task<IActionResult> GetAllHospitalDoctors(Guid hospitalId, int pageNumber, string? doctorName = null, string? specializationName = null)
         {
             try
             {
-                var doctors = await _hospitalService.GetHospitalDoctors(hospitalId, doctorName, pageNumber);
+                var doctors = await _hospitalService.GetHospitalDoctors(hospitalId, pageNumber, doctorName, specializationName);
                 return Ok(doctors);
             }
             catch (Exception ex)

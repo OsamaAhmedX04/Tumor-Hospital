@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using LinqKit;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.Hospital;
 using TumorHospital.Application.DTOs.Response.Hospital;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
+using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
@@ -88,16 +91,28 @@ namespace TumorHospital.Infrastructure.Services
             _cache.Remove("HospitalsGovernments");
         }
 
-        public async Task<PageSourcePagination<DoctorDto>> GetHospitalDoctors(Guid id, string? doctorName = null, int pageNumber = 1)
+        public async Task<PageSourcePagination<DoctorDto>> GetHospitalDoctors(Guid id, int pageNumber = 1, string? doctorName = null, string? specializationName = null)
         {
+            if (!await _unitOfWork.Hospitals.IsExistAsync(id))
+                throw new Exception("Hospital Not Exist");
+
+            Expression<Func<Doctor, bool>> filter = d => d.HospitalId == id;
+
+            if (!string.IsNullOrEmpty(doctorName))
+                filter = filter.And(d => (d.User.FirstName + " " + d.User.LastName).Contains(doctorName));
+
+            if (!string.IsNullOrEmpty(specializationName))
+                filter = filter.And(d => d.Specialization != null && d.Specialization.Name == specializationName);
+
             return await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
-                filter: d => d.HospitalId == id && (d.User.FirstName + " " + d.User.LastName).Contains(doctorName),
+                filter: filter,
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,
                     FullName = d.User.FirstName + " " + d.User.LastName,
                     Gender = d.Gender,
-                    ProfileImageUrl = SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
+                    ProfileImageUrl = d.ProfilePicturePath == null ?
+                                    null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
                     IsActive = d.User.IsActive
                 },
                 pageNumber: pageNumber,
@@ -135,8 +150,16 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<PageSourcePagination<ReceptionistDto>> GetHospitalReceptionists(Guid id, string? receptionistName = null, int pageNumber = 1)
         {
+            if (!await _unitOfWork.Hospitals.IsExistAsync(id))
+                throw new Exception("Hospital Not Exist");
+
+            Expression<Func<Receptionist, bool>> filter = d => d.HospitalId == id;
+
+            if (!string.IsNullOrEmpty(receptionistName))
+                filter = filter.And(r => (r.User.FirstName + " " + r.User.LastName).Contains(receptionistName));
+
             return await _unitOfWork.Receptionists.GetAllPaginatedEnhancedAsync(
-                filter: r => r.HospitalId == id && (r.User.FirstName + " " + r.User.LastName).Contains(receptionistName),
+                filter: filter,
                 selector: r => new ReceptionistDto
                 {
                     Id = r.ApplicationUserId,

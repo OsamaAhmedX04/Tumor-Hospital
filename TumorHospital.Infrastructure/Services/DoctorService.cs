@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using LinqKit;
+using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Helpers;
@@ -91,36 +92,15 @@ namespace TumorHospital.Infrastructure.Services
 
 
 
-        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null)
+        
+        public async Task<PageSourcePagination<DoctorDto>> GetDoctors(
+    int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null, string? specializationName = null)
         {
-            PageSourcePagination<DoctorDto> doctors;
-            if (string.IsNullOrEmpty(workDay))
+            Expression<Func<Doctor, bool>> filter = d => d.User.IsActive;
+
+            if (!string.IsNullOrEmpty(workDay))
             {
-                Expression<Func<Doctor, bool>> filter = d => d.User.IsActive;
-                if (IsSurgeon is not null) filter = d => d.User.IsActive && d.IsSurgeon == IsSurgeon;
-
-                if (government is not null)
-                    filter = d => d.User.IsActive && d.IsSurgeon == IsSurgeon && d.Hospital!.Government == government;
-
-
-                doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
-                filter: filter,
-                selector: d => new DoctorDto
-                {
-                    Id = d.ApplicationUserId,
-                    FullName = d.User.FirstName + " " + d.User.LastName,
-                    ProfileImageUrl = d.ProfilePicturePath == null ?
-                                    null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
-                    Gender = d.Gender,
-                    IsActive = true
-                },
-                pageSize: 15,
-                pageNumber: pageNumber
-                );
-            }
-            else
-            {
-                var day = workDay!.ToLower() switch
+                var day = workDay.ToLower() switch
                 {
                     "monday" => Day.Monday,
                     "tuesday" => Day.Tuesday,
@@ -131,27 +111,33 @@ namespace TumorHospital.Infrastructure.Services
                     "sunday" => Day.Sunday,
                     _ => throw new ArgumentException("Invalid day of the week"),
                 };
-                Expression<Func<Doctor, bool>> filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive;
-                if (IsSurgeon is not null) filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon;
+                filter = filter.And(d => d.Schedules.Any(s => s.DayOfWeek == day));
+            }
 
-                if (government is not null)
-                    filter = d => d.Schedules.Any(s => s.DayOfWeek == day) && d.User.IsActive && d.IsSurgeon == IsSurgeon && d.Hospital!.Government == government;
+            if (IsSurgeon.HasValue)
+                filter = filter.And(d => d.IsSurgeon == IsSurgeon.Value);
 
-                doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
+            if (!string.IsNullOrEmpty(government))
+                filter = filter.And(d => d.Hospital != null && d.Hospital.Government == government);
+
+            if (!string.IsNullOrEmpty(specializationName))
+                filter = filter.And(d => d.Specialization != null && d.Specialization.Name == specializationName);
+
+            var doctors = await _unitOfWork.Doctors.GetAllPaginatedEnhancedAsync(
                 filter: filter,
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,
                     FullName = d.User.FirstName + " " + d.User.LastName,
-                    ProfileImageUrl = d.ProfilePicturePath == null ?
-                                    null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
+                    ProfileImageUrl = d.ProfilePicturePath == null
+                        ? null
+                        : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
                     Gender = d.Gender,
                     IsActive = true
                 },
                 pageSize: 15,
                 pageNumber: pageNumber
-                );
-            }
+            );
 
             return doctors;
         }

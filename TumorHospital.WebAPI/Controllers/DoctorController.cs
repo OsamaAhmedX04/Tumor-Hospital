@@ -42,11 +42,11 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = DoctorDocs.GetDoctorsSummary, Description = DoctorDocs.GetDoctorsDescription)]
         [HttpGet("/api/Doctors")]
-        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null)
+        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null, string? specializationName = null)
         {
             try
             {
-                return Ok(await _doctorService.GetDoctors(pageNumber, workDay, IsSurgeon, government));
+                return Ok(await _doctorService.GetDoctors(pageNumber, workDay, IsSurgeon, government, specializationName));
             }
             catch (Exception ex)
             {
