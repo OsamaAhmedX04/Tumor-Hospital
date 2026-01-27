@@ -317,5 +317,66 @@
 ";
 
         #endregion
+
+
+        #region AssignSpecializationToDoctor
+
+        public const string AssignSpecializationToDoctorSummary = "Assign a specialization to a doctor";
+        public const string AssignSpecializationToDoctorDescription =
+            @"
+<b>Authentication & Authorization:</b><br/>
+- JWT token is REQUIRED.<br/>
+- User must have the <b>Admin</b> role.<br/><br/>
+
+<b>Purpose:</b><br/>
+- Assigns an existing medical specialization to a specific doctor.<br/>
+- Updates the doctor's specialization in the system.<br/>
+- Used to manage doctor expertise and ensure proper categorization of medical services.<br/><br/>
+
+<b>Request Type:</b><br/>
+- HTTP PUT<br/><br/>
+
+<b>Query Parameters:</b><br/>
+- <b>doctorId</b> (string, required): The ApplicationUserId of the doctor.<br/>
+- <b>specializationName</b> (string, required): The name of the specialization to assign.<br/><br/>
+
+<b>Business Rules:</b><br/>
+- The doctor must exist in the system.<br/>
+- The specialization must be one of the predefined specialization names.<br/>
+- Updating a doctor’s specialization replaces the previous one.<br/><br/>
+
+<b>Success Response (200 OK):</b><br/>
+<pre>
+{
+  ""message"": ""Specialization Assigned To Doctor Successfully""
+}
+</pre><br/>
+
+<b>Error Responses:</b><br/>
+- <b>400 Bad Request</b>:
+  <ul>
+    <li>If doctor does not exist.</li>
+    <li>If specialization name is invalid or does not exist.</li>
+  </ul><br/>
+- <b>401 Unauthorized</b>:
+  <ul>
+    <li>JWT token missing or invalid.</li>
+  </ul><br/>
+- <b>403 Forbidden</b>:
+  <ul>
+    <li>User is authenticated but does not have Admin role.</li>
+  </ul><br/>
+- <b>500 Internal Server Error</b>:
+  <ul>
+    <li>Unexpected server error.</li>
+  </ul><br/>
+
+<b>Frontend Notes:</b><br/>
+- Fetch the list of valid specializations from <b>GetSpecializationNames</b> to populate dropdowns.<br/>
+- Show validation messages if assignment fails.<br/>
+- Confirm success visually after the update.<br/>
+";
+
+        #endregion
     }
 }

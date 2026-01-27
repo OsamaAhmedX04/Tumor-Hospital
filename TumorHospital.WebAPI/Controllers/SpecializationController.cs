@@ -102,6 +102,8 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+        [SwaggerOperation(Summary = SpecializationDocs.AssignSpecializationToDoctorSummary, Description = SpecializationDocs.AssignSpecializationToDoctorDescription)]
+        //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("assign-to-doctor")]
         public async Task<IActionResult> AssignSpecializationToDoctor(string doctorId,string specializationName)
         {
