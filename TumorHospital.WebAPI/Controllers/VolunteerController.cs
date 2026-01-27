@@ -18,7 +18,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = VolunteerDocs.GetAllVolunteersSummary, Description = VolunteerDocs.GetAllVolunteersDescription)]
-        [Authorize(Roles = SystemRole.Admin + "," + SystemRole.Receptionist)]
+        //[Authorize(Roles = SystemRole.Admin + "," + SystemRole.Receptionist)]
         [HttpGet("Volunteers")]
         public async Task<IActionResult> GetAllVolunteers(int pageNumber)
         {
