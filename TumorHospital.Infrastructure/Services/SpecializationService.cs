@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Intefaces.Services;
@@ -12,10 +13,12 @@ namespace TumorHospital.Infrastructure.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMemoryCache _cache;
-        public SpecializationService(IUnitOfWork unitOfWork, IMemoryCache cache)
+        private readonly ISpecializationService _specializationService;
+        public SpecializationService(IUnitOfWork unitOfWork, IMemoryCache cache, ISpecializationService specializationService)
         {
             _unitOfWork = unitOfWork;
             _cache = cache;
+            _specializationService = specializationService;
         }
         public async Task AddSpecialization(SpecializationDto model)
         {
@@ -74,6 +77,25 @@ namespace TumorHospital.Infrastructure.Services
             _cache.Remove("SpecializationNames");
         }
 
+        public async Task AssignSpecializationToDoctor(string doctorId, string specializationName)
+        {
+            var doctor = await _unitOfWork.Doctors.GetAsync(
+                filter: d => d.ApplicationUserId == doctorId,
+                selector: d => d,
+                Includes: d => d.Specialization
+                );
+
+            if (doctor is null)
+                throw new Exception("Doctor not exist");
+
+            var specializations = await _specializationService.GetSpecializationNames();
+            if (!specializations.Contains(specializationName))
+                throw new BadHttpRequestException("This Specialization not exist");
+
+            doctor.Specialization!.Name = specializationName;
+            await _unitOfWork.CompleteAsync();
+        }
+
         public async Task<List<SpecializationDetailsDto>> GetSpecializations()
             => await _unitOfWork.Specializations.GetAllAsync(
                 selector: s => new SpecializationDetailsDto
@@ -107,7 +129,6 @@ namespace TumorHospital.Infrastructure.Services
 
         }
 
-
-
+        
     }
 }

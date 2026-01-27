@@ -8,6 +8,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task AddSpecialization(SpecializationDto model);
         Task UpdateSpecialization(Guid id, SpecializationDto model);
         Task DeleteSpecialization(Guid id);
+        Task AssignSpecializationToDoctor(string doctorId, string specializationName);
         Task<List<SpecializationDetailsDto>> GetSpecializations();
         Task<List<string>> GetSpecializationNames();
     }

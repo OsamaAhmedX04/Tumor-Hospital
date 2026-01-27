@@ -100,5 +100,25 @@ namespace TumorHospital.WebAPI.Controllers
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
         }
+
+
+        [HttpPut("assign-to-doctor")]
+        public async Task<IActionResult> AssignSpecializationToDoctor(string doctorId,string specializationName)
+        {
+            try
+            {
+                await _specializationService.AssignSpecializationToDoctor(doctorId,specializationName);
+                return Ok(new { Message = "Specialization Assigned To Doctor Successfully" });
+            }
+            catch (BadHttpRequestException ex)
+            {
+                ModelState.AddModelError("Name", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
     }
 }
