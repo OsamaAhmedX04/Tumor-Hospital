@@ -13,11 +13,10 @@ namespace TumorHospital.Infrastructure.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMemoryCache _cache;
-        public SpecializationService(IUnitOfWork unitOfWork, IMemoryCache cache, ISpecializationService specializationService)
+        public SpecializationService(IUnitOfWork unitOfWork, IMemoryCache cache)
         {
             _unitOfWork = unitOfWork;
             _cache = cache;
-            _specializationService = specializationService;
         }
         public async Task AddSpecialization(SpecializationDto model)
         {
