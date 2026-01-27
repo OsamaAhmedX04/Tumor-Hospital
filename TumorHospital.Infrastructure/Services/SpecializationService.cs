@@ -13,7 +13,6 @@ namespace TumorHospital.Infrastructure.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMemoryCache _cache;
-        private readonly ISpecializationService _specializationService;
         public SpecializationService(IUnitOfWork unitOfWork, IMemoryCache cache, ISpecializationService specializationService)
         {
             _unitOfWork = unitOfWork;
@@ -88,7 +87,7 @@ namespace TumorHospital.Infrastructure.Services
             if (doctor is null)
                 throw new Exception("Doctor not exist");
 
-            var specializations = await _specializationService.GetSpecializationNames();
+            var specializations = await GetSpecializationNames();
             if (!specializations.Contains(specializationName))
                 throw new BadHttpRequestException("This Specialization not exist");
 
