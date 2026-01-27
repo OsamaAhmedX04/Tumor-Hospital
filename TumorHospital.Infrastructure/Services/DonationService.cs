@@ -26,7 +26,9 @@ namespace TumorHospital.Infrastructure.Services
 
             var volunteerToAdd = _mapper.Map<VolunteerDonation>(volunteer);
             await _unitOfWork.VolunteerDonations.AddAsync(volunteerToAdd);
+
             need.CollectedAmount += volunteer.AmountDonated;
+            if (need.NeedAmount <= volunteer.AmountDonated) need.IsCompleted = true;
 
             await _unitOfWork.CompleteAsync();
         }

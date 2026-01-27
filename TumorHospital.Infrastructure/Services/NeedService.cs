@@ -24,30 +24,7 @@ namespace TumorHospital.Infrastructure.Services
             _fileService = fileService;
         }
 
-        public async Task AddNeed(NewNeedDto need)
-        {
-            var needToAdd = _mapper.Map<CharityNeed>(need);
-
-            needToAdd.ImagePath = await _fileService.UploadAsync(need.Image, "Images/CharityNeeds");
-
-            await _unitOfWork.CharityNeeds.AddAsync(needToAdd);
-
-            await _unitOfWork.CompleteAsync();
-        }
-
-        public async Task DeleteNeed(Guid id)
-        {
-            var isExist = await _unitOfWork.CharityNeeds.IsExistAsync(id);
-            if (!isExist)
-                throw new Exception("Need not found");
-
-            _unitOfWork.CharityNeeds.Delete(id);
-            await _unitOfWork.CompleteAsync();
-        }
-
-
-
-        public async Task<PageSourcePagination<NeedDto>> GetAllNeeds(int pageSize, int pageNumber)
+        public async Task<PageSourcePagination<NeedDto>> GetAllNeeds(int pageNumber)
         {
             return await _unitOfWork.CharityNeeds.GetAllPaginatedEnhancedAsync(
                 selector: need => new NeedDto
@@ -57,7 +34,7 @@ namespace TumorHospital.Infrastructure.Services
                     CharityCategory = need.Category.ToString(),
                     CreatedAt = need.CreatedAt
                 },
-                pageSize: pageSize,
+                pageSize: 10,
                 pageNumber: pageNumber
                 );
         }
@@ -84,7 +61,6 @@ namespace TumorHospital.Infrastructure.Services
                 ) ?? throw new Exception("Need not found");
         }
 
-
         public CharityCategoriesDto GetCategoriesOfNeeds()
         {
             var categories = Enum.GetNames(typeof(CharityCategory)).ToList();
@@ -95,6 +71,26 @@ namespace TumorHospital.Infrastructure.Services
             return dto;
         }
 
+        public async Task AddNeed(NewNeedDto need)
+        {
+            var needToAdd = _mapper.Map<CharityNeed>(need);
+
+            needToAdd.ImagePath = await _fileService.UploadAsync(need.Image, "Images/CharityNeeds");
+
+            await _unitOfWork.CharityNeeds.AddAsync(needToAdd);
+
+            await _unitOfWork.CompleteAsync();
+        }
+
+        public async Task DeleteNeed(Guid id)
+        {
+            var isExist = await _unitOfWork.CharityNeeds.IsExistAsync(id);
+            if (!isExist)
+                throw new Exception("Need not found");
+
+            _unitOfWork.CharityNeeds.Delete(id);
+            await _unitOfWork.CompleteAsync();
+        }
 
         public async Task UpdateNeed(UpdateNeedDto newNeed, Guid id)
         {
@@ -107,6 +103,7 @@ namespace TumorHospital.Infrastructure.Services
             need.ImagePath = await _fileService.EditAsync(need.ImagePath, newNeed.Image);
             need.NeedAmount = newNeed.NeedAmount;
             need.Category = Enum.Parse<CharityCategory>(newNeed.CharityCategory);
+            need.IsCompleted = need.NeedAmount <= need.CollectedAmount;
 
             await _unitOfWork.CompleteAsync();
         }
