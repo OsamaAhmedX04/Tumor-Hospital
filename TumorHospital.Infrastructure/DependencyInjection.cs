@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
 using System.Text;
+using TumorHospital.Application.DTOs.Response.About_Contact;
 using TumorHospital.Application.Intefaces.BackgroundServices;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;
@@ -32,8 +33,8 @@ namespace TumorHospital.Infrastructure
             #region DBContext And Identity
             // Register DbContext
             services.AddDbContext<AppDbContext>(options =>
-            //options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
-            options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
+            //options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
             ));
 
             // Register Identity
@@ -130,6 +131,8 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IHospitalService, HospitalService>();
             services.AddScoped<IVolunteerService, VolunteerService>();
             services.AddScoped<IDonationService, DonationService>();
+            services.AddScoped<IAboutService, AboutService>();
+            services.AddScoped<IOfferService, OfferService>();
             #endregion
 
             #region BackgroundServices
@@ -144,8 +147,8 @@ namespace TumorHospital.Infrastructure
                 option
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                //.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
-                .UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
+                .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+                //.UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
             });
             services.AddHangfireServer();
             #endregion

@@ -14,6 +14,7 @@ namespace TumorHospital.Application.Intefaces.UOW
 
         IRepository<Hospital> Hospitals { get; }
         IRepository<Bill> Bills { get; }
+        IRepository<Offer> Offers { get; }
         IRepository<CharityNeed> CharityNeeds { get; }
         IRepository<VolunteerDonation> VolunteerDonations { get; }
 

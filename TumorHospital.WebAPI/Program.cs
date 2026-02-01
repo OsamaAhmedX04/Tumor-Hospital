@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using TumorHospital.Application;
+using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Infrastructure;
 using TumorHospital.WebAPI.Extensions;
 
@@ -111,6 +112,16 @@ namespace TumorHospital.WebAPI
             app.UseAuthorization();
 
             app.UseHangfireDashboard("/hangfire");
+
+            RecurringJob.AddOrUpdate<IOfferService>(
+                recurringJobId: "NotifyExpiredOffers",
+                methodCall: service => service.GetExpiredOffersAsync(),
+                cronExpression: Cron.Daily,
+                options: new RecurringJobOptions
+                {
+                    TimeZone = TimeZoneInfo.Local
+                }
+            );
 
             app.MapControllers();
 

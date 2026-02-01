@@ -33,7 +33,7 @@ namespace TumorHospital.Infrastructure.Services
                     AppointmentDate = b.Appointment!.AttendenceDate!.Value,
                     PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.LastName}",
                     Status = b.Status.ToString(),
-                    TotalAmount = b.TotalAmount
+                    TotalAmount = b.FinalAmount
                 },
                 pageSize: 20,
                 pageNumber: pageNumber
@@ -54,7 +54,7 @@ namespace TumorHospital.Infrastructure.Services
                     PatientName = $"{b.Patient.User.FirstName} {b.Patient.User.LastName}",
                     AppointmentDate = b.Appointment!.AttendenceDate!.Value,
                     Status = b.Status.ToString(),
-                    TotalAmount = b.TotalAmount,
+                    TotalAmount = b.FinalAmount,
                     BillCode = b.Code
                 },
                 pageNumber: pageNumber,

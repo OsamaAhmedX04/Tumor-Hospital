@@ -15,9 +15,21 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(10);
 
-            builder.Property(b => b.TotalAmount)
-                .IsRequired()
-                .HasColumnType("DECIMAL(18,2)");
+            builder.Property(b => b.OriginalAmount)
+                   .IsRequired()
+                   .HasColumnType("DECIMAL(18,2)");
+
+            builder.Property(b => b.DiscountAmount)
+                   .IsRequired()
+                   .HasColumnType("DECIMAL(18,2)");
+
+            builder.Property(b => b.FinalAmount)
+                   .IsRequired()
+                   .HasColumnType("DECIMAL(18,2)");
+
+            builder.Property(b => b.AppliedOfferPercentage)
+                   .HasColumnType("DECIMAL(18,2)")
+                   .IsRequired(false);
 
             builder.Property(b => b.Code)
                 .IsRequired();

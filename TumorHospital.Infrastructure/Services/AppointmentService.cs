@@ -2,6 +2,7 @@
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Supabase.Gotrue.Mfa;
 using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.DTOs.Response.Appointment;
@@ -22,16 +23,19 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IScheduleService _scheduleService;
+        private readonly IOfferService _offerService;
         public AppointmentService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
-            IScheduleService scheduleService)
+            IScheduleService scheduleService,
+            IOfferService offerService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
             _scheduleService = scheduleService;
+            _offerService = offerService;
         }
 
 
@@ -300,7 +304,7 @@ namespace TumorHospital.Infrastructure.Services
                 appointment.ToTime = lastAppointmentInRequestedDay.ToTime!.Value.Add(TimeSpan.FromMinutes(30));
 
                 if (appointment.ToTime == doctorDaySchedule!.EndTime)
-                    await RejectRestOfAppointments(appointment.DoctorId!,appointment.DayOfWeek);
+                    await RejectRestOfAppointments(appointment.DoctorId!, appointment.DayOfWeek);
             }
 
             appointment.AttendenceDate = DayHelper.GetDateThisWeek(appointment.DayOfWeek);
@@ -325,11 +329,33 @@ namespace TumorHospital.Infrastructure.Services
             {
                 PatientId = appointment.PatientId,
                 AppointmentId = appointment.Id,
-                TotalAmount = amount!.Value,
+                OriginalAmount = amount!.Value,
                 Code = Generator.GenerateRandomBillCode(),
                 Status = BillStatus.Pending,
                 CreatedAt = DateTime.Now
             };
+
+            var total = bill.OriginalAmount;
+
+            var offers = await _offerService.GetAllOffersAsync();
+
+            var bestOffer = offers
+                .OrderByDescending(o => o.DiscountPercentage)
+                .FirstOrDefault();
+
+            decimal discount = 0;
+
+            if (bestOffer != null)
+            {
+                discount = total * (bestOffer.DiscountPercentage / 100m);
+
+                bill.AppliedOfferId = bestOffer.Id;
+                bill.AppliedOfferName = bestOffer.Title;
+                bill.AppliedOfferPercentage = bestOffer.DiscountPercentage;
+            }
+
+            bill.DiscountAmount = discount;
+            bill.FinalAmount = total - discount;
 
             await _unitOfWork.Bills.AddAsync(bill);
 

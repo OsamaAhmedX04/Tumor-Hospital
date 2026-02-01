@@ -23,6 +23,7 @@ namespace TumorHospital.Infrastructure.UOW
         public IRepository<Hospital> Hospitals { get; }
 
         public IRepository<Bill> Bills { get; }
+        public IRepository<Offer> Offers { get; }
 
         public IRepository<CharityNeed> CharityNeeds { get; }
 
@@ -62,6 +63,7 @@ namespace TumorHospital.Infrastructure.UOW
 
             Hospitals = new Repository<Hospital>(_db);
             Bills = new Repository<Bill>(_db);
+            Offers = new Repository<Offer>(_db);
             CharityNeeds = new Repository<CharityNeed>(_db);
             VolunteerDonations = new Repository<VolunteerDonation>(_db);
 

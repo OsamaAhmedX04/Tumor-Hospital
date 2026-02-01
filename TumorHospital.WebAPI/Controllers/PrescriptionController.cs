@@ -48,12 +48,21 @@ namespace TumorHospital.WebAPI.Controllers
         public async Task<IActionResult> Update(Guid id, PrescriptionCreateUpdateDto dto)
         {
             var validation = await _validator.ValidateAsync(dto);
-            if (!validation.IsValid)
-                return BadRequest(validation.Errors);
-
-            return await _service.UpdateAsync(id, dto)
-                ? Ok()
-                : NotFound();
+            if (validation.IsValid)
+            {
+                try
+                {
+                    await _service.UpdateAsync(id, dto);
+                    return Ok(new { Message = "New Prescription Has Updated Successfully" });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("DateConflict", ex.Message);
+                }
+            }
+            foreach (var error in validation.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [HttpGet("GetPrescription/{appointmentId}")]

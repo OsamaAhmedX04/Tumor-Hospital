@@ -19,6 +19,7 @@ namespace TumorHospital.Infrastructure.Persistence.Context
 
         public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Bill> Bills { get; set; }
+        public DbSet<Offer> Offers { get; set; }
         public DbSet<CharityNeed> CharityNeeds { get; set; }
         public DbSet<VolunteerDonation> VolunteerDonations { get; set; }
 

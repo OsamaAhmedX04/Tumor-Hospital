@@ -18,7 +18,13 @@ namespace TumorHospital.Domain.Entities
         public Guid? AppointmentId { get; set; }
         public Appointment? Appointment { get; set; }
 
-        public decimal TotalAmount { get; set; }
+        public decimal OriginalAmount { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal FinalAmount { get; set; }
+
+        public Guid? AppliedOfferId { get; set; }
+        public string? AppliedOfferName { get; set; }
+        public decimal? AppliedOfferPercentage { get; set; }
         public string Code { get; set; }
         public BillStatus Status { get; set; }
 

@@ -173,7 +173,7 @@ namespace TumorHospital.Infrastructure.Services
             var totalCharityNeeds = await _unitOfWork.CharityNeeds.Count();
 
             var paidBills = await _unitOfWork.Bills.GetAllAsync(b => b, b => b.Status == Domain.Enums.BillStatus.Paid);
-            var totalRevenue = paidBills.Sum(b => b.TotalAmount);
+            var totalRevenue = paidBills.Sum(b => b.FinalAmount);
 
             var pendingBills = await _unitOfWork.Bills.GetAllAsync(b => b, b => b.Status == Domain.Enums.BillStatus.Pending);
             var pendingBillsCount = pendingBills.Count;

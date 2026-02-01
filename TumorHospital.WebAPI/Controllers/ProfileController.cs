@@ -31,7 +31,6 @@ namespace TumorHospital.WebAPI.Controllers
             _receptionistValidator = receptionistValidator;
         }
 
-
         [SwaggerOperation(Summary = ProfileDocs.GetPatientProfileSummary, Description = ProfileDocs.GetPatientProfileDescription)]
         //[Authorize(Roles = SystemRole.Patient)]
         [HttpGet("GetPatientProfile/{userId}")]
@@ -42,8 +41,6 @@ namespace TumorHospital.WebAPI.Controllers
 
             return Ok(result);
         }
-
-        
 
         [SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
         //[Authorize(Roles = SystemRole.Patient)]
@@ -62,8 +59,6 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-
-
         [SwaggerOperation(Summary = ProfileDocs.GetDoctorProfileSummary, Description = ProfileDocs.GetDoctorProfileDescription)]
         //[Authorize(Roles = SystemRole.Doctor)]
         [HttpGet("GetDoctorProfile/{userId}")]
@@ -74,8 +69,6 @@ namespace TumorHospital.WebAPI.Controllers
 
             return Ok(result);
         }
-
-
 
         [SwaggerOperation(Summary = ProfileDocs.UpdateDoctorProfileSummary, Description = ProfileDocs.UpdateDoctorProfileDescription)]
         //[Authorize(Roles = SystemRole.Doctor)]
@@ -94,8 +87,6 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-
-
         [SwaggerOperation(Summary = ProfileDocs.GetReceptionistProfileSummary, Description = ProfileDocs.GetReceptionistProfileDescription)]
         //[Authorize(Roles = SystemRole.Receptionist)]
         [HttpGet("GetReceptionistProfile/{userId}")]
@@ -106,8 +97,6 @@ namespace TumorHospital.WebAPI.Controllers
 
             return Ok(result);
         }
-
-
 
         [SwaggerOperation(Summary = ProfileDocs.UpdateReceptionistProfileSummary, Description = ProfileDocs.UpdateReceptionistProfileDescription)]
         //[Authorize(Roles = SystemRole.Receptionist)]
