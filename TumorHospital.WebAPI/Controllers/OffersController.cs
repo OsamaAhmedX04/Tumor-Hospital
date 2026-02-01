@@ -23,7 +23,7 @@ namespace TumorHospital.WebAPI.Controllers
             _updateValidator = updateValidator;
         }
 
-        [HttpPost("AddOffer")]
+        [HttpPost]
         public async Task<IActionResult> AddOffer(AddOfferDto dto)
         {
             var validation = await _addValidator.ValidateAsync(dto);
@@ -44,7 +44,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpPut("UpdateOffer/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOffer(Guid id, UpdateOfferDto dto)
         {
             var validation = await _updateValidator.ValidateAsync(dto);
@@ -65,7 +65,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpDelete("DeleteOffer/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOffer(Guid id)
         {
             var success = await _offerService.RemoveOfferAsync(id);
@@ -73,21 +73,21 @@ namespace TumorHospital.WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("GetOffers")]
+        [HttpGet("Offers")]
         public async Task<IActionResult> GetOffers()
         {
             var offers = await _offerService.GetAllOffersAsync();
             return Ok(offers);
         }
 
-        [HttpGet("GetExpiredOffers")]
+        [HttpGet("ExpiredOffers")]
         public async Task<IActionResult> GetExpired()
         {
             var offers = await _offerService.GetExpiredOffersAsync();
             return Ok(offers);
         }
 
-        [HttpGet("GetUpcomingOffers")]
+        [HttpGet("UpcomingOffers")]
         public async Task<IActionResult> GetUpcoming()
         {
             var offers = await _offerService.GetUpcomingOffersAsync();

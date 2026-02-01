@@ -18,7 +18,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<AboutResponse> GetAboutAsync()
         {
-            var cacheKey = "about_en";
+            var cacheKey = "about";
 
             if (_cache.TryGetValue(cacheKey, out AboutResponse cached))
                 return cached;
@@ -31,7 +31,6 @@ namespace TumorHospital.Infrastructure.Services
                     Vision = "To be a leader in cancer treatment",
                     Email = "tumorhospital@gmail.com",
                     Phone = "+20 113 456 7890",
-                    Address = "Cairo, Egypt",
                     TotalDoctors = await _unitOfWork.Doctors.Count(),
                     TotalPatients = await _unitOfWork.Patients.Count(),
                     TotalReceptionist = await _unitOfWork.Receptionists.Count()
@@ -42,7 +41,7 @@ namespace TumorHospital.Infrastructure.Services
                 response,
                 new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7)
                 }
             );
 

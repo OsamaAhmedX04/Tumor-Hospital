@@ -33,7 +33,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = ProfileDocs.GetPatientProfileSummary, Description = ProfileDocs.GetPatientProfileDescription)]
         //[Authorize(Roles = SystemRole.Patient)]
-        [HttpGet("GetPatientProfile/{userId}")]
+        [HttpGet("PatientProfile/{userId}")]
         public async Task<IActionResult> GetPatientProfile(string userId)
         {
             var result = await _profileService.GetPatientProfile(userId);
@@ -44,7 +44,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
         //[Authorize(Roles = SystemRole.Patient)]
-        [HttpPut("UpdatePatientProfile/{userId}")]
+        [HttpPut("PatientProfile/{userId}")]
         [EnableRateLimiting("strict")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdatePatientProfileDto dto)
         {
@@ -61,7 +61,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = ProfileDocs.GetDoctorProfileSummary, Description = ProfileDocs.GetDoctorProfileDescription)]
         //[Authorize(Roles = SystemRole.Doctor)]
-        [HttpGet("GetDoctorProfile/{userId}")]
+        [HttpGet("DoctorProfile/{userId}")]
         public async Task<IActionResult> GetDoctorProfile(string userId)
         {
             var result = await _profileService.GetDoctorProfile(userId);
@@ -72,7 +72,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = ProfileDocs.UpdateDoctorProfileSummary, Description = ProfileDocs.UpdateDoctorProfileDescription)]
         //[Authorize(Roles = SystemRole.Doctor)]
-        [HttpPut("UpdateDoctorProfile/{userId}")]
+        [HttpPut("DoctorProfile/{userId}")]
         [EnableRateLimiting("strict")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdateDoctorProfileDto dto)
         {
@@ -89,7 +89,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = ProfileDocs.GetReceptionistProfileSummary, Description = ProfileDocs.GetReceptionistProfileDescription)]
         //[Authorize(Roles = SystemRole.Receptionist)]
-        [HttpGet("GetReceptionistProfile/{userId}")]
+        [HttpGet("ReceptionistProfile/{userId}")]
         public async Task<IActionResult> GetReceptionistProfile(string userId)
         {
             var result = await _profileService.GetReceptionistProfile(userId);
@@ -100,7 +100,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = ProfileDocs.UpdateReceptionistProfileSummary, Description = ProfileDocs.UpdateReceptionistProfileDescription)]
         //[Authorize(Roles = SystemRole.Receptionist)]
-        [HttpPut("UpdateReceptionistProfile/{userId}")]
+        [HttpPut("ReceptionistProfile/{userId}")]
         [EnableRateLimiting("strict")]
         public async Task<IActionResult> UpdateProfile(string userId, UpdateReceptionistProfileDto dto)
         {

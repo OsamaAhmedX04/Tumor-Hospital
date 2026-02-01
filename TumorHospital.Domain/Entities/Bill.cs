@@ -22,8 +22,9 @@ namespace TumorHospital.Domain.Entities
         public decimal DiscountAmount { get; set; }
         public decimal FinalAmount { get; set; }
 
+        [ForeignKey("Offer")]
         public Guid? AppliedOfferId { get; set; }
-        public string? AppliedOfferName { get; set; }
+        public Offer Offer { get; set; }
         public decimal? AppliedOfferPercentage { get; set; }
         public string Code { get; set; }
         public BillStatus Status { get; set; }

@@ -350,7 +350,6 @@ namespace TumorHospital.Infrastructure.Services
                 discount = total * (bestOffer.DiscountPercentage / 100m);
 
                 bill.AppliedOfferId = bestOffer.Id;
-                bill.AppliedOfferName = bestOffer.Title;
                 bill.AppliedOfferPercentage = bestOffer.DiscountPercentage;
             }
 

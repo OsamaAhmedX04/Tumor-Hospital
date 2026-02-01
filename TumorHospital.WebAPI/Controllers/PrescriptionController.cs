@@ -23,7 +23,7 @@ namespace TumorHospital.WebAPI.Controllers
             _validator = validator;
         }
 
-        [HttpPost("CreatePrescription")]
+        [HttpPost]
         public async Task<IActionResult> Create(PrescriptionCreateUpdateDto dto)
         {
             var validation = await _validator.ValidateAsync(dto);
@@ -44,7 +44,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpPut("UpdatePrescription/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, PrescriptionCreateUpdateDto dto)
         {
             var validation = await _validator.ValidateAsync(dto);
@@ -65,7 +65,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpGet("GetPrescription/{appointmentId}")]
+        [HttpGet("{appointmentId}")]
         public async Task<IActionResult> Get(Guid appointmentId)
         {
             try
@@ -79,7 +79,7 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
-        [HttpDelete("DeletePrescription/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
             => await _service.DeleteAsync(id) ? Ok(new { Message = "Prescription has been Deleted" }) : NotFound(new { Message = "Prescription Not Found" });
     }
