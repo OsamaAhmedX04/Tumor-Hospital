@@ -23,7 +23,7 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                     .HasMaxLength(50);
 
             builder.Property(a => a.CreatedAt)
-                    .HasDefaultValueSql("GETUTCDATE()");
+                    .HasDefaultValueSql("GETDATE()");
         }
     }
 }

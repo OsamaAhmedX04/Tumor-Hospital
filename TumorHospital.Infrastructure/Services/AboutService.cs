@@ -32,6 +32,8 @@ namespace TumorHospital.Infrastructure.Services
             if (about == null)
                 return null;
 
+            // throw exption
+
             var response = new AboutResponse
                 {
                     HospitalName = about.HospitalName,
@@ -81,8 +83,10 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task DeleteAsync(Guid id)
         {
-            var entity = await _unitOfWork.AboutInfos.GetByIdAsync(id);
-            if (entity == null) return;
+            var entity = await _unitOfWork.AboutInfos.IsExistAsync(id);
+            if (!entity) return;
+
+            // throw exption
 
             _unitOfWork.AboutInfos.Delete(id);
             await _unitOfWork.CompleteAsync();

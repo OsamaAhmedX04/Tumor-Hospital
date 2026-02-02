@@ -25,6 +25,6 @@ namespace TumorHospital.Domain.Entities
         [Required]
         public string Phone { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
     }
 }
