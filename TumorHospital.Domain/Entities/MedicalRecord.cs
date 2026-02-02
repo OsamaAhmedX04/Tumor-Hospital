@@ -19,8 +19,4 @@ namespace TumorHospital.Domain.Entities
         public ICollection<Diagnostic> Diagnostics { get; set; } = new List<Diagnostic>();
     }
 
-
-    //record_type VARCHAR(50),
-    //file_path NVARCHAR(MAX) NOT NULL,
-
 }

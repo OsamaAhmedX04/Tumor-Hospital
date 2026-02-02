@@ -30,6 +30,8 @@ namespace TumorHospital.Application.Intefaces.UOW
         IRepository<Notification> Notifications { get; }
         IRepository<FAQ> FAQs { get; }
 
+        IRepository<AboutInfo> AboutInfos { get; }
+
         Task<int> CompleteAsync();
     }
 }

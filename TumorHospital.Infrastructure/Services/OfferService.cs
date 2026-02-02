@@ -30,7 +30,7 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Offers.AddAsync(offer);
             await _unitOfWork.CompleteAsync();
 
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             if (offer.StartDate > now)
                 BackgroundJob.Schedule(() => ActivateOfferAsync(offer.Id), offer.StartDate - now);
@@ -55,7 +55,7 @@ namespace TumorHospital.Infrastructure.Services
             _unitOfWork.Offers.Update(offer);
             await _unitOfWork.CompleteAsync();
 
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             if (offer.StartDate > now)
                 BackgroundJob.Schedule(() => ActivateOfferAsync(offer.Id), offer.StartDate - now);
@@ -94,7 +94,7 @@ namespace TumorHospital.Infrastructure.Services
             if (_cache.TryGetValue(cacheKey, out List<OfferResponse> cached))
                 return cached;
 
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             var offers = await _unitOfWork.Offers.GetAllAsync(
                 o => o,
@@ -113,7 +113,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<List<OfferResponse>> GetExpiredOffersAsync()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             var expiredOffers = await _unitOfWork.Offers.GetAllAsync(
                 o => o,
@@ -130,7 +130,7 @@ namespace TumorHospital.Infrastructure.Services
             if (_cache.TryGetValue(cacheKey, out List<OfferResponse> cached))
                 return cached;
 
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var offers = await _unitOfWork.Offers.GetAllAsync(
                 o => o,
                 o => o.StartDate > now
@@ -151,7 +151,7 @@ namespace TumorHospital.Infrastructure.Services
             var offer = await _unitOfWork.Offers.GetByIdAsync(id);
             if (offer == null) return;
 
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             if (now >= offer.StartDate && now < offer.EndDate)
             {

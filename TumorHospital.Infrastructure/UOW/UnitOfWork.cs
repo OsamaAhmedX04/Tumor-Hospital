@@ -50,6 +50,8 @@ namespace TumorHospital.Infrastructure.UOW
 
         public IRepository<FAQ> FAQs { get; }
 
+        public IRepository<AboutInfo> AboutInfos { get; }
+
         public UnitOfWork(AppDbContext db)
         {
             _db = db;
@@ -78,6 +80,7 @@ namespace TumorHospital.Infrastructure.UOW
 
             Notifications = new Repository<Notification>(_db);
             FAQs = new Repository<FAQ>(_db);
+            AboutInfos = new Repository<AboutInfo>(_db);
 
         }
 

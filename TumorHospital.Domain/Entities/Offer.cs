@@ -20,7 +20,7 @@ namespace TumorHospital.Domain.Entities
 
         public bool IsActive { get; set; } = false;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public ICollection<Bill> Bills { get; set; } = new List<Bill>();
     }
