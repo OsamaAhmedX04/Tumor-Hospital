@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace TumorHospital.WebAPI.Documentation
+﻿namespace TumorHospital.WebAPI.Documentation
 {
     public static class VolunteerDocs
     {

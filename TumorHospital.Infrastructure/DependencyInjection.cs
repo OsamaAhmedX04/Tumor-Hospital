@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
 using System.Text;
-using TumorHospital.Application.DTOs.Response.About_Contact;
 using TumorHospital.Application.Intefaces.BackgroundServices;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;

@@ -6,7 +6,6 @@ using TumorHospital.Application.DTOs.Request.Hospital;
 using TumorHospital.Application.DTOs.Response.Hospital;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
-using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;

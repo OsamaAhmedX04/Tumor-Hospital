@@ -35,16 +35,16 @@ namespace TumorHospital.Infrastructure.Services
             // throw exption
 
             var response = new AboutResponse
-                {
-                    HospitalName = about.HospitalName,
-                    Description = about.Description,
-                    Mission = about.Mission,
-                    Vision = about.Vision,
-                    Email = about.Email,
-                    Phone = about.Phone,
-                    TotalDoctors = await _unitOfWork.Doctors.Count(),
-                    TotalPatients = await _unitOfWork.Patients.Count(),
-                    TotalReceptionist = await _unitOfWork.Receptionists.Count()
+            {
+                HospitalName = about.HospitalName,
+                Description = about.Description,
+                Mission = about.Mission,
+                Vision = about.Vision,
+                Email = about.Email,
+                Phone = about.Phone,
+                TotalDoctors = await _unitOfWork.Doctors.Count(),
+                TotalPatients = await _unitOfWork.Patients.Count(),
+                TotalReceptionist = await _unitOfWork.Receptionists.Count()
             };
 
             _cache.Set(

@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
-using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 

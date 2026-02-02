@@ -92,7 +92,7 @@ namespace TumorHospital.Infrastructure.Services
 
 
 
-        
+
         public async Task<PageSourcePagination<DoctorDto>> GetDoctors(
     int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null, string? specializationName = null)
         {
