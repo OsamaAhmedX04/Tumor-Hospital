@@ -35,6 +35,8 @@ namespace TumorHospital.Infrastructure.Persistence.Context
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<FAQ> FAQs { get; set; }
 
+        public DbSet<AboutInfo> AboutInfos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
