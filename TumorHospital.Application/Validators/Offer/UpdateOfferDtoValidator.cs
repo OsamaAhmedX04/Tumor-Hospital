@@ -16,6 +16,10 @@ namespace TumorHospital.Application.Validators.Offer
 
             RuleFor(x => x.StartDate)
                 .LessThan(x => x.EndDate);
+
+            RuleFor(x => x.EndDate)
+                .GreaterThan(DateOnly.FromDateTime(DateTime.Now))
+                .WithMessage("End date must be in the future");
         }
     }
 

@@ -32,15 +32,21 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Offers.AddAsync(offer);
             await _unitOfWork.CompleteAsync();
 
-            var now = DateTime.Now;
+            var now = DateOnly.FromDateTime(DateTime.Now);
 
             if (offer.StartDate > now)
-                BackgroundJob.Schedule(() => ActivateOfferAsync(offer.Id), offer.StartDate - now);
+            {
+                var numberOfDays = offer.StartDate.DayNumber - now.DayNumber;
+                BackgroundJob.Schedule(() => ActivateOfferAsync(offer.Id), TimeSpan.FromDays(numberOfDays));
+            }
             else
                 await ActivateOfferAsync(offer.Id);
 
             if (offer.EndDate > now)
-                BackgroundJob.Schedule(() => DeactivateOfferAsync(offer.Id), offer.EndDate - now);
+            {
+                var numberOfDays = offer.EndDate.DayNumber - now.DayNumber;
+                BackgroundJob.Schedule(() => DeactivateOfferAsync(offer.Id), TimeSpan.FromDays(numberOfDays));
+            }
 
             _cache.Remove("active_offers");
             _cache.Remove("upcoming_offers");
@@ -65,15 +71,23 @@ namespace TumorHospital.Infrastructure.Services
             _unitOfWork.Offers.Update(offer);
             await _unitOfWork.CompleteAsync();
 
-            var now = DateTime.Now;
+            var now = DateOnly.FromDateTime(DateTime.Now);
 
             if (offer.StartDate > now)
-                BackgroundJob.Schedule(() => ActivateOfferAsync(offer.Id), offer.StartDate - now);
+            {
+                var numberOfDays = offer.StartDate.DayNumber - now.DayNumber;
+                BackgroundJob.Schedule(() => ActivateOfferAsync(offer.Id), TimeSpan.FromDays(numberOfDays));
+            }
+                
             else if (!offer.IsActive && offer.StartDate <= now && offer.EndDate > now)
                 await ActivateOfferAsync(offer.Id);
 
             if (offer.EndDate > now)
-                BackgroundJob.Schedule(() => DeactivateOfferAsync(offer.Id), offer.EndDate - now);
+            {
+                var numberOfDays = offer.EndDate.DayNumber - now.DayNumber;
+                BackgroundJob.Schedule(() => DeactivateOfferAsync(offer.Id), TimeSpan.FromDays(numberOfDays));
+            }
+                
             else if (offer.EndDate <= now)
                 await DeactivateOfferAsync(offer.Id);
 
@@ -104,7 +118,7 @@ namespace TumorHospital.Infrastructure.Services
             if (_cache.TryGetValue(cacheKey, out List<OfferResponse> cached))
                 return cached;
 
-            var now = DateTime.Now;
+            var now = DateOnly.FromDateTime(DateTime.Now);
 
             var offers = await _unitOfWork.Offers.GetAllAsync(
                 o => o,
@@ -123,7 +137,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<List<OfferResponse>> GetExpiredOffersAsync()
         {
-            var now = DateTime.Now;
+            var now = DateOnly.FromDateTime(DateTime.Now);
 
             var expiredOffers = await _unitOfWork.Offers.GetAllAsync(
                 o => o,
@@ -140,7 +154,7 @@ namespace TumorHospital.Infrastructure.Services
             if (_cache.TryGetValue(cacheKey, out List<OfferResponse> cached))
                 return cached;
 
-            var now = DateTime.Now;
+            var now = DateOnly.FromDateTime(DateTime.Now);
             var offers = await _unitOfWork.Offers.GetAllAsync(
                 o => o,
                 o => o.StartDate > now
@@ -161,7 +175,7 @@ namespace TumorHospital.Infrastructure.Services
             var offer = await _unitOfWork.Offers.GetByIdAsync(id);
             if (offer == null) return;
 
-            var now = DateTime.Now;
+            var now = DateOnly.FromDateTime(DateTime.Now);
 
             if (now >= offer.StartDate && now < offer.EndDate)
             {

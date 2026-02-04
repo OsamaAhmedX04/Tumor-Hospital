@@ -105,14 +105,14 @@ namespace TumorHospital.WebAPI
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
                 .WriteTo.Logger(lc => lc
-                .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
-                .WriteTo.File(
-                    path: "Logs/log-.txt",
-                    rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 14,
-                    outputTemplate:
-                    "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
-                )
+                    .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
+                        .WriteTo.File(
+                            path: "Logs/log-.txt",
+                            rollingInterval: RollingInterval.Day,
+                            retainedFileCountLimit: 14,
+                            outputTemplate:
+                            "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+                        )
                 )
                 .WriteTo.File(
                     path: "Logs/errors-.txt",
@@ -153,23 +153,7 @@ namespace TumorHospital.WebAPI
 
             app.UseHangfireDashboard("/hangfire");
 
-
-
-            // Don't worry mr.tarek i just moved it to Infrastructure/DependencyInjection.cs -> AddBackgroundJobs() method
-
-            //RecurringJob.AddOrUpdate<IOfferService>(
-            //    recurringJobId: "NotifyExpiredOffers",
-            //    methodCall: service => service.GetExpiredOffersAsync(),
-            //    cronExpression: Cron.Daily,
-            //    options: new RecurringJobOptions
-            //    {
-            //        TimeZone = TimeZoneInfo.Local
-            //    }
-            //);
-
             app.MapControllers();
-
-
 
             app.AddBackgroundJobs();
 
