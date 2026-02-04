@@ -1,4 +1,5 @@
-﻿using TumorHospital.Application.DTOs.Response.Bill;
+﻿using Microsoft.Extensions.Logging;
+using TumorHospital.Application.DTOs.Response.Bill;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
@@ -11,10 +12,12 @@ namespace TumorHospital.Infrastructure.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppointmentService _appointmentService;
-        public BillService(IUnitOfWork unitOfWork, IAppointmentService appointmentService)
+        private readonly ILogger<BillService> _logger;
+        public BillService(IUnitOfWork unitOfWork, IAppointmentService appointmentService, ILogger<BillService> logger)
         {
             _unitOfWork = unitOfWork;
             _appointmentService = appointmentService;
+            _logger = logger;
         }
 
         public async Task<PageSourcePagination<BillDto>> GetBills(
@@ -69,9 +72,22 @@ namespace TumorHospital.Infrastructure.Services
             var bill = await _unitOfWork.Bills.GetByIdAsync(billId);
 
             if (bill == null)
+            {
+                _logger.LogWarning(
+                    "Payment failed: Bill not found. BillId={BillId}",
+                    billId
+                );
                 throw new Exception("This Bill Doesn't Exist");
+            }
+                
             if (bill.Code != billCode)
+            {
+                _logger.LogWarning(
+                    "Payment failed: Invalid bill code. BillId={BillId}",
+                    billId
+                );
                 throw new Exception("Code Is Wrong");
+            }
 
             bill.PaymentDate = DateTime.Now;
             bill.ConfirmedBy = receptionistId;
@@ -81,6 +97,11 @@ namespace TumorHospital.Infrastructure.Services
 
             await _unitOfWork.CompleteAsync();
 
+            _logger.LogInformation(
+                "Paying bill for PatientId {PatientId}, AppointmentId {AppointmentId}",
+                bill.PatientId,
+                bill.AppointmentId
+            );
         }
     }
 }

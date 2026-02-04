@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
@@ -151,6 +152,13 @@ namespace TumorHospital.Infrastructure
                 //.UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
             });
             services.AddHangfireServer();
+            services.AddSingleton<HangfireLoggingFilter>();
+            GlobalJobFilters.Filters.Add(
+                new HangfireLoggingFilter(
+                    services.BuildServiceProvider()
+                        .GetRequiredService<ILogger<HangfireLoggingFilter>>()
+                )
+            );
             #endregion
 
             #region Health Check

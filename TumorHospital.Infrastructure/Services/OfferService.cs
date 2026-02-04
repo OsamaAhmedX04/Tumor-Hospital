@@ -2,6 +2,7 @@
 using AutoMapper;
 using Hangfire;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using TumorHospital.Application.DTOs.Request.Offer;
 using TumorHospital.Application.DTOs.Response.Offer;
 using TumorHospital.Application.Intefaces.Services;
@@ -15,12 +16,14 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IMemoryCache _cache;
+        private readonly ILogger<OfferService> _logger;
 
-        public OfferService(IUnitOfWork unitOfWork, IMapper mapper, IMemoryCache cache)
+        public OfferService(IUnitOfWork unitOfWork, IMapper mapper, IMemoryCache cache, ILogger<OfferService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<OfferResponse> AddOfferAsync(AddOfferDto dto)
@@ -42,6 +45,14 @@ namespace TumorHospital.Infrastructure.Services
 
             _cache.Remove("active_offers");
             _cache.Remove("upcoming_offers");
+
+            _logger.LogInformation(
+                "Offer created: {Title} ({Discount}%) from {Start} to {End}",
+                dto.Title,
+                dto.DiscountPercentage,
+                dto.StartDate,
+                dto.EndDate
+            );
 
             return _mapper.Map<OfferResponse>(offer);
         }

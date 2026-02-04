@@ -3,6 +3,8 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
+using Serilog;
+using Serilog.Events;
 using System.Threading.RateLimiting;
 using TumorHospital.Application;
 using TumorHospital.Application.Intefaces.Services;
@@ -35,11 +37,23 @@ namespace TumorHospital.WebAPI
                 // Custom rejection response
                 options.OnRejected = async (context, token) =>
                 {
+                    var logger = context.HttpContext.RequestServices
+                        .GetRequiredService<ILogger<Program>>();
+
+                    var ip = context.HttpContext.Connection.RemoteIpAddress?.ToString();
+                    var endpoint = context.HttpContext.Request.Path;
+
+                    logger.LogWarning(
+                        "Rate limit exceeded. IP: {IP}, Endpoint: {Endpoint}",
+                        ip,
+                        endpoint
+                    );
+
                     context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    await context.HttpContext.Response.WriteAsJsonAsync(new
-                    {
-                        error = "Too many requests. Please try again later."
-                    }, token);
+                    await context.HttpContext.Response.WriteAsync(
+                        "Too many requests. Please try again later.",
+                        token
+                    );
                 };
 
                 // Global IP-based limiter
@@ -85,6 +99,32 @@ namespace TumorHospital.WebAPI
 
             // Register Infrastructure Layer
             builder.Services.AddInfrastructure(builder.Configuration);
+
+            // Logging Builder
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
+                .WriteTo.Logger(lc => lc
+                .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
+                .WriteTo.File(
+                    path: "Logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 14,
+                    outputTemplate:
+                    "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+                )
+                )
+                .WriteTo.File(
+                    path: "Logs/errors-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 30,
+                    restrictedToMinimumLevel: LogEventLevel.Warning,
+                    outputTemplate:
+                    "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+                )
+                .CreateLogger();
+
+            builder.Host.UseSerilog(Log.Logger);
 
             // Build The App
             var app = builder.Build();

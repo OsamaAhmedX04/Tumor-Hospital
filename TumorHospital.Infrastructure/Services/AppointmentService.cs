@@ -2,6 +2,7 @@
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Supabase.Gotrue.Mfa;
 using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.Appointment;
@@ -24,21 +25,21 @@ namespace TumorHospital.Infrastructure.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IScheduleService _scheduleService;
         private readonly IOfferService _offerService;
+        private readonly ILogger<AppointmentService> _logger;
         public AppointmentService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IScheduleService scheduleService,
-            IOfferService offerService)
+            IOfferService offerService, ILogger<AppointmentService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
             _scheduleService = scheduleService;
             _offerService = offerService;
+            _logger = logger;
         }
-
-
 
         public async Task AppointConsultation(NewConsultationAppointmentDto appointment)
         {
@@ -85,11 +86,6 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
-
-
-
-
-
         public async Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
             Expression<Func<Appointment, bool>>? filter = null;
@@ -146,7 +142,6 @@ namespace TumorHospital.Infrastructure.Services
 
             return appointments;
         }
-
         public async Task<PageSourcePagination<AppointmentDto>> GetPatientAppointments(int pageNumber, string patientId, string? appointmentReason = null, string? appointmentStatus = null)
         {
             Expression<Func<Appointment, bool>>? filter = a => a.PatientId == patientId;
@@ -203,7 +198,6 @@ namespace TumorHospital.Infrastructure.Services
 
             return appointments;
         }
-
         public async Task<PageSourcePagination<AppointmentDto>> GetDoctorAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
         {
             Expression<Func<Appointment, bool>>? filter = a => a.DoctorId == doctorId;
@@ -260,16 +254,11 @@ namespace TumorHospital.Infrastructure.Services
 
             return appointments;
         }
-
         public List<string> AppointmentReasons()
         {
             var reasons = Enum.GetNames(typeof(AppointmentReason)).ToList();
             return reasons;
         }
-
-
-
-
         public async Task AcceptAppointment(Guid appointmentId)
         {
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
@@ -351,6 +340,19 @@ namespace TumorHospital.Infrastructure.Services
 
                 bill.AppliedOfferId = bestOffer.Id;
                 bill.AppliedOfferPercentage = bestOffer.DiscountPercentage;
+
+                _logger.LogInformation(
+                    "Applied offer {OfferTitle} ({Discount}%) on Bill {BillId}",
+                    bestOffer.Title,
+                    bestOffer.DiscountPercentage,
+                    bill.Id
+                );
+            }
+
+            else
+            {
+                bill.AppliedOfferId = null;
+                bill.AppliedOfferPercentage = 0;
             }
 
             bill.DiscountAmount = discount;
@@ -359,6 +361,12 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Bills.AddAsync(bill);
 
             await _unitOfWork.CompleteAsync();
+
+            _logger.LogInformation(
+                "Creating bill for PatientId {PatientId}, AppointmentId {AppointmentId}",
+                bill.PatientId,
+                bill.AppointmentId
+            );
 
             var appointmentInfo = await _unitOfWork.Appointments.GetEnhancedAsync(
                 filter: a => a.Id == appointment.Id,
