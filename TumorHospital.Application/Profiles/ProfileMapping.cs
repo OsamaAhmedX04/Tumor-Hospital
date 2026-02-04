@@ -23,7 +23,7 @@ namespace TumorHospital.Application.Profiles
             CreateMap<Doctor, DoctorProfileResponse>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.User.FirstName} {src.User.LastName}"))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
-                .ForMember(dest => dest.ProfilePicturePath, opt => opt.MapFrom(src => src.ProfilePicturePath == null? null : SupabaseConstants.PrefixSupaURL + src.ProfilePicturePath))
+                .ForMember(dest => dest.ProfilePicturePath, opt => opt.MapFrom(src => src.ProfilePicturePath == null ? null : SupabaseConstants.PrefixSupaURL + src.ProfilePicturePath))
                 .ForMember(dest => dest.SpecializationName, opt => opt.MapFrom(src => src.Specialization.Name));
 
             CreateMap<UpdateDoctorProfileDto, Doctor>()

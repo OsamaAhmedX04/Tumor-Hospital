@@ -10,7 +10,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Supabase;
 using System.Text;
-using TumorHospital.Application.DTOs.Response.About_Contact;
 using TumorHospital.Application.Intefaces.BackgroundServices;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Repositories;
@@ -34,8 +33,8 @@ namespace TumorHospital.Infrastructure
             #region DBContext And Identity
             // Register DbContext
             services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
-            //options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
+            //options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
+            options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
             ));
 
             // Register Identity
@@ -148,8 +147,8 @@ namespace TumorHospital.Infrastructure
                 option
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
-                //.UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
+                //.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+                .UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
             });
             services.AddHangfireServer();
             services.AddSingleton<HangfireLoggingFilter>();
@@ -189,6 +188,16 @@ namespace TumorHospital.Infrastructure
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time"),
                 }
                );
+
+            RecurringJob.AddOrUpdate<IOfferService>(
+                recurringJobId: "NotifyExpiredOffers",
+                methodCall: service => service.GetExpiredOffersAsync(),
+                cronExpression: Cron.Daily,
+                options: new RecurringJobOptions
+                {
+                    TimeZone = TimeZoneInfo.Local
+                }
+            );
         }
     }
 }

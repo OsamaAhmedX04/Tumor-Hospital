@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
-using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
@@ -105,11 +103,11 @@ namespace TumorHospital.WebAPI.Controllers
         [SwaggerOperation(Summary = SpecializationDocs.AssignSpecializationToDoctorSummary, Description = SpecializationDocs.AssignSpecializationToDoctorDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("assign-to-doctor")]
-        public async Task<IActionResult> AssignSpecializationToDoctor(string doctorId,string specializationName)
+        public async Task<IActionResult> AssignSpecializationToDoctor(string doctorId, string specializationName)
         {
             try
             {
-                await _specializationService.AssignSpecializationToDoctor(doctorId,specializationName);
+                await _specializationService.AssignSpecializationToDoctor(doctorId, specializationName);
                 return Ok(new { Message = "Specialization Assigned To Doctor Successfully" });
             }
             catch (BadHttpRequestException ex)

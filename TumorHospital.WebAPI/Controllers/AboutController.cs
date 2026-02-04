@@ -1,11 +1,7 @@
-﻿using Amazon.Runtime.Internal.Util;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using TumorHospital.Application.DTOs.Request.About_Contact;
-using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.Intefaces.Services;
-using TumorHospital.Application.Validators.About;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers

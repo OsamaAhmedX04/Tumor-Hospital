@@ -153,15 +153,19 @@ namespace TumorHospital.WebAPI
 
             app.UseHangfireDashboard("/hangfire");
 
-            RecurringJob.AddOrUpdate<IOfferService>(
-                recurringJobId: "NotifyExpiredOffers",
-                methodCall: service => service.GetExpiredOffersAsync(),
-                cronExpression: Cron.Daily,
-                options: new RecurringJobOptions
-                {
-                    TimeZone = TimeZoneInfo.Local
-                }
-            );
+
+
+            // Don't worry mr.tarek i just moved it to Infrastructure/DependencyInjection.cs -> AddBackgroundJobs() method
+
+            //RecurringJob.AddOrUpdate<IOfferService>(
+            //    recurringJobId: "NotifyExpiredOffers",
+            //    methodCall: service => service.GetExpiredOffersAsync(),
+            //    cronExpression: Cron.Daily,
+            //    options: new RecurringJobOptions
+            //    {
+            //        TimeZone = TimeZoneInfo.Local
+            //    }
+            //);
 
             app.MapControllers();
 

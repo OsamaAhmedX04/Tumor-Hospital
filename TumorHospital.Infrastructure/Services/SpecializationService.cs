@@ -87,7 +87,8 @@ namespace TumorHospital.Infrastructure.Services
 
             var specialization = await _unitOfWork.Specializations.GetAsync(
                 filter: s => s.Name == specializationName,
-                selector: s => new { 
+                selector: s => new
+                {
                     Id = s.Id,
                     Name = s.Name
                 }
@@ -134,6 +135,6 @@ namespace TumorHospital.Infrastructure.Services
 
         }
 
-        
+
     }
 }
