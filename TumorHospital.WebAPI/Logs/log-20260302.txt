@@ -1,0 +1,66 @@
+[2026-03-02 11:59:40 INF] Start installing Hangfire SQL objects...
+[2026-03-02 11:59:41 INF] Hangfire SQL objects installed.
+[2026-03-02 11:59:42 INF] User profile is available. Using 'C:\Users\TM\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[2026-03-02 11:59:43 INF] Now listening on: https://localhost:7114
+[2026-03-02 11:59:43 INF] Now listening on: http://localhost:5070
+[2026-03-02 11:59:43 INF] Starting Hangfire Server using job storage: 'SQL Server: DESKTOP-TI3609O\SQLEXPRESS@TumorHospital'
+[2026-03-02 11:59:43 INF] Using the following options for SQL Server job storage: Queue poll interval: 00:00:00.
+[2026-03-02 11:59:43 INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+[2026-03-02 11:59:43 INF] Application started. Press Ctrl+C to shut down.
+[2026-03-02 11:59:43 INF] Hosting environment: Development
+[2026-03-02 11:59:43 INF] Content root path: D:\OSaMa\Osama_Code\.Net\API\Projects\Tumor Hospital GP\TumorHospital\TumorHospital.WebAPI
+[2026-03-02 11:59:43 INF] Server desktop-ti3609o:16660:24ca2f95 successfully announced in 25.299 ms
+[2026-03-02 11:59:43 INF] Server desktop-ti3609o:16660:24ca2f95 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, SqlServerHeartbeatProcess, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+[2026-03-02 11:59:43 INF] 1 servers were removed due to timeout
+[2026-03-02 11:59:43 INF] Server desktop-ti3609o:16660:24ca2f95 all the dispatchers started
+[2026-03-02 11:59:43 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/index.html - null null
+[2026-03-02 11:59:44 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/swagger-ui.css - null null
+[2026-03-02 11:59:44 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/swagger-ui-bundle.js - null null
+[2026-03-02 11:59:44 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/swagger-ui-standalone-preset.js - null null
+[2026-03-02 11:59:44 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-03-02 11:59:44 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/index.html - 200 null text/html;charset=utf-8 384.8018ms
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 16525 application/javascript; charset=utf-8 51.8691ms
+[2026-03-02 11:59:44 INF] The file /swagger-ui.css was not modified
+[2026-03-02 11:59:44 INF] The file /swagger-ui-standalone-preset.js was not modified
+[2026-03-02 11:59:44 INF] The file /swagger-ui-bundle.js was not modified
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/swagger-ui-standalone-preset.js - 304 null text/javascript 58.66ms
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/swagger-ui-bundle.js - 304 null text/javascript 58.6599ms
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/swagger-ui.css - 304 null text/css 58.6599ms
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 110.6213ms
+[2026-03-02 11:59:44 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/v1/swagger.json - null null
+[2026-03-02 11:59:44 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/favicon-32x32.png - null null
+[2026-03-02 11:59:44 INF] The file /favicon-32x32.png was not modified
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/favicon-32x32.png - 304 null image/png 2.3661ms
+[2026-03-02 11:59:44 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 84.6866ms
+[2026-03-02 12:06:32 INF] Start installing Hangfire SQL objects...
+[2026-03-02 12:06:32 INF] Hangfire SQL objects installed.
+[2026-03-02 12:06:32 INF] User profile is available. Using 'C:\Users\TM\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[2026-03-02 12:06:33 INF] Now listening on: https://localhost:7114
+[2026-03-02 12:06:33 INF] Now listening on: http://localhost:5070
+[2026-03-02 12:06:33 INF] Starting Hangfire Server using job storage: 'SQL Server: DESKTOP-TI3609O\SQLEXPRESS@TumorHospital'
+[2026-03-02 12:06:33 INF] Using the following options for SQL Server job storage: Queue poll interval: 00:00:00.
+[2026-03-02 12:06:33 INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+[2026-03-02 12:06:33 INF] Application started. Press Ctrl+C to shut down.
+[2026-03-02 12:06:33 INF] Hosting environment: Development
+[2026-03-02 12:06:33 INF] Content root path: D:\OSaMa\Osama_Code\.Net\API\Projects\Tumor Hospital GP\TumorHospital\TumorHospital.WebAPI
+[2026-03-02 12:06:33 INF] Server desktop-ti3609o:22660:112dbbf2 successfully announced in 22.4167 ms
+[2026-03-02 12:06:33 INF] Server desktop-ti3609o:22660:112dbbf2 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, SqlServerHeartbeatProcess, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+[2026-03-02 12:06:33 INF] 1 servers were removed due to timeout
+[2026-03-02 12:06:33 INF] Server desktop-ti3609o:22660:112dbbf2 all the dispatchers started
+[2026-03-02 12:06:33 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/index.html - null null
+[2026-03-02 12:06:34 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-03-02 12:06:34 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-03-02 12:06:34 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/index.html - 200 null text/html;charset=utf-8 290.1326ms
+[2026-03-02 12:06:34 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 16525 application/javascript; charset=utf-8 7.3921ms
+[2026-03-02 12:06:34 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 55.9844ms
+[2026-03-02 12:06:34 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/v1/swagger.json - null null
+[2026-03-02 12:06:34 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 55.5547ms
