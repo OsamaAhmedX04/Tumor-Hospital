@@ -304,6 +304,7 @@ namespace TumorHospital.Infrastructure.Services
 
             user.IsActive = true;
             await _userManager.UpdateAsync(user);
+            await _unitOfWork.CompleteAsync();
 
             return new AuthModel
             {
