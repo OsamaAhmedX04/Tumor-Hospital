@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Supabase.Gotrue;
 using System.IdentityModel.Tokens.Jwt;
 using TumorHospital.Application.DTOs.Request.Auth;
 using TumorHospital.Application.DTOs.Response.Auth;
@@ -22,6 +24,7 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IEmailService _emailService;
         private readonly JWTService _jwtService;
         private readonly AppDbContext _db;
+        private readonly ILogger<AuthService> _logger;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
@@ -29,7 +32,7 @@ namespace TumorHospital.Infrastructure.Services
             IUnitOfWork unitOfWork,
             IEmailService emailService,
             JWTService jwtService,
-            AppDbContext db
+            AppDbContext db, ILogger<AuthService> logger
             )
         {
             _userManager = userManager;
@@ -38,6 +41,7 @@ namespace TumorHospital.Infrastructure.Services
             _emailService = emailService;
             _jwtService = jwtService;
             _db = db;
+            _logger = logger;
         }
 
         public async Task Register(RegisterDto model)
@@ -77,6 +81,11 @@ namespace TumorHospital.Infrastructure.Services
                 newUser.Email,
                 "Email Confirmation",
                 EmailBody.GetPatientEmailCreatedBody(token));
+
+            _logger.LogInformation(
+                "New User {Email} Registered successfully",
+                newUser.Email
+            );
         }
 
         public async Task<AuthModel> ConfirmEmail(ConfirmEmailDto model)
@@ -183,7 +192,13 @@ namespace TumorHospital.Infrastructure.Services
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
             if (!result.Succeeded)
+            {
+                _logger.LogWarning(
+                    "Failed login attempt for email {Email}",
+                    user.Email
+                );
                 throw new Exception("Email Or Password Wrong");
+            }
 
             var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -218,6 +233,11 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
             user.IsActive = true;
             await _userManager.UpdateAsync(user);
+
+            _logger.LogInformation(
+                "User {Email} logged in successfully",
+                user.Email
+            );
 
             return new AuthModel
             {
