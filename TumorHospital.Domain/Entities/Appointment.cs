@@ -26,5 +26,14 @@ namespace TumorHospital.Domain.Entities
         public DateOnly? AttendenceDate { get; set; }
         public Prescription? Prescription { get; set; }
         public Bill? Bill { get; set; }
+
+        [NotMapped]
+        public DateTime? StartDateTime =>
+            AttendenceDate.HasValue && FromTime.HasValue
+                ? AttendenceDate.Value.ToDateTime(
+                    TimeOnly.FromTimeSpan(FromTime.Value))
+                : null;
+
+        public ICollection<VideoCall> VideoCalls { get; set; } = new List<VideoCall>();
     }
 }

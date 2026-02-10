@@ -20,6 +20,7 @@ namespace TumorHospital.Domain.Entities
         public ICollection<Bill> Bills { get; set; } = new List<Bill>();
         public ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
         public ICollection<MentalHealthSurvey> MentalHealthSurvies { get; set; } = new List<MentalHealthSurvey>();
+        public ICollection<VideoCall> VideoCalls { get; set; } = new List<VideoCall>();
 
     }
 

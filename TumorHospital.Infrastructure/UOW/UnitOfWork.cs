@@ -52,6 +52,9 @@ namespace TumorHospital.Infrastructure.UOW
 
         public IRepository<AboutInfo> AboutInfos { get; }
 
+        public IRepository<VideoCall> VideoCalls { get; }
+
+
         public UnitOfWork(AppDbContext db)
         {
             _db = db;
@@ -81,6 +84,7 @@ namespace TumorHospital.Infrastructure.UOW
             Notifications = new Repository<Notification>(_db);
             FAQs = new Repository<FAQ>(_db);
             AboutInfos = new Repository<AboutInfo>(_db);
+            VideoCalls = new Repository<VideoCall>(_db);
 
         }
 

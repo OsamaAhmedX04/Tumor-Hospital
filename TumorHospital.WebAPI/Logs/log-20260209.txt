@@ -1,0 +1,418 @@
+[2026-02-09 16:39:34 INF] Executed DbCommand (404ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+CREATE DATABASE [TumorHospital];
+[2026-02-09 16:39:34 INF] Executed DbCommand (191ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [TumorHospital] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+[2026-02-09 16:39:34 INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+[2026-02-09 16:39:34 INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [__EFMigrationsHistory] (
+    [MigrationId] nvarchar(150) NOT NULL,
+    [ProductVersion] nvarchar(32) NOT NULL,
+    CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+);
+[2026-02-09 16:39:34 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+[2026-02-09 16:39:34 INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+[2026-02-09 16:39:34 INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+[2026-02-09 16:39:34 INF] Applying migration '20260210003806_init'.
+[2026-02-09 16:39:35 INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AboutInfos] (
+    [Id] uniqueidentifier NOT NULL,
+    [HospitalName] nvarchar(100) NOT NULL,
+    [Description] nvarchar(max) NOT NULL,
+    [Mission] nvarchar(max) NOT NULL,
+    [Vision] nvarchar(max) NOT NULL,
+    [Email] nvarchar(100) NOT NULL,
+    [Phone] nvarchar(50) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_AboutInfos] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [CharityNeeds] (
+    [Id] uniqueidentifier NOT NULL,
+    [Title] nvarchar(40) NOT NULL,
+    [Description] NVARCHAR(MAX) NOT NULL,
+    [ImagePath] nvarchar(max) NOT NULL,
+    [Category] nvarchar(20) NOT NULL,
+    [NeedAmount] decimal(18,2) NOT NULL,
+    [CollectedAmount] decimal(18,2) NOT NULL DEFAULT 0.0,
+    [IsCompleted] bit NOT NULL DEFAULT CAST(0 AS bit),
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_CharityNeeds] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [FAQs] (
+    [Id] int NOT NULL IDENTITY,
+    [Question] nvarchar(max) NOT NULL,
+    [Answer] nvarchar(max) NOT NULL,
+    CONSTRAINT [PK_FAQs] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Hospitals] (
+    [Id] uniqueidentifier NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    [Government] nvarchar(100) NOT NULL,
+    [Address] nvarchar(300) NOT NULL,
+    [MaxNumberOfDoctors] int NOT NULL,
+    [MaxNumberOfReceptionists] int NOT NULL,
+    CONSTRAINT [PK_Hospitals] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Offers] (
+    [Id] uniqueidentifier NOT NULL,
+    [Title] nvarchar(100) NOT NULL,
+    [Description] nvarchar(500) NULL,
+    [DiscountPercentage] DECIMAL(5,2) NOT NULL,
+    [StartDate] date NOT NULL,
+    [EndDate] date NOT NULL,
+    [IsActive] bit NOT NULL DEFAULT CAST(0 AS bit),
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_Offers] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Roles] (
+    [Id] nvarchar(450) NOT NULL,
+    [Name] nvarchar(256) NULL,
+    [NormalizedName] nvarchar(256) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    CONSTRAINT [PK_Roles] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Specializations] (
+    [Id] uniqueidentifier NOT NULL,
+    [Name] nvarchar(100) NOT NULL,
+    [Description] nvarchar(max) NULL DEFAULT N'N/A',
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_Specializations] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Users] (
+    [Id] nvarchar(450) NOT NULL,
+    [FirstName] nvarchar(40) NOT NULL,
+    [LastName] nvarchar(40) NOT NULL,
+    [IsActive] bit NOT NULL DEFAULT CAST(0 AS bit),
+    [UserName] nvarchar(256) NULL,
+    [NormalizedUserName] nvarchar(256) NULL,
+    [Email] nvarchar(256) NULL,
+    [NormalizedEmail] nvarchar(256) NULL,
+    [EmailConfirmed] bit NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [SecurityStamp] nvarchar(max) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [PhoneNumberConfirmed] bit NOT NULL,
+    [TwoFactorEnabled] bit NOT NULL,
+    [LockoutEnd] datetimeoffset NULL,
+    [LockoutEnabled] bit NOT NULL,
+    [AccessFailedCount] int NOT NULL,
+    CONSTRAINT [PK_Users] PRIMARY KEY ([Id])
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [VolunteerDonations] (
+    [Id] uniqueidentifier NOT NULL,
+    [CharityNeedId] uniqueidentifier NULL,
+    [VolunteerName] nvarchar(40) NOT NULL,
+    [Email] nvarchar(100) NULL,
+    [Phone] nvarchar(60) NULL,
+    [AmountDonated] decimal(18,2) NOT NULL,
+    [DonationDate] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_VolunteerDonations] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_VolunteerDonations_CharityNeeds_CharityNeedId] FOREIGN KEY ([CharityNeedId]) REFERENCES [CharityNeeds] ([Id]) ON DELETE SET NULL
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetRoleClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [RoleId] nvarchar(450) NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetRoleClaims_Roles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Roles] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Admins] (
+    [ApplicationUserId] nvarchar(450) NOT NULL,
+    [IsSuperAdmin] bit NOT NULL DEFAULT CAST(0 AS bit),
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_Admins] PRIMARY KEY ([ApplicationUserId]),
+    CONSTRAINT [FK_Admins_Users_ApplicationUserId] FOREIGN KEY ([ApplicationUserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] nvarchar(450) NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetUserClaims_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserLogins] (
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [ProviderKey] nvarchar(450) NOT NULL,
+    [ProviderDisplayName] nvarchar(max) NULL,
+    [UserId] nvarchar(450) NOT NULL,
+    CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY ([LoginProvider], [ProviderKey]),
+    CONSTRAINT [FK_AspNetUserLogins_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Doctors] (
+    [ApplicationUserId] nvarchar(450) NOT NULL,
+    [HospitalId] uniqueidentifier NULL,
+    [Gender] nvarchar(10) NOT NULL,
+    [SpecializationId] uniqueidentifier NULL,
+    [IsSurgeon] bit NOT NULL DEFAULT CAST(0 AS bit),
+    [ProfilePicturePath] nvarchar(max) NULL,
+    [Bio] nvarchar(max) NULL,
+    [ConsultationCost] decimal(18,2) NOT NULL,
+    [FollowUpCost] decimal(18,2) NOT NULL,
+    [SurgeryCost] decimal(18,2) NULL,
+    [RegistrationDate] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_Doctors] PRIMARY KEY ([ApplicationUserId]),
+    CONSTRAINT [FK_Doctors_Hospitals_HospitalId] FOREIGN KEY ([HospitalId]) REFERENCES [Hospitals] ([Id]) ON DELETE SET NULL,
+    CONSTRAINT [FK_Doctors_Specializations_SpecializationId] FOREIGN KEY ([SpecializationId]) REFERENCES [Specializations] ([Id]) ON DELETE SET NULL,
+    CONSTRAINT [FK_Doctors_Users_ApplicationUserId] FOREIGN KEY ([ApplicationUserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Notifications] (
+    [Id] uniqueidentifier NOT NULL,
+    [ApplicationUserId] nvarchar(450) NOT NULL,
+    [Description] nvarchar(150) NOT NULL,
+    [RouteAction] nvarchar(max) NOT NULL,
+    [SentAt] datetime2 NULL DEFAULT (GETDATE()),
+    [IsSeen] bit NOT NULL DEFAULT CAST(0 AS bit),
+    CONSTRAINT [PK_Notifications] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Notifications_Users_ApplicationUserId] FOREIGN KEY ([ApplicationUserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Patients] (
+    [ApplicationUserId] nvarchar(450) NOT NULL,
+    [DateOfBirth] date NULL,
+    [Gender] nvarchar(10) NOT NULL,
+    [Address] nvarchar(200) NULL,
+    [RegistrationDate] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_Patients] PRIMARY KEY ([ApplicationUserId]),
+    CONSTRAINT [FK_Patients_Users_ApplicationUserId] FOREIGN KEY ([ApplicationUserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Receptionists] (
+    [ApplicationUserId] nvarchar(450) NOT NULL,
+    [HospitalId] uniqueidentifier NULL,
+    [Gender] nvarchar(10) NOT NULL,
+    [Address] nvarchar(200) NOT NULL,
+    [RegistrationDate] datetime2 NOT NULL DEFAULT (GETDATE()),
+    [IsDeleted] bit NOT NULL,
+    CONSTRAINT [PK_Receptionists] PRIMARY KEY ([ApplicationUserId]),
+    CONSTRAINT [FK_Receptionists_Hospitals_HospitalId] FOREIGN KEY ([HospitalId]) REFERENCES [Hospitals] ([Id]) ON DELETE SET NULL,
+    CONSTRAINT [FK_Receptionists_Users_ApplicationUserId] FOREIGN KEY ([ApplicationUserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [RefreshTokenAuths] (
+    [UserId] nvarchar(450) NOT NULL,
+    [Token] nvarchar(max) NOT NULL,
+    [RefreshToken] nvarchar(max) NOT NULL,
+    [RefreshTokenExpiration] datetime2 NOT NULL,
+    CONSTRAINT [PK_RefreshTokenAuths] PRIMARY KEY ([UserId]),
+    CONSTRAINT [FK_RefreshTokenAuths_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [UserRoles] (
+    [UserId] nvarchar(450) NOT NULL,
+    [RoleId] nvarchar(450) NOT NULL,
+    CONSTRAINT [PK_UserRoles] PRIMARY KEY ([UserId], [RoleId]),
+    CONSTRAINT [FK_UserRoles_Roles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Roles] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_UserRoles_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [UserTokens] (
+    [UserId] nvarchar(450) NOT NULL,
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [Name] nvarchar(450) NOT NULL,
+    [ExpireDate] datetime2 NOT NULL,
+    [Value] nvarchar(max) NULL,
+    CONSTRAINT [PK_UserTokens] PRIMARY KEY ([UserId], [LoginProvider], [Name]),
+    CONSTRAINT [FK_UserTokens_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [DoctorSchedules] (
+    [Id] uniqueidentifier NOT NULL,
+    [DoctorId] nvarchar(450) NOT NULL,
+    [DayOfWeek] nvarchar(10) NOT NULL,
+    [StartTime] TIME NOT NULL,
+    [EndTime] TIME NOT NULL,
+    [IsAvailable] bit NOT NULL DEFAULT CAST(1 AS bit),
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    [LastModified] datetime2 NULL,
+    CONSTRAINT [PK_DoctorSchedules] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_DoctorSchedules_Doctors_DoctorId] FOREIGN KEY ([DoctorId]) REFERENCES [Doctors] ([ApplicationUserId]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Appointments] (
+    [Id] uniqueidentifier NOT NULL,
+    [PatientId] nvarchar(450) NOT NULL,
+    [DoctorId] nvarchar(450) NULL,
+    [Reason] nvarchar(50) NOT NULL,
+    [DayOfWeek] nvarchar(10) NOT NULL,
+    [FromTime] time NULL,
+    [ToTime] time NULL,
+    [Status] nvarchar(20) NOT NULL,
+    [RequestCreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    [AttendenceDate] date NULL,
+    CONSTRAINT [PK_Appointments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Appointments_Doctors_DoctorId] FOREIGN KEY ([DoctorId]) REFERENCES [Doctors] ([ApplicationUserId]),
+    CONSTRAINT [FK_Appointments_Patients_PatientId] FOREIGN KEY ([PatientId]) REFERENCES [Patients] ([ApplicationUserId]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [MedicalRecords] (
+    [Id] uniqueidentifier NOT NULL,
+    [PatientId] nvarchar(450) NULL,
+    [RecordType] nvarchar(50) NOT NULL,
+    [FilePath] nvarchar(max) NOT NULL,
+    [UploadDate] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_MedicalRecords] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_MedicalRecords_Patients_PatientId] FOREIGN KEY ([PatientId]) REFERENCES [Patients] ([ApplicationUserId]) ON DELETE SET NULL
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [MentalHealthSurvies] (
+    [Id] uniqueidentifier NOT NULL,
+    [PatientId] nvarchar(450) NULL,
+    [AnxietyScore] int NOT NULL,
+    [DepressionScore] int NOT NULL,
+    [StressScore] int NOT NULL,
+    [SurveyDate] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_MentalHealthSurvies] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_MentalHealthSurvies_Patients_PatientId] FOREIGN KEY ([PatientId]) REFERENCES [Patients] ([ApplicationUserId]) ON DELETE SET NULL
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Bills] (
+    [Id] uniqueidentifier NOT NULL,
+    [PatientId] nvarchar(450) NOT NULL,
+    [AppointmentId] uniqueidentifier NULL,
+    [OriginalAmount] DECIMAL(18,2) NOT NULL,
+    [DiscountAmount] DECIMAL(18,2) NOT NULL,
+    [FinalAmount] DECIMAL(18,2) NOT NULL,
+    [AppliedOfferId] uniqueidentifier NULL,
+    [AppliedOfferPercentage] DECIMAL(18,2) NULL,
+    [Code] nvarchar(450) NOT NULL,
+    [Status] nvarchar(10) NOT NULL,
+    [ConfirmedBy] nvarchar(450) NULL,
+    [PaymentDate] datetime2 NULL,
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_Bills] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Bills_Appointments_AppointmentId] FOREIGN KEY ([AppointmentId]) REFERENCES [Appointments] ([Id]),
+    CONSTRAINT [FK_Bills_Offers_AppliedOfferId] FOREIGN KEY ([AppliedOfferId]) REFERENCES [Offers] ([Id]),
+    CONSTRAINT [FK_Bills_Patients_PatientId] FOREIGN KEY ([PatientId]) REFERENCES [Patients] ([ApplicationUserId]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_Bills_Receptionists_ConfirmedBy] FOREIGN KEY ([ConfirmedBy]) REFERENCES [Receptionists] ([ApplicationUserId]) ON DELETE SET NULL
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Prescriptions] (
+    [Id] uniqueidentifier NOT NULL,
+    [AppointmentId] uniqueidentifier NOT NULL,
+    [Medication] nvarchar(max) NOT NULL,
+    [Dosage] nvarchar(max) NOT NULL,
+    [StartDate] datetime2 NOT NULL,
+    [EndDate] datetime2 NOT NULL,
+    CONSTRAINT [PK_Prescriptions] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Prescriptions_Appointments_AppointmentId] FOREIGN KEY ([AppointmentId]) REFERENCES [Appointments] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [VideoCalls] (
+    [Id] uniqueidentifier NOT NULL,
+    [CallerId] nvarchar(450) NOT NULL,
+    [ReceiverId] nvarchar(450) NOT NULL,
+    [AppointmentId] uniqueidentifier NOT NULL,
+    [StartedAt] datetime2 NOT NULL,
+    [EndedAt] datetime2 NULL,
+    [IsActive] bit NOT NULL,
+    [Status] nvarchar(20) NOT NULL,
+    CONSTRAINT [PK_VideoCalls] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_VideoCalls_Appointments_AppointmentId] FOREIGN KEY ([AppointmentId]) REFERENCES [Appointments] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_VideoCalls_Doctors_ReceiverId] FOREIGN KEY ([ReceiverId]) REFERENCES [Doctors] ([ApplicationUserId]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_VideoCalls_Patients_CallerId] FOREIGN KEY ([CallerId]) REFERENCES [Patients] ([ApplicationUserId]) ON DELETE NO ACTION
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Diagnostics] (
+    [Id] uniqueidentifier NOT NULL,
+    [MedicalRecordId] uniqueidentifier NOT NULL,
+    [ModelOutput] nvarchar(50) NOT NULL,
+    [TumorLocation] nvarchar(100) NOT NULL,
+    [ConfidenceScore] DECIMAL(5,2) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETDATE()),
+    CONSTRAINT [PK_Diagnostics] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Diagnostics_MedicalRecords_MedicalRecordId] FOREIGN KEY ([MedicalRecordId]) REFERENCES [MedicalRecords] ([Id]) ON DELETE CASCADE
+);
+[2026-02-09 16:39:35 INF] Executed DbCommand (37ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ConcurrencyStamp', N'Name', N'NormalizedName') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] ON;
+INSERT INTO [Roles] ([Id], [ConcurrencyStamp], [Name], [NormalizedName])
+VALUES (N'3f209613-7a40-4a9b-b270-ff3a39a1337c', N'33333333-3333-3300-0000-000000000000', N'InActiveReceptionistRole', N'INACTIVERECEPTIONISTROLE'),
+(N'9f8d4b9b-1e52-4dbf-a356-2c62b9db5b01', N'11111111-1111-1111-1111-111111111111', N'Admin', N'ADMIN'),
+(N'a7e13e2a-63a7-4c5d-a5b9-5b49efb0123f', N'22222222-2222-2222-2222-222222222222', N'Doctor', N'DOCTOR'),
+(N'b3f14a23-34a5-4bc0-912d-0f2f1d8d4a11', N'33333333-3333-3333-3333-333333333333', N'Receptionist', N'RECEPTIONIST'),
+(N'c3e4c1a9-4f7e-4a42-9c36-8d2a6e9c75bd', N'22222222-2222-2200-0000-000000000000', N'InActiveDoctorRole', N'INACTIVEDOCTORROLE'),
+(N'c4f72d94-5632-4cb1-9c33-2a72e1c77788', N'44444444-4444-4444-4444-444444444444', N'Patient', N'PATIENT');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ConcurrencyStamp', N'Name', N'NormalizedName') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] OFF;
+[2026-02-09 16:39:35 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Appointments_DoctorId] ON [Appointments] ([DoctorId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Appointments_PatientId] ON [Appointments] ([PatientId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [AspNetRoleClaims] ([RoleId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserClaims_UserId] ON [AspNetUserClaims] ([UserId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserLogins_UserId] ON [AspNetUserLogins] ([UserId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Bills_AppliedOfferId] ON [Bills] ([AppliedOfferId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Bills_AppointmentId] ON [Bills] ([AppointmentId]) WHERE [AppointmentId] IS NOT NULL;
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Bills_Code] ON [Bills] ([Code]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Bills_ConfirmedBy] ON [Bills] ([ConfirmedBy]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Bills_PatientId] ON [Bills] ([PatientId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Diagnostics_MedicalRecordId] ON [Diagnostics] ([MedicalRecordId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Doctors_HospitalId] ON [Doctors] ([HospitalId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Doctors_SpecializationId] ON [Doctors] ([SpecializationId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_DoctorSchedules_DoctorId] ON [DoctorSchedules] ([DoctorId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_MedicalRecords_PatientId] ON [MedicalRecords] ([PatientId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_MentalHealthSurvies_PatientId] ON [MentalHealthSurvies] ([PatientId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Notifications_ApplicationUserId] ON [Notifications] ([ApplicationUserId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Prescriptions_AppointmentId] ON [Prescriptions] ([AppointmentId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Receptionists_HospitalId] ON [Receptionists] ([HospitalId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (38ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [RoleNameIndex] ON [Roles] ([NormalizedName]) WHERE [NormalizedName] IS NOT NULL;
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_UserRoles_RoleId] ON [UserRoles] ([RoleId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [EmailIndex] ON [Users] ([NormalizedEmail]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [UserNameIndex] ON [Users] ([NormalizedUserName]) WHERE [NormalizedUserName] IS NOT NULL;
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_VideoCalls_AppointmentId_IsActive] ON [VideoCalls] ([AppointmentId], [IsActive]) WHERE [IsActive] = 1;
+[2026-02-09 16:39:35 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_VideoCalls_CallerId] ON [VideoCalls] ([CallerId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_VideoCalls_ReceiverId] ON [VideoCalls] ([ReceiverId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_VolunteerDonations_CharityNeedId] ON [VolunteerDonations] ([CharityNeedId]);
+[2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20260210003806_init', N'8.0.0');

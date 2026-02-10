@@ -29,6 +29,7 @@ namespace TumorHospital.Domain.Entities
 
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public ICollection<DoctorSchedule> Schedules { get; set; } = new List<DoctorSchedule>();
+        public ICollection<VideoCall> VideoCalls { get; set; } = new List<VideoCall>();
     }
 
 

@@ -32,6 +32,9 @@ namespace TumorHospital.Application.Intefaces.UOW
 
         IRepository<AboutInfo> AboutInfos { get; }
 
+        IRepository<VideoCall> VideoCalls { get; }
+
+
         Task<int> CompleteAsync();
     }
 }
