@@ -416,3 +416,259 @@ CREATE INDEX [IX_VolunteerDonations_CharityNeedId] ON [VolunteerDonations] ([Cha
 [2026-02-09 16:39:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20260210003806_init', N'8.0.0');
+[2026-02-09 16:41:09 INF] Start installing Hangfire SQL objects...
+[2026-02-09 16:41:10 INF] Hangfire SQL objects installed.
+[2026-02-09 16:41:11 INF] User profile is available. Using 'C:\Users\Tarek\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[2026-02-09 16:41:12 INF] Now listening on: https://localhost:7114
+[2026-02-09 16:41:12 INF] Now listening on: http://localhost:5070
+[2026-02-09 16:41:12 INF] Starting Hangfire Server using job storage: 'SQL Server: DESKTOP-L6CN5CU@TumorHospital'
+[2026-02-09 16:41:12 INF] Using the following options for SQL Server job storage: Queue poll interval: 00:00:00.
+[2026-02-09 16:41:12 INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+[2026-02-09 16:41:12 INF] Application started. Press Ctrl+C to shut down.
+[2026-02-09 16:41:12 INF] Hosting environment: Development
+[2026-02-09 16:41:12 INF] Content root path: D:\Full-Stack Project\Tumor-Hospital\Tumor-Hospital\TumorHospital.WebAPI
+[2026-02-09 16:41:12 INF] Server desktop-l6cn5cu:4192:58fe9fed successfully announced in 143.6464 ms
+[2026-02-09 16:41:12 INF] Server desktop-l6cn5cu:4192:58fe9fed is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, SqlServerHeartbeatProcess, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+[2026-02-09 16:41:13 INF] Server desktop-l6cn5cu:4192:58fe9fed all the dispatchers started
+[2026-02-09 16:41:15 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/index.html - null null
+[2026-02-09 16:41:17 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/swagger-ui.css - null null
+[2026-02-09 16:41:17 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/swagger-ui-bundle.js - null null
+[2026-02-09 16:41:17 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:41:17 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:41:17 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/swagger-ui-standalone-preset.js - null null
+[2026-02-09 16:41:17 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/index.html - 200 null text/html;charset=utf-8 1650.3766ms
+[2026-02-09 16:41:17 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 65.8843ms
+[2026-02-09 16:41:17 INF] The file /swagger-ui-standalone-preset.js was not modified
+[2026-02-09 16:41:17 INF] The file /swagger-ui-bundle.js was not modified
+[2026-02-09 16:41:17 INF] The file /swagger-ui.css was not modified
+[2026-02-09 16:41:17 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/swagger-ui-bundle.js - 304 null text/javascript 123.0319ms
+[2026-02-09 16:41:17 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/swagger-ui.css - 304 null text/css 124.8699ms
+[2026-02-09 16:41:17 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/swagger-ui-standalone-preset.js - 304 null text/javascript 118.6818ms
+[2026-02-09 16:41:17 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 518.6962ms
+[2026-02-09 16:41:17 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/v1/swagger.json - null null
+[2026-02-09 16:41:17 INF] Request starting HTTP/2 GET https://localhost:7114/swagger/favicon-32x32.png - null null
+[2026-02-09 16:41:17 INF] The file /favicon-32x32.png was not modified
+[2026-02-09 16:41:17 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/favicon-32x32.png - 304 null image/png 3.5868ms
+[2026-02-09 16:41:18 INF] Request finished HTTP/2 GET https://localhost:7114/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 220.4564ms
+[2026-02-09 16:41:34 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire - null null
+[2026-02-09 16:41:35 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/css182201611152482 - null null
+[2026-02-09 16:41:35 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/css-dark182201891643439 - null null
+[2026-02-09 16:41:35 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:41:35 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:41:35 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/js18220898134990 - null null
+[2026-02-09 16:41:35 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 4.5735ms
+[2026-02-09 16:41:35 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire - 200 null text/html 1228.3176ms
+[2026-02-09 16:41:35 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/css-dark182201891643439 - 200 null text/css 83.5682ms
+[2026-02-09 16:41:35 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/css182201611152482 - 200 null text/css 104.0547ms
+[2026-02-09 16:41:35 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/js18220898134990 - 200 null application/javascript 122.9993ms
+[2026-02-09 16:41:35 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 161.8242ms
+[2026-02-09 16:41:36 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/fonts/glyphicons-halflings-regular/woff2 - null null
+[2026-02-09 16:41:36 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/fonts/glyphicons-halflings-regular/woff2 - 200 null font/woff2 19.7737ms
+[2026-02-09 16:41:38 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:38 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 58.1961ms
+[2026-02-09 16:41:40 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:40 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 17.4368ms
+[2026-02-09 16:41:42 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:42 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 23.1328ms
+[2026-02-09 16:41:44 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:44 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 16.7727ms
+[2026-02-09 16:41:46 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:46 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 24.1935ms
+[2026-02-09 16:41:48 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:48 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 18.5996ms
+[2026-02-09 16:41:50 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:50 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 18.6828ms
+[2026-02-09 16:41:52 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:41:52 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 10.2459ms
+[2026-02-09 16:41:52 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/recurring - null null
+[2026-02-09 16:41:53 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/recurring - 200 null text/html 222.2113ms
+[2026-02-09 16:41:53 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:41:53 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:41:53 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 29.0418ms
+[2026-02-09 16:41:53 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 53.0904ms
+[2026-02-09 16:41:55 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:41:55 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 5.1361ms
+[2026-02-09 16:41:57 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:41:57 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 5.1348ms
+[2026-02-09 16:41:59 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:41:59 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 3.6468ms
+[2026-02-09 16:42:01 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:01 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 4.6413ms
+[2026-02-09 16:42:03 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:03 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 5.5036ms
+[2026-02-09 16:42:05 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:05 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 13.6409ms
+[2026-02-09 16:42:07 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:07 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 4.1412ms
+[2026-02-09 16:42:09 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:09 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 3.8626ms
+[2026-02-09 16:42:11 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:11 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 8.9213ms
+[2026-02-09 16:42:13 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:13 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 2.9642ms
+[2026-02-09 16:42:15 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:15 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 4.5489ms
+[2026-02-09 16:42:17 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:42:17 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 429 null null 19.0151ms
+[2026-02-09 16:42:23 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/recurring - null null
+[2026-02-09 16:42:23 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/recurring - 429 null null 11.2282ms
+[2026-02-09 16:42:23 INF] Request starting HTTP/2 GET https://localhost:7114/favicon.ico - null null
+[2026-02-09 16:42:23 INF] Request finished HTTP/2 GET https://localhost:7114/favicon.ico - 429 null null 1.3846ms
+[2026-02-09 16:42:33 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/ - null null
+[2026-02-09 16:42:33 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/ - 429 null null 6.3783ms
+[2026-02-09 16:42:33 INF] Request starting HTTP/2 GET https://localhost:7114/favicon.ico - null null
+[2026-02-09 16:42:33 INF] Request finished HTTP/2 GET https://localhost:7114/favicon.ico - 429 null null 1.7001ms
+[2026-02-09 16:43:59 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/ - null null
+[2026-02-09 16:43:59 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/ - 200 null text/html 127.9431ms
+[2026-02-09 16:43:59 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:43:59 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:43:59 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 11.4097ms
+[2026-02-09 16:44:00 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 117.8493ms
+[2026-02-09 16:44:02 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:02 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 11.543ms
+[2026-02-09 16:44:04 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:04 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 17.2329ms
+[2026-02-09 16:44:06 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:06 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 18.8724ms
+[2026-02-09 16:44:08 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:08 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 15.2611ms
+[2026-02-09 16:44:10 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:10 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 22.6752ms
+[2026-02-09 16:44:12 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:12 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 27.0731ms
+[2026-02-09 16:44:15 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:15 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 17.8339ms
+[2026-02-09 16:44:18 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:18 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 21.3731ms
+[2026-02-09 16:44:21 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:21 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 14.4457ms
+[2026-02-09 16:44:24 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:24 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 16.0565ms
+[2026-02-09 16:44:27 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:27 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 13.6285ms
+[2026-02-09 16:44:30 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:30 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 13.667ms
+[2026-02-09 16:44:33 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:33 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 14.0454ms
+[2026-02-09 16:44:36 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:36 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 15.4378ms
+[2026-02-09 16:44:39 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:39 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 10.6319ms
+[2026-02-09 16:44:42 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:42 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 18.661ms
+[2026-02-09 16:44:45 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:45 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 19.5538ms
+[2026-02-09 16:44:48 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:48 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 95.6489ms
+[2026-02-09 16:44:51 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:51 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 87.1921ms
+[2026-02-09 16:44:54 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:54 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 62.7711ms
+[2026-02-09 16:44:57 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:44:57 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 10.591ms
+[2026-02-09 16:45:00 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:00 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 18.3849ms
+[2026-02-09 16:45:03 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:03 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 16.3476ms
+[2026-02-09 16:45:06 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:06 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 17.293ms
+[2026-02-09 16:45:09 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:09 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 21.2458ms
+[2026-02-09 16:45:12 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:12 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 9.7993ms
+[2026-02-09 16:45:15 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:15 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 19.267ms
+[2026-02-09 16:45:17 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:17 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 21.1857ms
+[2026-02-09 16:45:19 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:19 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 17.7767ms
+[2026-02-09 16:45:21 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:21 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 18.2706ms
+[2026-02-09 16:45:21 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/?period=week - null null
+[2026-02-09 16:45:21 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/?period=week - 200 null text/html 78.7344ms
+[2026-02-09 16:45:21 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:21 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:21 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 2.1057ms
+[2026-02-09 16:45:21 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 54.2048ms
+[2026-02-09 16:45:23 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 485
+[2026-02-09 16:45:23 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 17.2152ms
+[2026-02-09 16:45:23 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/jobs/enqueued - null null
+[2026-02-09 16:45:23 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/jobs/enqueued - 200 null text/html 47.484ms
+[2026-02-09 16:45:23 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:23 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:23 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 6.3304ms
+[2026-02-09 16:45:23 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 35.0801ms
+[2026-02-09 16:45:25 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/jobs/scheduled - null null
+[2026-02-09 16:45:25 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/jobs/scheduled - 200 null text/html 65.0835ms
+[2026-02-09 16:45:25 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:25 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:25 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 2.3689ms
+[2026-02-09 16:45:26 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 41.8806ms
+[2026-02-09 16:45:26 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/jobs/processing - null null
+[2026-02-09 16:45:27 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/jobs/processing - 200 null text/html 71.7748ms
+[2026-02-09 16:45:27 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:27 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:27 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 3.2741ms
+[2026-02-09 16:45:27 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 46.9443ms
+[2026-02-09 16:45:28 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/jobs/succeeded - null null
+[2026-02-09 16:45:28 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/jobs/succeeded - 200 null text/html 36.5771ms
+[2026-02-09 16:45:28 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:28 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:28 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 5.0618ms
+[2026-02-09 16:45:28 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 49.7054ms
+[2026-02-09 16:45:29 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/jobs/failed - null null
+[2026-02-09 16:45:29 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/jobs/failed - 200 null text/html 18.6851ms
+[2026-02-09 16:45:29 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:29 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:29 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 7.3904ms
+[2026-02-09 16:45:29 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 53.5686ms
+[2026-02-09 16:45:30 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/jobs/deleted - null null
+[2026-02-09 16:45:30 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/jobs/deleted - 200 null text/html 28.9494ms
+[2026-02-09 16:45:30 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:30 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:30 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 2.4219ms
+[2026-02-09 16:45:30 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 47.0439ms
+[2026-02-09 16:45:31 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/jobs/awaiting - null null
+[2026-02-09 16:45:31 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/jobs/awaiting - 200 null text/html 37.5539ms
+[2026-02-09 16:45:31 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:31 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:31 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 2.6945ms
+[2026-02-09 16:45:31 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 26.6494ms
+[2026-02-09 16:45:32 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/retries - null null
+[2026-02-09 16:45:32 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/retries - 200 null text/html 33.6305ms
+[2026-02-09 16:45:32 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:32 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:32 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 4.4373ms
+[2026-02-09 16:45:32 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 61.12ms
+[2026-02-09 16:45:33 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/recurring - null null
+[2026-02-09 16:45:33 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/recurring - 200 null text/html 41.6435ms
+[2026-02-09 16:45:34 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:34 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:34 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 4.4421ms
+[2026-02-09 16:45:34 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 35.027ms
+[2026-02-09 16:45:35 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/servers - null null
+[2026-02-09 16:45:35 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/servers - 200 null text/html 39.3857ms
+[2026-02-09 16:45:35 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:35 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 6.3929ms
+[2026-02-09 16:45:35 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:35 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 69.6503ms
+[2026-02-09 16:45:37 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:45:37 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 4.0321ms
+[2026-02-09 16:45:38 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/recurring - null null
+[2026-02-09 16:45:38 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/recurring - 200 null text/html 16.9669ms
+[2026-02-09 16:45:38 INF] Request starting HTTP/2 GET https://localhost:7114/_vs/browserLink - null null
+[2026-02-09 16:45:38 INF] Request starting HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - null null
+[2026-02-09 16:45:38 INF] Request finished HTTP/2 GET https://localhost:7114/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 2.1567ms
+[2026-02-09 16:45:38 INF] Request finished HTTP/2 GET https://localhost:7114/_vs/browserLink - 200 null text/javascript; charset=UTF-8 30.8914ms
+[2026-02-09 16:45:40 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:45:40 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 4.7451ms
+[2026-02-09 16:45:42 INF] Request starting HTTP/2 POST https://localhost:7114/hangfire/stats - application/x-www-form-urlencoded; charset=UTF-8 167
+[2026-02-09 16:45:42 INF] Request finished HTTP/2 POST https://localhost:7114/hangfire/stats - 200 null application/json 7.2297ms
+[2026-02-09 16:45:43 INF] Request starting HTTP/2 GET https://localhost:7114/hangfire/retries - null null
+[2026-02-09 16:45:43 INF] Request finished HTTP/2 GET https://localhost:7114/hangfire/retries - 429 null null 4.9595ms
+[2026-02-09 16:45:43 INF] Request starting HTTP/2 GET https://localhost:7114/favicon.ico - null null
+[2026-02-09 16:45:43 INF] Request finished HTTP/2 GET https://localhost:7114/favicon.ico - 429 null null 5.4461ms
