@@ -148,13 +148,14 @@ namespace TumorHospital.WebAPI
 
             app.UseRateLimiter();
 
-            //app.MapHub<VideoCallHub>("/hubs/video-call");
+            app.MapHub<VideoCallHub>("/hubs/video-call");
 
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.UseHangfireDashboard("/hangfire");
+            app.MapHangfireDashboard("/hangfire")
+                .DisableRateLimiting();
 
             app.MapControllers();
 
