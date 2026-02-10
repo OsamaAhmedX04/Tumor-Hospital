@@ -1,7 +1,0 @@
-[2026-02-09 16:42:17 WRN] Rate limit exceeded. IP: ::1, Endpoint: /hangfire/stats
-[2026-02-09 16:42:23 WRN] Rate limit exceeded. IP: ::1, Endpoint: /hangfire/recurring
-[2026-02-09 16:42:23 WRN] Rate limit exceeded. IP: ::1, Endpoint: /favicon.ico
-[2026-02-09 16:42:33 WRN] Rate limit exceeded. IP: ::1, Endpoint: /hangfire/
-[2026-02-09 16:42:33 WRN] Rate limit exceeded. IP: ::1, Endpoint: /favicon.ico
-[2026-02-09 16:45:43 WRN] Rate limit exceeded. IP: ::1, Endpoint: /hangfire/retries
-[2026-02-09 16:45:43 WRN] Rate limit exceeded. IP: ::1, Endpoint: /favicon.ico
