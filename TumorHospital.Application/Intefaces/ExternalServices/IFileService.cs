@@ -7,5 +7,6 @@ namespace TumorHospital.Application.Intefaces.ExternalServices
         Task<string> UploadAsync(IFormFile file, string? folder = null);
         Task<string> EditAsync(string existingFilePath, IFormFile newFile);
         Task DeleteAsync(string filePath);
+        Task DeleteRangeAsync(List<string> filesPath);
     }
 }

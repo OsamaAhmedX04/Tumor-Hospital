@@ -100,7 +100,7 @@ namespace TumorHospital.Infrastructure.Services
                 );
 
             if (doctorImagePath == "N/A")
-                await _fileService.DeleteAsync(SupabaseConstants.PrefixSupaURL + doctorImagePath);
+                await _fileService.DeleteAsync(doctorImagePath);
 
             await _userManager.DeleteAsync(doctor);
         }
