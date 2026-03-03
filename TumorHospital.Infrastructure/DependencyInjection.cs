@@ -133,6 +133,8 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IDonationService, DonationService>();
             services.AddScoped<IAboutService, AboutService>();
             services.AddScoped<IOfferService, OfferService>();
+            services.AddSignalR();
+            services.AddScoped<IVideoCallService, VideoCallService>();
             #endregion
 
             #region BackgroundServices

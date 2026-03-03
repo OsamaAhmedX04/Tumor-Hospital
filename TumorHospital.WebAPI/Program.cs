@@ -9,6 +9,7 @@ using System.Threading.RateLimiting;
 using TumorHospital.Application;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Infrastructure;
+using TumorHospital.Infrastructure.Services;
 using TumorHospital.WebAPI.Extensions;
 
 
@@ -147,11 +148,14 @@ namespace TumorHospital.WebAPI
 
             app.UseRateLimiter();
 
+            app.MapHub<VideoCallHub>("/hubs/video-call");
+
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.UseHangfireDashboard("/hangfire");
+            app.MapHangfireDashboard("/hangfire")
+                .DisableRateLimiting();
 
             app.MapControllers();
 
