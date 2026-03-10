@@ -10,6 +10,8 @@ namespace TumorHospital.Infrastructure.Persistence.Context
 
         // its already exist in IdentityDbContext base class
         //public DbSet<ApplicationUser> ApplicationUser { get; set; }
+
+        public DbSet<TestFile> TestFiles { get; set; }
         public DbSet<RefreshTokenAuth> RefreshTokenAuths { get; set; }
 
         public DbSet<Admin> Admins { get; set; }
