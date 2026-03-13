@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Supabase.Gotrue;
 using System.IdentityModel.Tokens.Jwt;
 using TumorHospital.Application.DTOs.Request.Auth;
 using TumorHospital.Application.DTOs.Response.Auth;

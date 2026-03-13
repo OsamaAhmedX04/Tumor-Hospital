@@ -1,10 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Domain.Constants;
-using TumorHospital.Domain.Enums;
-using TumorHospital.Infrastructure.Services;
 
 namespace TumorHospital.WebAPI.Controllers
 {

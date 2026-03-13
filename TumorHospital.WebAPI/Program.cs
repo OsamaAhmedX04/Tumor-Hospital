@@ -7,7 +7,6 @@ using Serilog;
 using Serilog.Events;
 using System.Threading.RateLimiting;
 using TumorHospital.Application;
-using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Infrastructure;
 using TumorHospital.Infrastructure.Services;
 using TumorHospital.WebAPI.Extensions;

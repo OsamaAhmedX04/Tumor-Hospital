@@ -78,7 +78,7 @@ namespace TumorHospital.Infrastructure.Services
                 var numberOfDays = offer.StartDate.DayNumber - now.DayNumber;
                 BackgroundJob.Schedule(() => ActivateOfferAsync(offer.Id), TimeSpan.FromDays(numberOfDays));
             }
-                
+
             else if (!offer.IsActive && offer.StartDate <= now && offer.EndDate > now)
                 await ActivateOfferAsync(offer.Id);
 
@@ -87,7 +87,7 @@ namespace TumorHospital.Infrastructure.Services
                 var numberOfDays = offer.EndDate.DayNumber - now.DayNumber;
                 BackgroundJob.Schedule(() => DeactivateOfferAsync(offer.Id), TimeSpan.FromDays(numberOfDays));
             }
-                
+
             else if (offer.EndDate <= now)
                 await DeactivateOfferAsync(offer.Id);
 

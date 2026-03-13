@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 using Supabase;
 using TumorHospital.Application.Intefaces.ExternalServices;
 //using TumorHospital.Application.Settings;
-using TumorHospital.Domain.Constants;
 using TumorHospital.Infrastructure.Settings;
 
 namespace TumorHospital.Infrastructure.ExternalServices

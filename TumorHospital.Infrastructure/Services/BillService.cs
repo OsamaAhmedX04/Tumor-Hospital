@@ -79,7 +79,7 @@ namespace TumorHospital.Infrastructure.Services
                 );
                 throw new Exception("This Bill Doesn't Exist");
             }
-                
+
             if (bill.Code != billCode)
             {
                 _logger.LogWarning(

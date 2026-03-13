@@ -3,7 +3,6 @@ using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Supabase.Gotrue.Mfa;
 using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.DTOs.Response.Appointment;

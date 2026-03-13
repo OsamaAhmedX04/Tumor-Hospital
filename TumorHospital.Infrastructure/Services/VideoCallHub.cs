@@ -1,5 +1,5 @@
-﻿using System.Collections.Concurrent;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
+using System.Collections.Concurrent;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Enums;
@@ -33,10 +33,10 @@ namespace TumorHospital.Infrastructure.Services
             var call = await _unitOfWork.VideoCalls.GetByIdAsync(callId);
 
             if (call.CallerId != userId && call.ReceiverId != userId)
-            throw new HubException("Unauthorized");
+                throw new HubException("Unauthorized");
 
             if (call.Status != CallStatus.Accepted)
-            throw new HubException("Call not accepted");
+                throw new HubException("Call not accepted");
 
             var key = $"{Context.ConnectionId}:ice";
             var now = DateTime.Now;
@@ -57,13 +57,13 @@ namespace TumorHospital.Infrastructure.Services
 
             var call = await _unitOfWork.VideoCalls.GetByIdAsync(callId);
             if (call == null)
-            throw new HubException("Call not found");
+                throw new HubException("Call not found");
 
             if (call.Status != CallStatus.Accepted)
-            throw new HubException("Call has not been accepted yet");
+                throw new HubException("Call has not been accepted yet");
 
             if (call.CallerId != userId && call.ReceiverId != userId)
-            throw new HubException("Unauthorized");
+                throw new HubException("Unauthorized");
 
             await Groups.AddToGroupAsync(Context.ConnectionId, callId.ToString());
 
