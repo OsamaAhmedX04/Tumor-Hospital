@@ -31,6 +31,19 @@ namespace TumorHospital.WebAPI
                 options.KnownProxies.Clear();
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalHost", builder =>
+                {
+                    builder.WithOrigins(
+                        "http://localhost:5173"
+                )
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+                });
+            });
+
             builder.Services.AddRateLimiter(options =>
             {
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -136,6 +149,8 @@ namespace TumorHospital.WebAPI
             app.UseSwagger();
             app.UseSwaggerUI();
             //}
+
+            app.UseCors("AllowLocalHost");
 
             app.UseForwardedHeaders();
 
