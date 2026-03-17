@@ -54,6 +54,7 @@ namespace TumorHospital.Infrastructure
             #region JWT
             // Register JWT
             services.AddScoped<JWTService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
             var jwtSettings = configuration.GetSection("JWT");
             var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
