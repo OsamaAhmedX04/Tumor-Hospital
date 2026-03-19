@@ -2,6 +2,7 @@
 {
     public class AboutResponse
     {
+        public Guid Id { get; set; }
         public string HospitalName { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Mission { get; set; } = string.Empty;

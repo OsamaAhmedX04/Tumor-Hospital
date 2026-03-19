@@ -36,6 +36,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var response = new AboutResponse
             {
+                Id = about.Id,
                 HospitalName = about.HospitalName,
                 Description = about.Description,
                 Mission = about.Mission,
@@ -58,16 +59,35 @@ namespace TumorHospital.Infrastructure.Services
 
             return response;
         }
-        public async Task AddOrUpdateAsync(AddAboutInfoDto dto)
+        public async Task AddAsync(AddAboutInfoDto dto)
         {
-            var existing = (await _unitOfWork.AboutInfos.GetAllAsync(a => a))
-                           .FirstOrDefault();
+            var isExist = await _unitOfWork.AboutInfos.AnyAsync();
+
+            if (isExist)
+                throw new Exception("About Information Already Exist You Can Update It");
+
+            var about = new AboutInfo
+            {
+                HospitalName = dto.HospitalName,
+                Description = dto.Description,
+                Mission = dto.Mission,
+                Vision = dto.Vision,
+                Email = dto.Email,
+                Phone = dto.Phone
+            };
+
+            await _unitOfWork.AboutInfos.AddAsync(about);
+            await _unitOfWork.CompleteAsync();
+
+            _cache.Remove("about");
+        }
+
+        public async Task UpdateAsync(Guid id, UpdateAboutInfoDto dto)
+        {
+            var existing = await _unitOfWork.AboutInfos.FirstOrDefaultAsync(a => a.Id == id);
 
             if (existing == null)
-            {
-                existing = new AboutInfo();
-                await _unitOfWork.AboutInfos.AddAsync(existing);
-            }
+                throw new Exception("About Information Is Not Created Yet");
 
             existing.HospitalName = dto.HospitalName;
             existing.Description = dto.Description;
@@ -84,7 +104,7 @@ namespace TumorHospital.Infrastructure.Services
         public async Task DeleteAsync(Guid id)
         {
             var entity = await _unitOfWork.AboutInfos.IsExistAsync(id);
-            if (!entity) return;
+            if (!entity) throw new Exception("About Not Exist");
 
             // throw exption
 

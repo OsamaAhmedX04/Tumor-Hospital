@@ -6,7 +6,8 @@ namespace TumorHospital.Application.Intefaces.Services
     public interface IAboutService
     {
         Task<AboutResponse> GetAboutAsync();
-        Task AddOrUpdateAsync(AddAboutInfoDto dto);
+        Task AddAsync(AddAboutInfoDto dto);
+        Task UpdateAsync(Guid id, UpdateAboutInfoDto dto);
         Task DeleteAsync(Guid id);
     }
 }
