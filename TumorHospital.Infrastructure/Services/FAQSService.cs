@@ -24,7 +24,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task DeleteFAQ(int id)
         {
-            var faq = _unitOfWork.FAQs.GetByIdAsync(id);
+            var faq = await _unitOfWork.FAQs.GetByIdAsync(id);
             if (faq is null) throw new Exception("FAQ not found");
 
             _unitOfWork.FAQs.Delete(id);
