@@ -84,17 +84,17 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task UpdateAsync(Guid id, UpdateAboutInfoDto dto)
         {
-            var existing = await _unitOfWork.AboutInfos.FirstOrDefaultAsync(a => a.Id == id);
+            var about = await _unitOfWork.AboutInfos.FirstOrDefaultAsync(a => a.Id == id);
 
-            if (existing == null)
+            if (about == null)
                 throw new Exception("About Information Is Not Created Yet");
 
-            existing.HospitalName = dto.HospitalName;
-            existing.Description = dto.Description;
-            existing.Mission = dto.Mission;
-            existing.Vision = dto.Vision;
-            existing.Email = dto.Email;
-            existing.Phone = dto.Phone;
+            about.HospitalName = dto.HospitalName;
+            about.Description = dto.Description;
+            about.Mission = dto.Mission;
+            about.Vision = dto.Vision;
+            about.Email = dto.Email;
+            about.Phone = dto.Phone;
 
             await _unitOfWork.CompleteAsync();
 

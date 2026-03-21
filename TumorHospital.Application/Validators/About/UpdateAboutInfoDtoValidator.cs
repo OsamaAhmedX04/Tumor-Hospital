@@ -12,23 +12,23 @@ namespace TumorHospital.Application.Validators.About
                 .MaximumLength(200);
 
             RuleFor(x => x.Description)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Hospital Description is required")
                 .MaximumLength(1000);
 
             RuleFor(x => x.Mission)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Hospital Mission is required")
                 .MaximumLength(500);
 
             RuleFor(x => x.Vision)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Hospital Vision is required")
                 .MaximumLength(500);
 
             RuleFor(x => x.Email)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Hospital Email is required")
                 .EmailAddress();
 
             RuleFor(x => x.Phone)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Hospital Phone is required")
                 .MaximumLength(50);
         }
     }
