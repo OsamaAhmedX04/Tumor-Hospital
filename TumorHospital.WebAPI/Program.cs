@@ -79,7 +79,7 @@ namespace TumorHospital.WebAPI
                             ip,
                             _ => new FixedWindowRateLimiterOptions
                             {
-                                PermitLimit = 25,
+                                PermitLimit = 1000,
                                 Window = TimeSpan.FromMinutes(1),
                                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                                 QueueLimit = 0
@@ -89,7 +89,7 @@ namespace TumorHospital.WebAPI
                 // Named policies
                 options.AddFixedWindowLimiter("strict", opt =>
                 {
-                    opt.PermitLimit = 10;
+                    opt.PermitLimit = 1000;
                     opt.Window = TimeSpan.FromMinutes(1);
                     opt.QueueLimit = 0;
                 });
