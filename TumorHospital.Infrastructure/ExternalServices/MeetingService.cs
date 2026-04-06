@@ -19,21 +19,23 @@ namespace TumorHospital.Infrastructure.ExternalServices
             _settings = settings.Value;
         }
 
-        public async Task<CreateMeetingDto> CreateMeeting()
+        public async Task<CreateMeetingDto> CreateMeeting(DateTime startTime)
         {
             var token = await GetAccessToken();
 
             var meeting = new
             {
-                topic = "Investor Meeting",
-                type = 1,
+                topic = "Doctor-Patient Meeting",
+                type = 2,
+                start_time = startTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                duration = 60, // minutes
                 settings = new
                 {
                     host_video = true,
                     participant_video = true,
-                    join_before_host = true,
-                    waiting_room = false,
-                    mute_upon_entry = false,
+                    join_before_host = false,
+                    waiting_room = true,
+                    mute_upon_entry = true,
                     approval_type = 0,
                     audio = "both",
                     auto_recording = "none"

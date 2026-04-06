@@ -20,6 +20,7 @@ namespace TumorHospital.Infrastructure.Services
     public class AppointmentService : IAppointmentService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMeetingService _meetingService;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IScheduleService _scheduleService;
@@ -30,7 +31,7 @@ namespace TumorHospital.Infrastructure.Services
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IScheduleService scheduleService,
-            IOfferService offerService, ILogger<AppointmentService> logger)
+            IOfferService offerService, ILogger<AppointmentService> logger, IMeetingService meetingService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -38,6 +39,7 @@ namespace TumorHospital.Infrastructure.Services
             _scheduleService = scheduleService;
             _offerService = offerService;
             _logger = logger;
+            _meetingService = meetingService;
         }
 
         public async Task AppointConsultation(NewConsultationAppointmentDto appointment)
@@ -188,6 +190,14 @@ namespace TumorHospital.Infrastructure.Services
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
                     IsPrescriptionExist = a.Prescription != null,
+                    IsVideoCall = a.Reason == AppointmentReason.VideoCall,
+                    IsVideoCallAvailableToJoin = a.Reason == 
+                            AppointmentReason.VideoCall &&
+                            a.Status == AppointmentStatus.Approved &&
+                            a.AttendenceDate == DateOnly.FromDateTime(DateTime.Now) &&
+                            a.FromTime <= DateTime.Now.TimeOfDay &&
+                            a.ToTime >= DateTime.Now.TimeOfDay,
+                    VideoCallLink = a.MeetingJoinLink,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
@@ -244,8 +254,17 @@ namespace TumorHospital.Infrastructure.Services
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
                     IsPrescriptionExist = a.Prescription != null,
+                    IsVideoCall = a.Reason == AppointmentReason.VideoCall,
+                    IsVideoCallAvailableToJoin = a.Reason ==
+                            AppointmentReason.VideoCall &&
+                            a.Status == AppointmentStatus.Approved &&
+                            a.AttendenceDate == DateOnly.FromDateTime(DateTime.Now) &&
+                            a.FromTime <= DateTime.Now.TimeOfDay &&
+                            a.ToTime >= DateTime.Now.TimeOfDay,
+                    VideoCallLink = a.MeetingStartLink,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
+
                 },
                 pageSize: 15,
                 pageNumber: pageNumber
@@ -356,6 +375,17 @@ namespace TumorHospital.Infrastructure.Services
 
             bill.DiscountAmount = discount;
             bill.FinalAmount = total - discount;
+
+            if(appointment.Reason == AppointmentReason.VideoCall)
+            {
+                DateOnly date = appointment.AttendenceDate.Value;
+                TimeSpan time = appointment.FromTime.Value;
+                var datetime = date.ToDateTime(TimeOnly.FromTimeSpan(time));
+
+                var meetingInfo = await _meetingService.CreateMeeting(datetime);
+                appointment.MeetingStartLink = meetingInfo.StartUrl;
+                appointment.MeetingJoinLink = meetingInfo.JoinUrl;
+            }
 
             await _unitOfWork.Bills.AddAsync(bill);
 

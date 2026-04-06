@@ -18,6 +18,8 @@ namespace TumorHospital.Domain.Entities
         public string? DoctorId { get; set; }
         public Doctor? Doctor { get; set; }
         public AppointmentReason Reason { get; set; }
+        public string? MeetingJoinLink { get; set; }
+        public string? MeetingStartLink { get; set; }
         public Day DayOfWeek { get; set; }
         public TimeSpan? FromTime { get; set; }
         public TimeSpan? ToTime { get; set; }

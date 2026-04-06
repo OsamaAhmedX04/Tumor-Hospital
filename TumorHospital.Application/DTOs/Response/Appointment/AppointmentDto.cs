@@ -17,6 +17,9 @@ namespace TumorHospital.Application.DTOs.Response.Appointment
         public TimeSpan? ToTime { get; set; }
         public string Status { get; set; }
         public bool IsPrescriptionExist { get; set; }
+        public bool IsVideoCall { get; set; } = false;
+        public bool IsVideoCallAvailableToJoin { get; set; } = false;
+        public string? VideoCallLink { get; set; }
         public DateTime RequestCreatedAt { get; set; }
         public DateOnly? AttendenceDate { get; set; }
     }
