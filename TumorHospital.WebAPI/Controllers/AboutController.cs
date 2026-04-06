@@ -57,7 +57,7 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 try
                 {
-                    await _aboutService.UpdateAsync(id,dto);
+                    await _aboutService.UpdateAsync(id, dto);
                     return Ok(new { Message = "About Has Updated Successfully" });
                 }
                 catch (Exception ex)
@@ -77,7 +77,7 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 await _aboutService.DeleteAsync(id);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("NotFound", ex.Message);
                 return NotFound(new { Errors = ModelState.ToErrorResponse() });

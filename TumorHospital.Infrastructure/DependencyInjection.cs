@@ -1,7 +1,6 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -117,7 +116,6 @@ namespace TumorHospital.Infrastructure
 
             #region BuisenessService
             // Register Services
-            services.AddScoped<ITestService, TestService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAdminSevice, AdminService>();
             services.AddScoped<IScheduleService, ScheduleService>();
