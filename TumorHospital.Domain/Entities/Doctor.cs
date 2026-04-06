@@ -19,12 +19,12 @@ namespace TumorHospital.Domain.Entities
         [ForeignKey("Specialization")]
         public Guid? SpecializationId { get; set; }
         public Specialization? Specialization { get; set; }
-        public bool IsSurgeon { get; set; }
+        public bool IsVideoCallDoctor { get; set; }
         public string? ProfilePicturePath { get; set; }
         public string? Bio { get; set; }
         public decimal ConsultationCost { get; set; }
         public decimal FollowUpCost { get; set; }
-        public decimal? SurgeryCost { get; set; }
+        public decimal? VideoCallCost { get; set; }
         public DateTime RegistrationDate { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

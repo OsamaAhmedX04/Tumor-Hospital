@@ -8,10 +8,10 @@
         public string Gender { get; set; }
         public string SpecializationName { get; set; }
         public string HospitalName { get; set; }
-        public bool IsSurgeon { get; set; }
+        public bool IsVideoCallDoctor { get; set; }
         public decimal ConsultationCost { get; set; }
         public decimal FollowUpCost { get; set; }
-        public decimal? SurgeryCost { get; set; }
+        public decimal? VideoCallCost { get; set; }
 
         public List<DoctorScheduleDto> Schedules { get; set; } = new List<DoctorScheduleDto>();
     }

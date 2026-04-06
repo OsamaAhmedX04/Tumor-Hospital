@@ -70,7 +70,7 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
-        public async Task AppointSurgery(NewSurgeryAppointmentDto appointment)
+        public async Task AppointVideoCall(NewVideoCallAppointmentDto appointment)
         {
             if (IsInValidTimeToAppoint())
                 throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
@@ -303,14 +303,14 @@ namespace TumorHospital.Infrastructure.Services
                 {
                     d.ConsultationCost,
                     d.FollowUpCost,
-                    d.SurgeryCost
+                    d.VideoCallCost
                 });
 
             var amount = appointment.Reason switch
             {
                 AppointmentReason.Consultation => appointmentCost!.ConsultationCost,
                 AppointmentReason.FollowUp => appointmentCost!.FollowUpCost,
-                AppointmentReason.Surgery => appointmentCost!.SurgeryCost,
+                AppointmentReason.VideoCall => appointmentCost!.VideoCallCost,
                 _ => 0.00m
             };
             var bill = new Bill

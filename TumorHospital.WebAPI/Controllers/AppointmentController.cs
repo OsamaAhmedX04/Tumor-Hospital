@@ -14,14 +14,14 @@ namespace TumorHospital.WebAPI.Controllers
         private readonly IScheduleService _scheduleService;
         private readonly IValidator<NewConsultationAppointmentDto> _newAppointmentConsultaionValidator;
         private readonly IValidator<NewFollowUpAppointmentDto> _newAppointmentFollowUpValidator;
-        private readonly IValidator<NewSurgeryAppointmentDto> _newAppointmentSurgeryValidator;
+        private readonly IValidator<NewVideoCallAppointmentDto> _newAppointmentSurgeryValidator;
 
         public AppointmentController(
             IAppointmentService appointmentService,
             IValidator<NewConsultationAppointmentDto> newAppointmentConsultaionValidator,
             IScheduleService scheduleService,
             IValidator<NewFollowUpAppointmentDto> newAppointmentFollowUpValidator,
-            IValidator<NewSurgeryAppointmentDto> newAppointmentSurgeryValidator)
+            IValidator<NewVideoCallAppointmentDto> newAppointmentSurgeryValidator)
         {
             _appointmentService = appointmentService;
             _newAppointmentConsultaionValidator = newAppointmentConsultaionValidator;
@@ -30,7 +30,7 @@ namespace TumorHospital.WebAPI.Controllers
             _newAppointmentSurgeryValidator = newAppointmentSurgeryValidator;
         }
 
-        [HttpPost("Consultaion")]
+        [HttpPost("consultaion")]
         public async Task<IActionResult> AppointConsultation(NewConsultationAppointmentDto appointmentDto)
         {
             var validationResult = await _newAppointmentConsultaionValidator.ValidateAsync(appointmentDto);
@@ -86,15 +86,15 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpPost("Surgery")]
-        public async Task<IActionResult> AppointSurgery(NewSurgeryAppointmentDto appointmentDto)
+        [HttpPost("video-call")]
+        public async Task<IActionResult> AppointVideoCall(NewVideoCallAppointmentDto appointmentDto)
         {
             var validationResult = await _newAppointmentSurgeryValidator.ValidateAsync(appointmentDto);
             if (validationResult.IsValid)
             {
                 try
                 {
-                    await _appointmentService.AppointSurgery(appointmentDto);
+                    await _appointmentService.AppointVideoCall(appointmentDto);
                     return Ok(new { Message = "Appointment Created Successfully" });
                 }
                 catch (ApplicationException ex)

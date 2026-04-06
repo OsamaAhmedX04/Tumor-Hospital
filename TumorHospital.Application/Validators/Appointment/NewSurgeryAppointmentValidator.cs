@@ -4,7 +4,7 @@ using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Application.Validators.Appointment
 {
-    public class NewSurgeryAppointmentValidator : AbstractValidator<NewSurgeryAppointmentDto>
+    public class NewSurgeryAppointmentValidator : AbstractValidator<NewVideoCallAppointmentDto>
     {
         public NewSurgeryAppointmentValidator()
         {

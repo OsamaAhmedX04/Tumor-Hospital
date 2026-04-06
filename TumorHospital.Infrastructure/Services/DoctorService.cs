@@ -32,10 +32,10 @@ namespace TumorHospital.Infrastructure.Services
                     Gender = d.Gender,
                     Bio = d.Bio,
                     Specialization = d.Specialization!.Name,
-                    IsSurgeon = d.IsSurgeon,
+                    IsVideoCallDoctor = d.IsVideoCallDoctor,
                     ConsultationCost = d.ConsultationCost,
                     FollowUpCost = d.FollowUpCost,
-                    SurgeryCost = !d.IsSurgeon ? null : d.SurgeryCost,
+                    VideoCallCost = !d.IsVideoCallDoctor ? null : d.VideoCallCost,
                     Location = d.Hospital!.Address + " - " + d.Hospital.Government,
                     WorkingDays = d.Schedules.Select(s => new DoctorWorkDayDto
                     {
@@ -63,8 +63,14 @@ namespace TumorHospital.Infrastructure.Services
                 a.DoctorId == doctorId && a.PatientId == patientId &&
                 a.Reason == AppointmentReason.Consultation && a.Status == AppointmentStatus.Completed);
 
+            var isAbleToAppointVideoCall = !await _unitOfWork.Appointments.AnyAsync(
+                filter: a =>
+                a.DoctorId == doctorId && a.PatientId == patientId
+                && (a.Status == AppointmentStatus.Approved || a.Status == AppointmentStatus.Pending));
+
             doctorDetails.IsAbleToAppointConsultation = isAbleToAppointConsultation;
             doctorDetails.IsAbleToAppointFollowUp = isAbleToAppointFollowUp;
+            doctorDetails.IsAbleToAppointVideoCall = doctorDetails.IsVideoCallDoctor && isAbleToAppointVideoCall;
 
 
             return doctorDetails;
@@ -72,29 +78,23 @@ namespace TumorHospital.Infrastructure.Services
 
         private async Task<bool> IsAvailableDay(string doctorId, Day dayOfWeek)
         {
-            var isHaveSurgery = await _unitOfWork.Appointments
-                .AnyAsync(a => a.DoctorId == doctorId &&
-                               a.DayOfWeek == dayOfWeek &&
-                               a.Reason == AppointmentReason.Surgery &&
-                               a.Status == AppointmentStatus.Approved);
-
             var appointments = await _unitOfWork.Appointments.GetAllAsync(
                 filter: a => a.DoctorId == doctorId &&
                              a.DayOfWeek == dayOfWeek &&
                              a.Status == AppointmentStatus.Approved &&
-                             (a.Reason == AppointmentReason.Consultation || a.Reason == AppointmentReason.FollowUp),
+                             (a.Reason == AppointmentReason.Consultation || a.Reason == AppointmentReason.FollowUp || a.Reason == AppointmentReason.VideoCall),
                 selector: a => new { a.Id }
                 );
-            var isFullyBooked = appointments.Count() == Appointments.NumberOfConsultationsOrFollowUpsPerDay;
+            var isFullyBooked = appointments.Count() == Appointments.NumberOfAppointmentsPerDay;
 
-            return !isHaveSurgery && !isFullyBooked;
+            return !isFullyBooked;
         }
 
 
 
 
         public async Task<PageSourcePagination<DoctorDto>> GetDoctors(
-    int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null, string? specializationName = null)
+    int pageNumber, string? workDay = null, bool? IsVideoCallDoctor = null, string? government = null, string? specializationName = null)
         {
             Expression<Func<Doctor, bool>> filter = d => d.User.IsActive;
 
@@ -114,8 +114,8 @@ namespace TumorHospital.Infrastructure.Services
                 filter = filter.And(d => d.Schedules.Any(s => s.DayOfWeek == day));
             }
 
-            if (IsSurgeon.HasValue)
-                filter = filter.And(d => d.IsSurgeon == IsSurgeon.Value);
+            if (IsVideoCallDoctor.HasValue)
+                filter = filter.And(d => d.IsVideoCallDoctor == IsVideoCallDoctor.Value);
 
             if (!string.IsNullOrEmpty(government))
                 filter = filter.And(d => d.Hospital != null && d.Hospital.Government == government);

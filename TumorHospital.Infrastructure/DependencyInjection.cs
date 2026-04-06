@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -176,6 +177,15 @@ namespace TumorHospital.Infrastructure
                 .AddSendGrid(configuration["SendGridSettings:ApiKey"]!);
 
             #endregion
+
+            #region Zoom
+            services.AddOptions<ZoomSettings>()
+               .Bind(configuration.GetSection("Zoom"))
+               .ValidateOnStart();
+
+            services.AddHttpClient<IMeetingService, MeetingService>();
+            #endregion
+
 
             return services;
         }

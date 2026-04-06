@@ -21,10 +21,10 @@ namespace TumorHospital.Application.Profiles
                 .ForMember(dest => dest.Reason, opt => opt.MapFrom(src => AppointmentReason.FollowUp))
                 .ForMember(dest => dest.RequestCreatedAt, opt => opt.MapFrom(src => DateTime.Now));
 
-            CreateMap<NewSurgeryAppointmentDto, Appointment>()
+            CreateMap<NewVideoCallAppointmentDto, Appointment>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => AppointmentStatus.Pending))
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => Enum.Parse<Day>(src.DayOfWeek, true)))
-                .ForMember(dest => dest.Reason, opt => opt.MapFrom(src => AppointmentReason.Surgery))
+                .ForMember(dest => dest.Reason, opt => opt.MapFrom(src => AppointmentReason.VideoCall))
                 .ForMember(dest => dest.RequestCreatedAt, opt => opt.MapFrom(src => DateTime.Now));
         }
     }

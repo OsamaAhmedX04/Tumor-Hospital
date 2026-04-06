@@ -4,6 +4,6 @@
     {
         Consultation,
         FollowUp,
-        Surgery,
+        VideoCall,
     }
 }

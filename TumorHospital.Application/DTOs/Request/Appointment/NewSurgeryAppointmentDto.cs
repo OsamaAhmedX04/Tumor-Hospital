@@ -1,6 +1,6 @@
 ﻿namespace TumorHospital.Application.DTOs.Request.Appointment
 {
-    public class NewSurgeryAppointmentDto
+    public class NewVideoCallAppointmentDto
     {
         public string PatientId { get; set; }
         public string DoctorId { get; set; }

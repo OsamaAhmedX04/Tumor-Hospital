@@ -131,10 +131,10 @@ namespace TumorHospital.Infrastructure.Services
                     Gender = d.Gender,
                     Bio = d.Bio,
                     Specialization = d.Specialization!.Name,
-                    IsSurgeon = d.IsSurgeon,
+                    IsVideoCallDoctor = d.IsVideoCallDoctor,
                     ConsultationCost = d.ConsultationCost,
                     FollowUpCost = d.FollowUpCost,
-                    SurgeryCost = !d.IsSurgeon ? null : d.SurgeryCost,
+                    VideoCallCost = !d.IsVideoCallDoctor ? null : d.VideoCallCost,
                     WorkingDays = d.Schedules.Select(s => new DoctorWorkDayPreifDto
                     {
                         Day = s.DayOfWeek.ToString(),
