@@ -186,6 +186,12 @@ namespace TumorHospital.Infrastructure.Services
             if (user == null)
                 throw new Exception("User Not Found");
 
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var mainRole = userRoles[0];
+
+            if(mainRole == Role.InActiveDoctorRole.ToString() || mainRole == Role.InActiveReceptionistRole.ToString())
+                throw new Exception("Your Account Is Not Active Yet, Please Change Your Password");
+
             if (!await _userManager.IsEmailConfirmedAsync(user))
                 throw new Exception("Email Not Confirmed Yet");
 
@@ -199,14 +205,12 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception("Email Or Password Wrong");
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
                 Id = user.Id,
                 Email = user.Email!,
                 Name = user.FirstName + " " + user.LastName,
-                Role = userRoles[0]
+                Role = mainRole
             });
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
@@ -220,13 +224,14 @@ namespace TumorHospital.Infrastructure.Services
                     UserId = user.Id,
                     Token = token,
                     RefreshToken = refreshToken,
+                    RefreshTokenExpiration = model.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(1)
                 });
             }
             else
             {
                 tokenRow.Token = token;
                 tokenRow.RefreshToken = refreshToken;
-                tokenRow.RefreshTokenExpiration = DateTime.Now.AddDays(20);
+                tokenRow.RefreshTokenExpiration = model.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(1);
             }
 
             await _unitOfWork.CompleteAsync();
