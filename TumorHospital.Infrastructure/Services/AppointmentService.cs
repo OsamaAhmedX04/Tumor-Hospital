@@ -191,7 +191,7 @@ namespace TumorHospital.Infrastructure.Services
                     Status = a.Status.ToString(),
                     IsPrescriptionExist = a.Prescription != null,
                     IsVideoCall = a.Reason == AppointmentReason.VideoCall,
-                    IsVideoCallAvailableToJoin = a.Reason == 
+                    IsVideoCallAvailableToJoin = a.Reason ==
                             AppointmentReason.VideoCall &&
                             a.Status == AppointmentStatus.Approved &&
                             a.AttendenceDate == DateOnly.FromDateTime(DateTime.Now) &&
@@ -376,7 +376,7 @@ namespace TumorHospital.Infrastructure.Services
             bill.DiscountAmount = discount;
             bill.FinalAmount = total - discount;
 
-            if(appointment.Reason == AppointmentReason.VideoCall)
+            if (appointment.Reason == AppointmentReason.VideoCall)
             {
                 DateOnly date = appointment.AttendenceDate.Value;
                 TimeSpan time = appointment.FromTime.Value;

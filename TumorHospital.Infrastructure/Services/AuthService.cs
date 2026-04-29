@@ -189,7 +189,7 @@ namespace TumorHospital.Infrastructure.Services
             var userRoles = await _userManager.GetRolesAsync(user);
             var mainRole = userRoles[0];
 
-            if(mainRole == Role.InActiveDoctorRole.ToString() || mainRole == Role.InActiveReceptionistRole.ToString())
+            if (mainRole == Role.InActiveDoctorRole.ToString() || mainRole == Role.InActiveReceptionistRole.ToString())
                 throw new Exception("Your Account Is Not Active Yet, Please Change Your Password");
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
