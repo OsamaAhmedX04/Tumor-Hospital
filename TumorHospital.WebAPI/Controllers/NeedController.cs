@@ -76,7 +76,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = NeedDocs.UpdateNeedSummary, Description = NeedDocs.UpdateNeedDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateNeed([FromForm] UpdateNeedDto newNeed, Guid id)
         {
             var validationResult = await _updateNeedValidator.ValidateAsync(newNeed);

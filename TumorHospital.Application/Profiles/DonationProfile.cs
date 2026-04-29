@@ -21,7 +21,7 @@ namespace TumorHospital.Application.Profiles
                 .ForMember(dest => dest.CollectedAmount, opt => opt.MapFrom(src => 0))
                 .ForMember(dest => dest.IsCompleted, opt => opt.MapFrom(src => false));
 
-            CreateMap<VolunteerInfoDto, VolunteerDonation>();
+            CreateMap<VolunteerDto, VolunteerDonation>();
 
 
 

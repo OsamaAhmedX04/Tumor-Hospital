@@ -29,6 +29,7 @@ namespace TumorHospital.Infrastructure.Services
             return await _unitOfWork.CharityNeeds.GetAllPaginatedEnhancedAsync(
                 selector: need => new NeedDto
                 {
+                    Id = need.Id,
                     Title = need.Title,
                     ImagePath = SupabaseConstants.PrefixSupaURL + need.ImagePath,
                     CharityCategory = need.Category.ToString(),
