@@ -17,12 +17,12 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
             var admin = new ApplicationUser
             {
                 Id = "b999c3a1-4e99-4d8a-9f99-2c997b1e3d99",
-                UserName = "admin@hospital.com",
+                UserName = "admin@gmail.com",
                 FirstName = "Admin",
                 LastName = "Hospital",
                 NormalizedUserName = "ADMIN",
-                Email = "admin@hospital.com",
-                NormalizedEmail = "ADMIN@HOSPITAL.COM",
+                Email = "admin@gmail.com",
+                NormalizedEmail = "ADMIN@GMAIL.COM",
                 EmailConfirmed = true,
                 IsActive = true,
                 SecurityStamp = "b7f9c3a1-4e2d-4d8a-9f5e-2c6a7b1e3d90",

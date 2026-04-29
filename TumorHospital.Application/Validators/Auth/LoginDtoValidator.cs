@@ -14,6 +14,7 @@ namespace TumorHospital.Application.Validators.Auth
                 .NotEmpty().WithMessage("Password Is Required");
 
             RuleFor(x => x.RememberMe)
+                .Must(x => x.ToLower() == "true" || x.ToLower() == "false").WithMessage("Remember Me Must Be True Or False")
                 .NotEmpty().WithMessage("Remember Me Is Required (True/False)");
         }
     }

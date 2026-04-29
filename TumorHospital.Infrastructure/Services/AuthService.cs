@@ -224,14 +224,14 @@ namespace TumorHospital.Infrastructure.Services
                     UserId = user.Id,
                     Token = token,
                     RefreshToken = refreshToken,
-                    RefreshTokenExpiration = model.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(1)
+                    RefreshTokenExpiration = model.RememberMe == "true" ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(1)
                 });
             }
             else
             {
                 tokenRow.Token = token;
                 tokenRow.RefreshToken = refreshToken;
-                tokenRow.RefreshTokenExpiration = model.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(1);
+                tokenRow.RefreshTokenExpiration = model.RememberMe == "true" ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(1);
             }
 
             await _unitOfWork.CompleteAsync();
