@@ -26,7 +26,7 @@ namespace TumorHospital.Infrastructure.Services
                     CharityNeedCategory = volunteer.CharityNeed!.Category.ToString(),
                     DonationDate = volunteer.DonationDate
                 },
-                pageSize: 20,
+                pageSize: 24,
                 pageNumber: pageNumber
                 );
         }

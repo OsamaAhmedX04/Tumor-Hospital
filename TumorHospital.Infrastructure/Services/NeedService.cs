@@ -35,7 +35,7 @@ namespace TumorHospital.Infrastructure.Services
                     CharityCategory = need.Category.ToString(),
                     CreatedAt = need.CreatedAt
                 },
-                pageSize: 10,
+                pageSize: 12,
                 pageNumber: pageNumber
                 );
         }
