@@ -29,7 +29,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = NeedDocs.GetAllNeedsSummary, Description = NeedDocs.GetAllNeedsDescription)]
-        [HttpGet("needs")]
+        [HttpGet("/api/Needs")]
         public async Task<IActionResult> GetAllNeeds(int pageNumber, string? category)
         {
             try
@@ -46,21 +46,21 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
-        [SwaggerOperation(Summary = NeedDocs.GetNeedSummary, Description = NeedDocs.GetNeedDescription)]
-        [HttpGet("need/{id}")]
-        public async Task<IActionResult> GetNeed(Guid id)
-        {
-            try
-            {
-                var need = await _needService.GetNeed(id);
-                return Ok(need);
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("Message", ex.Message);
-            }
-            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        }
+        //[SwaggerOperation(Summary = NeedDocs.GetNeedSummary, Description = NeedDocs.GetNeedDescription)]
+        //[HttpGet("need/{id}")]
+        //public async Task<IActionResult> GetNeed(Guid id)
+        //{
+        //    try
+        //    {
+        //        var need = await _needService.GetNeed(id);
+        //        return Ok(need);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError("Message", ex.Message);
+        //    }
+        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        //}
 
 
         [SwaggerOperation(Summary = NeedDocs.AddNeedSummary, Description = NeedDocs.AddNeedDescription)]

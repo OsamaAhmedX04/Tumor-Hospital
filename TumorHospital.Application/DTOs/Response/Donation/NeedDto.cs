@@ -6,6 +6,9 @@
         public string Title { get; set; }
         public string ImagePath { get; set; }
         public string CharityCategory { get; set; }
+        public decimal NeedAmount { get; set; }
+        public decimal CollectedAmount { get; set; }
+        public bool IsCompleted { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

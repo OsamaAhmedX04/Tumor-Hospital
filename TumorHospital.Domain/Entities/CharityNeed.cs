@@ -8,7 +8,7 @@ namespace TumorHospital.Domain.Entities
         [Key]
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
+        //public string Description { get; set; }
         public string ImagePath { get; set; }
         public CharityCategory Category { get; set; }
         public decimal NeedAmount { get; set; }

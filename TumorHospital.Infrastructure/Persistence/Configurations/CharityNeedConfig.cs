@@ -14,9 +14,9 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(40);
 
-            builder.Property(cn => cn.Description)
-                .IsRequired()
-                .HasColumnType("NVARCHAR(MAX)");
+            //builder.Property(cn => cn.Description)
+            //    .IsRequired()
+            //    .HasColumnType("NVARCHAR(MAX)");
 
             builder.Property(cn => cn.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");

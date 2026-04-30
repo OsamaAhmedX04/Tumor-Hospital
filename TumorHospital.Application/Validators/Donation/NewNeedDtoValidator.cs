@@ -28,9 +28,9 @@ namespace TumorHospital.Application.Validators.Donation
                 .NotEmpty().WithMessage("Need Amount is required.")
                 .GreaterThan(0).WithMessage("Need Amount must be greater than zero.");
 
-            RuleFor(need => need.Description)
-                .NotEmpty().WithMessage("Description is required.")
-                .MaximumLength(1000).WithMessage("Description cannot exceed 1000 characters.");
+            //RuleFor(need => need.Description)
+            //    .NotEmpty().WithMessage("Description is required.")
+            //    .MaximumLength(1000).WithMessage("Description cannot exceed 1000 characters.");
 
             RuleFor(need => need.Image)
                 .NotEmpty().WithMessage("Image Path is required.")

@@ -7,7 +7,7 @@ namespace TumorHospital.Application.Intefaces.Services
     public interface INeedService
     {
         Task<PageSourcePagination<NeedDto>> GetAllNeeds(int pageNumber, string? category);
-        Task<NeedDetailsDto> GetNeed(Guid id);
+        //Task<NeedDetailsDto> GetNeed(Guid id);
         CharityCategoriesDto GetCategoriesOfNeeds();
         Task AddNeed(NewNeedDto need);
         Task UpdateNeed(UpdateNeedDto newNeed, Guid id);

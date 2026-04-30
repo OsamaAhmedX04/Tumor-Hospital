@@ -42,6 +42,9 @@ namespace TumorHospital.Infrastructure.Services
                     Title = need.Title,
                     ImagePath = SupabaseConstants.PrefixSupaURL + need.ImagePath,
                     CharityCategory = need.Category.ToString(),
+                    NeedAmount = need.NeedAmount,
+                    CollectedAmount = need.CollectedAmount,
+                    IsCompleted = need.IsCompleted,
                     CreatedAt = need.CreatedAt
                 },
                 orderBy: need => need.OrderBy(n => n.IsCompleted).ThenBy(n => n.CollectedAmount),
@@ -50,27 +53,27 @@ namespace TumorHospital.Infrastructure.Services
                 );
         }
 
-        public async Task<NeedDetailsDto> GetNeed(Guid id)
-        {
-            var isExist = await _unitOfWork.CharityNeeds.IsExistAsync(id);
-            if (!isExist)
-                throw new Exception("Need not found");
+        //public async Task<NeedDetailsDto> GetNeed(Guid id)
+        //{
+        //    var isExist = await _unitOfWork.CharityNeeds.IsExistAsync(id);
+        //    if (!isExist)
+        //        throw new Exception("Need not found");
 
-            return await _unitOfWork.CharityNeeds.GetEnhancedAsync(
-                filter: need => need.Id == id,
-                selector: need => new NeedDetailsDto
-                {
-                    Title = need.Title,
-                    Description = need.Description,
-                    ImagePath = SupabaseConstants.PrefixSupaURL + need.ImagePath,
-                    CharityCategory = need.Category.ToString(),
-                    NeedAmount = need.NeedAmount,
-                    CollectedAmount = need.CollectedAmount,
-                    IsCompleted = need.IsCompleted,
-                    CreatedAt = need.CreatedAt
-                }
-                ) ?? throw new Exception("Need not found");
-        }
+        //    return await _unitOfWork.CharityNeeds.GetEnhancedAsync(
+        //        filter: need => need.Id == id,
+        //        selector: need => new NeedDetailsDto
+        //        {
+        //            Title = need.Title,
+        //            Description = need.Description,
+        //            ImagePath = SupabaseConstants.PrefixSupaURL + need.ImagePath,
+        //            CharityCategory = need.Category.ToString(),
+        //            NeedAmount = need.NeedAmount,
+        //            CollectedAmount = need.CollectedAmount,
+        //            IsCompleted = need.IsCompleted,
+        //            CreatedAt = need.CreatedAt
+        //        }
+        //        ) ?? throw new Exception("Need not found");
+        //}
 
         public CharityCategoriesDto GetCategoriesOfNeeds()
         {
@@ -110,7 +113,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception("Need not found");
 
             need.Title = newNeed.Title;
-            need.Description = newNeed.Description;
+            //need.Description = newNeed.Description;
             need.ImagePath = await _fileService.EditAsync(need.ImagePath, newNeed.Image);
             need.NeedAmount = newNeed.NeedAmount;
             need.Category = Enum.Parse<CharityCategory>(newNeed.CharityCategory);
