@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Request.Donation;
 using TumorHospital.Application.DTOs.Response.Donation;
 using TumorHospital.Application.DTOs.Response.Pagination;
@@ -24,9 +25,17 @@ namespace TumorHospital.Infrastructure.Services
             _fileService = fileService;
         }
 
-        public async Task<PageSourcePagination<NeedDto>> GetAllNeeds(int pageNumber)
+        public async Task<PageSourcePagination<NeedDto>> GetAllNeeds(int pageNumber, string? category)
         {
+            Expression<Func<CharityNeed, bool>> filter = n => true;
+            if (!string.IsNullOrEmpty(category))
+            {
+                if (!Enum.TryParse<CharityCategory>(category, true, out var parsedCategory))
+                    throw new Exception("Invalid category");
+                filter = n => n.Category == parsedCategory;
+            }
             return await _unitOfWork.CharityNeeds.GetAllPaginatedEnhancedAsync(
+                filter: filter,
                 selector: need => new NeedDto
                 {
                     Id = need.Id,
@@ -35,7 +44,7 @@ namespace TumorHospital.Infrastructure.Services
                     CharityCategory = need.Category.ToString(),
                     CreatedAt = need.CreatedAt
                 },
-                orderBy: need => need.OrderBy(n => n.IsCompleted),
+                orderBy: need => need.OrderBy(n => n.IsCompleted).ThenBy(n => n.CollectedAmount),
                 pageSize: 12,
                 pageNumber: pageNumber
                 );

@@ -30,10 +30,19 @@ namespace TumorHospital.WebAPI.Controllers
 
         [SwaggerOperation(Summary = NeedDocs.GetAllNeedsSummary, Description = NeedDocs.GetAllNeedsDescription)]
         [HttpGet("needs")]
-        public async Task<IActionResult> GetAllNeeds(int pageNumber)
+        public async Task<IActionResult> GetAllNeeds(int pageNumber, string? category)
         {
-            var needs = await _needService.GetAllNeeds(pageNumber);
-            return Ok(needs);
+            try
+            {
+                var needs = await _needService.GetAllNeeds(pageNumber, category);
+                return Ok(needs);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+
         }
 
 
