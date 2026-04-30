@@ -17,6 +17,14 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
 
             builder.Property(a => a.IsSuperAdmin).HasDefaultValue(false);
             builder.Property(a => a.CreatedAt).HasDefaultValueSql("GETDATE()");
+
+            builder.HasData(
+                new Admin
+                {
+                    ApplicationUserId = "b999c3a1-4e99-4d8a-9f99-2c997b1e3d99",
+                    IsSuperAdmin = true,
+                }
+            );
         }
     }
 }
