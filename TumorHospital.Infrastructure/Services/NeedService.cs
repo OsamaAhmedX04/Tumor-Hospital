@@ -35,6 +35,7 @@ namespace TumorHospital.Infrastructure.Services
                     CharityCategory = need.Category.ToString(),
                     CreatedAt = need.CreatedAt
                 },
+                orderBy: need => need.OrderBy(n => n.IsCompleted),
                 pageSize: 12,
                 pageNumber: pageNumber
                 );
