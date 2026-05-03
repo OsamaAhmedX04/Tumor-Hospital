@@ -6,7 +6,7 @@ namespace TumorHospital.Application.DTOs.Request.Donation
     {
         public string Title { get; set; }
         //public string Description { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public string CharityCategory { get; set; }
         public decimal NeedAmount { get; set; }
     }

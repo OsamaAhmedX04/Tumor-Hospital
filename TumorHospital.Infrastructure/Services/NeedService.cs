@@ -114,7 +114,10 @@ namespace TumorHospital.Infrastructure.Services
 
             need.Title = newNeed.Title;
             //need.Description = newNeed.Description;
-            need.ImagePath = await _fileService.EditAsync(need.ImagePath, newNeed.Image);
+
+            if(newNeed.Image is not null)
+                need.ImagePath = await _fileService.EditAsync(need.ImagePath, newNeed.Image);
+
             need.NeedAmount = newNeed.NeedAmount;
             need.Category = Enum.Parse<CharityCategory>(newNeed.CharityCategory);
             need.IsCompleted = need.NeedAmount <= need.CollectedAmount;
