@@ -33,10 +33,10 @@ namespace TumorHospital.Application.Validators.Donation
             //    .MaximumLength(1000).WithMessage("Description cannot exceed 1000 characters.");
 
             RuleFor(need => need.Image)
-                .NotEmpty().WithMessage("Image Path is required.")
                 .Must(image => allowedImageExtensions.Contains(Path.GetExtension(image.FileName)))
                 .WithMessage($"Invalid image format. Allowed formats are: {string.Join(',', allowedImageExtensions)}")
-                .Must(image => image.Length <= maxImageSize).WithMessage("Image size must be less than 1 MB.");
+                .Must(image => image.Length <= maxImageSize).WithMessage("Image size must be less than 1 MB.")
+                .When(need => need.Image is not null);
 
         }
     }

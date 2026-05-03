@@ -113,7 +113,6 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception("Need not found");
 
             need.Title = newNeed.Title;
-            //need.Description = newNeed.Description;
 
             if(newNeed.Image is not null)
                 need.ImagePath = await _fileService.EditAsync(need.ImagePath, newNeed.Image);
