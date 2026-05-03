@@ -150,7 +150,8 @@ namespace TumorHospital.Infrastructure.Services
                 Message = "Your Email Confirmed Succefully",
                 UserId = user.Id,
                 Token = token,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                IsActiveAccount = true
             };
         }
 
@@ -189,8 +190,7 @@ namespace TumorHospital.Infrastructure.Services
             var userRoles = await _userManager.GetRolesAsync(user);
             var mainRole = userRoles[0];
 
-            if (mainRole == Role.InActiveDoctorRole.ToString() || mainRole == Role.InActiveReceptionistRole.ToString())
-                throw new Exception("Your Account Is Not Active Yet, Please Change Your Password");
+            bool isInActiveAccount = mainRole == Role.InActiveDoctorRole.ToString() || mainRole == Role.InActiveReceptionistRole.ToString();
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
                 throw new Exception("Email Not Confirmed Yet");
@@ -245,10 +245,11 @@ namespace TumorHospital.Infrastructure.Services
 
             return new AuthModel
             {
-                Message = "Login Succefully",
+                Message = isInActiveAccount ? "Your Account Is Not Active Yet, Please Change Your Password" : "Login Successfully",
                 UserId = user.Id,
                 Token = token,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                IsActiveAccount = !isInActiveAccount
             };
         }
 
@@ -335,7 +336,8 @@ namespace TumorHospital.Infrastructure.Services
                 Message = "Password Changed Succefully",
                 UserId = user.Id,
                 Token = token,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                IsActiveAccount = true
             };
         }
 
@@ -453,7 +455,8 @@ namespace TumorHospital.Infrastructure.Services
                 Message = "Token Refreshed Successfully",
                 UserId = user.Id,
                 Token = newAccessToken,
-                RefreshToken = newRefreshToken
+                RefreshToken = newRefreshToken,
+                IsActiveAccount = true
             };
         }
     }
