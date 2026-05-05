@@ -16,7 +16,7 @@ namespace TumorHospital.Infrastructure.ExternalServices
         public string? UserId =>
            _contextAccessor.HttpContext?
            .User?
-           .FindFirst(ClaimTypes.NameIdentifier)?
+           .FindFirst("UserId")?
            .Value;
 
         public string? UserRole =>

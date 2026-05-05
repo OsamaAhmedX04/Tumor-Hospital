@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.Auth;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
@@ -130,8 +132,34 @@ namespace TumorHospital.WebAPI.Controllers
 
 
 
+        //[SwaggerOperation(Summary = AuthDocs.ChangePasswordSummary, Description = AuthDocs.ChangePasswordDescription)]
+        ////[Authorize(Roles = SystemRole.Patient)]
+        //[HttpPut("Change-Password")]
+        //[EnableRateLimiting("strict")]
+        //public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
+        //{
+        //    var result = _ChangePasswordValidator.Validate(model);
+        //    if (result.IsValid)
+        //    {
+        //        try
+        //        {
+        //            await _authService.ChangePassword(model);
+        //            return Ok(new { Message = "Password Changed Successfully" });
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ModelState.AddModelError("Identity", ex.Message);
+        //        }
+        //    }
+
+        //    foreach (var error in result.Errors)
+        //        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+
+        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        //}
+
         [SwaggerOperation(Summary = AuthDocs.ChangePasswordSummary, Description = AuthDocs.ChangePasswordDescription)]
-        //[Authorize(Roles = SystemRole.Patient)]
+        [Authorize(Roles = SystemRole.ActiveRole)]
         [HttpPut("Change-Password")]
         [EnableRateLimiting("strict")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto model)

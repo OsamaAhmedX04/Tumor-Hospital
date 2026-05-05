@@ -2,9 +2,9 @@
 {
     public interface ICurrentUserService
     {
-        string? UserId { get; }
-        string? UserRole { get; }
-        string? Username { get; }
-        string? UserEmail { get; }
+        public string? UserId { get; }
+        public string? UserRole { get; }
+        public string? Username { get; }
+        public string? UserEmail { get; }
     }
 }

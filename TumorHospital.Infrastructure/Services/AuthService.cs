@@ -24,6 +24,7 @@ namespace TumorHospital.Infrastructure.Services
         private readonly JWTService _jwtService;
         private readonly AppDbContext _db;
         private readonly ILogger<AuthService> _logger;
+        private readonly ICurrentUserService _currentUserService;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
@@ -32,7 +33,7 @@ namespace TumorHospital.Infrastructure.Services
             IEmailService emailService,
             JWTService jwtService,
             AppDbContext db, ILogger<AuthService> logger
-            )
+, ICurrentUserService currentUserService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,6 +42,7 @@ namespace TumorHospital.Infrastructure.Services
             _jwtService = jwtService;
             _db = db;
             _logger = logger;
+            _currentUserService = currentUserService;
         }
 
         public async Task Register(RegisterDto model)
@@ -265,7 +267,9 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task ChangePassword(ChangePasswordDto model)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var userId = _currentUserService.UserId;
+
+            var user = await _userManager.FindByIdAsync(userId!);
 
             if (user == null) throw new Exception("User Not Exist");
 
@@ -276,7 +280,8 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<AuthModel> ChangeInActiveRolePassword(ChangePasswordDto model)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var userId = _currentUserService.UserId;
+            var user = await _userManager.FindByIdAsync(userId!);
             if (user == null) throw new Exception("User Not Exist");
 
             var isInActiveDoctor = await _userManager.IsInRoleAsync(user, Role.InActiveDoctorRole.ToString());

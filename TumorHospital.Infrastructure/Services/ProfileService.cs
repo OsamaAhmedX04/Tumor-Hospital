@@ -18,12 +18,14 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IFileService _fileService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public ProfileService(IFileService fileService, IUnitOfWork unitOfWork, IMapper mapper)
+        public ProfileService(IFileService fileService, IUnitOfWork unitOfWork, IMapper mapper, ICurrentUserService currentUserService)
         {
             _fileService = fileService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
         public async Task UploadProfilePicture(IFormFile file, string userId)
         {
@@ -52,8 +54,22 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<PatientProfileResponse> GetPatientProfile(string userId)
+        //public async Task<PatientProfileResponse> GetPatientProfile(string userId)
+        //{
+        //    var patient = await _unitOfWork.Patients.GetAsync(
+        //        selector: x => x,
+        //        filter: x => x.ApplicationUserId == userId,
+        //        Includes: x => x.User
+        //    );
+
+        //    if (patient == null) throw new Exception("Patient not found");
+
+        //    return _mapper.Map<PatientProfileResponse>(patient);
+        //}
+
+        public async Task<PatientProfileResponse> GetPatientProfile()
         {
+            var userId = _currentUserService.UserId;
             var patient = await _unitOfWork.Patients.GetAsync(
                 selector: x => x,
                 filter: x => x.ApplicationUserId == userId,
@@ -65,8 +81,28 @@ namespace TumorHospital.Infrastructure.Services
             return _mapper.Map<PatientProfileResponse>(patient);
         }
 
-        public async Task<bool> UpdateProfile(string userId, UpdatePatientProfileDto dto)
+        //public async Task<bool> UpdateProfile(string userId, UpdatePatientProfileDto dto)
+        //{
+        //    var patient = await _unitOfWork.Patients.GetAsync(
+        //        selector: x => x,
+        //        filter: x => x.ApplicationUserId == userId,
+        //        Includes: x => x.User
+        //    );
+
+        //    if (patient == null) return false;
+
+        //    _mapper.Map(dto, patient);
+        //    _mapper.Map(dto, patient.User);
+
+        //    _unitOfWork.Patients.Update(patient);
+        //    await _unitOfWork.CompleteAsync();
+
+        //    return true;
+        //}
+
+        public async Task<bool> UpdateProfile(UpdatePatientProfileDto dto)
         {
+            var userId = _currentUserService.UserId;
             var patient = await _unitOfWork.Patients.GetAsync(
                 selector: x => x,
                 filter: x => x.ApplicationUserId == userId,

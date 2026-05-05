@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.Infrastructure.Services;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
@@ -30,14 +32,31 @@ namespace TumorHospital.WebAPI.Controllers
             _receptionistValidator = receptionistValidator;
         }
 
+        //[SwaggerOperation(Summary = ProfileDocs.GetPatientProfileSummary, Description = ProfileDocs.GetPatientProfileDescription)]
+        ////[Authorize(Roles = SystemRole.Patient)]
+        //[HttpGet("PatientProfile/{userId}")]
+        //public async Task<IActionResult> GetPatientProfile(string userId)
+        //{
+        //    try
+        //    {
+        //       var result = await _profileService.GetPatientProfile(userId);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError("Identity", ex.Message);
+        //    }
+        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        //}
+
         [SwaggerOperation(Summary = ProfileDocs.GetPatientProfileSummary, Description = ProfileDocs.GetPatientProfileDescription)]
-        //[Authorize(Roles = SystemRole.Patient)]
-        [HttpGet("PatientProfile/{userId}")]
-        public async Task<IActionResult> GetPatientProfile(string userId)
+        [Authorize(Roles = SystemRole.Patient)]
+        [HttpGet("PatientProfile")]
+        public async Task<IActionResult> GetPatientProfile()
         {
             try
             {
-               var result = await _profileService.GetPatientProfile(userId);
+                var result = await _profileService.GetPatientProfile();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -47,16 +66,33 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+        //[SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
+        ////[Authorize(Roles = SystemRole.Patient)]
+        //[HttpPut("PatientProfile/{userId}")]
+        //[EnableRateLimiting("strict")]
+        //public async Task<IActionResult> UpdateProfile(string userId, UpdatePatientProfileDto dto)
+        //{
+        //    var validationResult = await _patientValidator.ValidateAsync(dto);
+        //    if (validationResult.IsValid)
+        //    {
+        //        await _profileService.UpdateProfile(userId, dto);
+        //        return Ok("Patient profile updated successfully");
+        //    }
+        //    foreach (var error in validationResult.Errors)
+        //        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        //}
+
         [SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
-        //[Authorize(Roles = SystemRole.Patient)]
-        [HttpPut("PatientProfile/{userId}")]
+        [Authorize(Roles = SystemRole.Patient)]
+        [HttpPut("PatientProfile")]
         [EnableRateLimiting("strict")]
-        public async Task<IActionResult> UpdateProfile(string userId, UpdatePatientProfileDto dto)
+        public async Task<IActionResult> UpdateProfile(UpdatePatientProfileDto dto)
         {
             var validationResult = await _patientValidator.ValidateAsync(dto);
             if (validationResult.IsValid)
             {
-                await _profileService.UpdateProfile(userId, dto);
+                await _profileService.UpdateProfile(dto);
                 return Ok("Patient profile updated successfully");
             }
             foreach (var error in validationResult.Errors)
