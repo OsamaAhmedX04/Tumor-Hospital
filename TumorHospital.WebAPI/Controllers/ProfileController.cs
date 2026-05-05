@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Infrastructure.Services;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
@@ -34,10 +35,16 @@ namespace TumorHospital.WebAPI.Controllers
         [HttpGet("PatientProfile/{userId}")]
         public async Task<IActionResult> GetPatientProfile(string userId)
         {
-            var result = await _profileService.GetPatientProfile(userId);
-            if (result == null) return NotFound(new { Message = "User Not Found" });
-
-            return Ok(result);
+            try
+            {
+               var result = await _profileService.GetPatientProfile(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
@@ -62,10 +69,16 @@ namespace TumorHospital.WebAPI.Controllers
         [HttpGet("DoctorProfile/{userId}")]
         public async Task<IActionResult> GetDoctorProfile(string userId)
         {
-            var result = await _profileService.GetDoctorProfile(userId);
-            if (result == null) return NotFound(new { Message = "User Not Found" });
-
-            return Ok(result);
+            try
+            {
+                var result = await _profileService.GetDoctorProfile(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [SwaggerOperation(Summary = ProfileDocs.UpdateDoctorProfileSummary, Description = ProfileDocs.UpdateDoctorProfileDescription)]
@@ -90,10 +103,16 @@ namespace TumorHospital.WebAPI.Controllers
         [HttpGet("ReceptionistProfile/{userId}")]
         public async Task<IActionResult> GetReceptionistProfile(string userId)
         {
-            var result = await _profileService.GetReceptionistProfile(userId);
-            if (result == null) return NotFound(new { Message = "User Not Found" });
-
-            return Ok(result);
+            try
+            {
+                var result = await _profileService.GetReceptionistProfile(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
         [SwaggerOperation(Summary = ProfileDocs.UpdateReceptionistProfileSummary, Description = ProfileDocs.UpdateReceptionistProfileDescription)]
