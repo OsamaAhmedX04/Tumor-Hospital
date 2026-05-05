@@ -47,7 +47,7 @@ namespace TumorHospital.Infrastructure.Services
                     IsCompleted = need.IsCompleted,
                     CreatedAt = need.CreatedAt
                 },
-                orderBy: need => need.OrderBy(n => n.IsCompleted).ThenBy(n => n.CollectedAmount),
+                orderBy: need => need.OrderBy(n => n.IsCompleted).ThenByDescending(n => n.CollectedAmount),
                 pageSize: 12,
                 pageNumber: pageNumber
                 );
