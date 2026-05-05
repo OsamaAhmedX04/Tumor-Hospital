@@ -265,7 +265,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task ChangePassword(ChangePasswordDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByIdAsync(model.UserId);
 
             if (user == null) throw new Exception("User Not Exist");
 
@@ -276,7 +276,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task<AuthModel> ChangeInActiveRolePassword(ChangePasswordDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null) throw new Exception("User Not Exist");
 
             var isInActiveDoctor = await _userManager.IsInRoleAsync(user, Role.InActiveDoctorRole.ToString());

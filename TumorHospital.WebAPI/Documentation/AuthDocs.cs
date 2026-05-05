@@ -438,14 +438,14 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
 <b>Request Body:</b><br/>
 <pre>
 {
-    ""email"": ""user@email.com"",
+    ""UserId"": ""userId_value"",
     ""oldPassword"": ""OldPassword123"",
     ""newPassword"": ""NewPassword456""
 }
 </pre><br/>
 
 <b>Validations:</b><br/>
-- Email is required.<br/>
+- UserId is required.<br/>
 - Old password is required.<br/>
 - New password is required.<br/>
 - New password must be different from the old password.<br/><br/>
@@ -527,14 +527,14 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
 <b>Request Body:</b><br/>
 <pre>
 {
-    ""email"": ""user@email.com"",
+    ""userId"": ""userId_value"",
     ""oldPassword"": ""OldPassword123"",
     ""newPassword"": ""NewPassword456""
 }
 </pre><br/>
 
 <b>Validations:</b><br/>
-- Email is required.<br/>
+- UserId is required.<br/>
 - Old password is required.<br/>
 - New password is required.<br/>
 - New password must be different from the old password.<br/><br/>
@@ -547,7 +547,7 @@ Authorization: Bearer &lt;JWT_TOKEN&gt;
 - NonAlphaNumeric.<br/><br/>
 
 <b>Business Logic:</b><br/>
-1. Find user by email.<br/>
+1. Find user by UserId.<br/>
 2. Ensure user exists.<br/>
 3. Check if user has an inactive role.<br/>
 4. Change the password using the old password.<br/>

@@ -8,8 +8,8 @@ namespace TumorHospital.Application.Validators.Auth
     {
         public ChangePasswordDtoValidator()
         {
-            RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email Is Required");
+            RuleFor(x => x.UserId)
+                .NotEmpty().WithMessage("UserId Is Required");
 
             RuleFor(x => x.OldPassword)
                 .NotEmpty().WithMessage("Current Password Is Required");
