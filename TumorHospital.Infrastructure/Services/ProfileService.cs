@@ -27,8 +27,9 @@ namespace TumorHospital.Infrastructure.Services
             _mapper = mapper;
             _currentUserService = currentUserService;
         }
-        public async Task UploadProfilePicture(IFormFile file, string userId)
+        public async Task UploadProfilePicture(IFormFile file)
         {
+            var userId = _currentUserService.UserId;
             var isNullableFile = file is null || file.Length == 0;
             if (isNullableFile) throw new Exception("Please Upload The Image");
 
@@ -54,19 +55,6 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        //public async Task<PatientProfileResponse> GetPatientProfile(string userId)
-        //{
-        //    var patient = await _unitOfWork.Patients.GetAsync(
-        //        selector: x => x,
-        //        filter: x => x.ApplicationUserId == userId,
-        //        Includes: x => x.User
-        //    );
-
-        //    if (patient == null) throw new Exception("Patient not found");
-
-        //    return _mapper.Map<PatientProfileResponse>(patient);
-        //}
-
         public async Task<PatientProfileResponse> GetPatientProfile()
         {
             var userId = _currentUserService.UserId;
@@ -80,25 +68,6 @@ namespace TumorHospital.Infrastructure.Services
 
             return _mapper.Map<PatientProfileResponse>(patient);
         }
-
-        //public async Task<bool> UpdateProfile(string userId, UpdatePatientProfileDto dto)
-        //{
-        //    var patient = await _unitOfWork.Patients.GetAsync(
-        //        selector: x => x,
-        //        filter: x => x.ApplicationUserId == userId,
-        //        Includes: x => x.User
-        //    );
-
-        //    if (patient == null) return false;
-
-        //    _mapper.Map(dto, patient);
-        //    _mapper.Map(dto, patient.User);
-
-        //    _unitOfWork.Patients.Update(patient);
-        //    await _unitOfWork.CompleteAsync();
-
-        //    return true;
-        //}
 
         public async Task<bool> UpdateProfile(UpdatePatientProfileDto dto)
         {
@@ -120,8 +89,9 @@ namespace TumorHospital.Infrastructure.Services
             return true;
         }
 
-        public async Task<DoctorProfileResponse> GetDoctorProfile(string userId)
+        public async Task<DoctorProfileResponse> GetDoctorProfile()
         {
+            var userId = _currentUserService.UserId;
             var doctor = await _unitOfWork.Doctors.GetAsync(
                 selector: x => x,
                 filter: x => x.ApplicationUserId == userId,
@@ -138,8 +108,9 @@ namespace TumorHospital.Infrastructure.Services
             return _mapper.Map<DoctorProfileResponse>(doctor);
         }
 
-        public async Task<bool> UpdateProfile(string userId, UpdateDoctorProfileDto dto)
+        public async Task<bool> UpdateProfile(UpdateDoctorProfileDto dto)
         {
+            var userId = _currentUserService.UserId;
             var doctor = await _unitOfWork.Doctors.GetAsync(
                 selector: x => x,
                 filter: x => x.ApplicationUserId == userId,
@@ -157,8 +128,9 @@ namespace TumorHospital.Infrastructure.Services
             return true;
         }
 
-        public async Task<ReceptionistProfileResponse> GetReceptionistProfile(string userId)
+        public async Task<ReceptionistProfileResponse> GetReceptionistProfile()
         {
+            var userId = _currentUserService.UserId;
             var receptionist = await _unitOfWork.Receptionists.GetAsync(
                 selector: x => x,
                 filter: x => x.ApplicationUserId == userId,
@@ -170,8 +142,9 @@ namespace TumorHospital.Infrastructure.Services
             return _mapper.Map<ReceptionistProfileResponse>(receptionist);
         }
 
-        public async Task<bool> UpdateProfile(string userId, UpdateReceptionistProfileDto dto)
+        public async Task<bool> UpdateProfile(UpdateReceptionistProfileDto dto)
         {
+            var userId = _currentUserService.UserId;
             var receptionist = await _unitOfWork.Receptionists.GetAsync(
                 selector: x => x,
                 filter: x => x.ApplicationUserId == userId,

@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
 using TumorHospital.Application.Helpers;
+using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
@@ -14,13 +15,16 @@ namespace TumorHospital.Infrastructure.Services
     public class DoctorService : IDoctorService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public DoctorService(IUnitOfWork unitOfWork)
+        private readonly ICurrentUserService _currentUserService;
+        public DoctorService(IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<DoctorDetailsDto> GetDoctorDetails(string doctorId, string patientId)
+        public async Task<DoctorDetailsDto> GetDoctorDetails(string doctorId)
         {
+            var patientId = _currentUserService.UserId;
             var doctorDetails = await _unitOfWork.Doctors.GetEnhancedAsync(
                 filter: d => d.ApplicationUserId == doctorId && d.User.IsActive,
                 selector: d => new DoctorDetailsDto
@@ -128,7 +132,8 @@ namespace TumorHospital.Infrastructure.Services
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,
-                    FullName = d.User.FirstName + " " + d.User.LastName,
+                    FirstName = d.User.FirstName,
+                    LastName = d.User.LastName,
                     ProfileImageUrl = d.ProfilePicturePath == null
                         ? null
                         : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,

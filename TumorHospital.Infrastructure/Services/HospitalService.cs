@@ -108,14 +108,15 @@ namespace TumorHospital.Infrastructure.Services
                 selector: d => new DoctorDto
                 {
                     Id = d.ApplicationUserId,
-                    FullName = d.User.FirstName + " " + d.User.LastName,
+                    FirstName = d.User.FirstName,
+                    LastName = d.User.LastName,
                     Gender = d.Gender,
                     ProfileImageUrl = d.ProfilePicturePath == null ?
                                     null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
                     IsActive = d.User.IsActive
                 },
                 pageNumber: pageNumber,
-                pageSize: 10
+                pageSize: 15
                 );
         }
         public async Task<DoctorInformationDto> GetHospitalDoctor(string doctorId)
@@ -147,7 +148,7 @@ namespace TumorHospital.Infrastructure.Services
             return doctorDetails;
         }
 
-        public async Task<PageSourcePagination<ReceptionistDto>> GetHospitalReceptionists(Guid id, string? receptionistName = null, int pageNumber = 1)
+        public async Task<PageSourcePagination<ReceptionistDetailsDto>> GetHospitalReceptionists(Guid id, string? receptionistName = null, int pageNumber = 1)
         {
             if (!await _unitOfWork.Hospitals.IsExistAsync(id))
                 throw new Exception("Hospital Not Exist");
@@ -159,13 +160,17 @@ namespace TumorHospital.Infrastructure.Services
 
             return await _unitOfWork.Receptionists.GetAllPaginatedEnhancedAsync(
                 filter: filter,
-                selector: r => new ReceptionistDto
+                selector: r => new ReceptionistDetailsDto
                 {
                     Id = r.ApplicationUserId,
-                    Name = r.User.FirstName + " " + r.User.LastName,
+                    FirstName = r.User.FirstName,
+                    LastName = r.User.LastName,
+                    Gender = r.Gender,
+                    Email = r.User.Email,
+                    IsActive = r.User.IsActive
                 },
                 pageNumber: pageNumber,
-                pageSize: 10
+                pageSize: 15
                 );
         }
 

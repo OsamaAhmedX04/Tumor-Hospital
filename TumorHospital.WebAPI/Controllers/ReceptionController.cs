@@ -17,7 +17,7 @@ namespace TumorHospital.WebAPI.Controllers
             _billService = billService;
         }
 
-        [HttpGet("Receptionists")]
+        [HttpGet("/api/Receptionists")]
         public async Task<IActionResult> GetAllReceptionists(int pageNumber, string? receptionistName)
         {
             try
@@ -33,7 +33,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpGet("Receptionists/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetReceptionist(string id)
         {
             try

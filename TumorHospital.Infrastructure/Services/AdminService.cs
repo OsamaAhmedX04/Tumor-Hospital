@@ -93,13 +93,13 @@ namespace TumorHospital.Infrastructure.Services
             if (doctor == null)
                 throw new Exception("This User Not Exist");
 
-            string? doctorImagePath = await _unitOfWork.Doctors.GetEnhancedAsync
+            string doctorImagePath = await _unitOfWork.Doctors.GetEnhancedAsync
                 (
                 filter: d => d.ApplicationUserId == doctorId,
                 selector: d => d.ProfilePicturePath ?? "N/A"
-                );
+                )?? "N/A";
 
-            if (doctorImagePath == "N/A")
+            if (doctorImagePath != "N/A")
                 await _fileService.DeleteAsync(doctorImagePath);
 
             await _userManager.DeleteAsync(doctor);

@@ -40,8 +40,8 @@ namespace TumorHospital.Infrastructure.Services
                 {
                     Id = r.ApplicationUserId,
                     IsActive = r.User.IsActive,
-                    IsDeleted = r.IsDeleted,
-                    Name = r.User.FirstName + " " + r.User.LastName,
+                    FirstName = r.User.FirstName,
+                    LastName = r.User.LastName,
                     Email = r.User.Email!,
                     Gender = r.Gender
                 }

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
@@ -21,13 +23,13 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = DoctorDocs.UploadProfilePictureSummary, Description = DoctorDocs.UploadProfilePictureDescription)]
-        //[Authorize(Roles = SystemRole.Doctor)]
+        [Authorize(Roles = SystemRole.Doctor)]
         [HttpPost("Profile-Picture")]
-        public async Task<IActionResult> UploadProfilePicture(IFormFile file, string userId)
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
         {
             try
             {
-                await _profileService.UploadProfilePicture(file, userId);
+                await _profileService.UploadProfilePicture(file);
                 return Ok(new { Message = "Profile Picture Uploaded Successfully" });
             }
             catch (Exception ex)
@@ -55,13 +57,13 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = DoctorDocs.GetDoctorSummary, Description = DoctorDocs.GetDoctorDescription)]
-        //[Authorize(Roles = SystemRole.Patient)]
+        [Authorize(Roles = SystemRole.Patient)]
         [HttpGet("{doctorId}")]
-        public async Task<IActionResult> GetDoctor(string doctorId, string patientId)
+        public async Task<IActionResult> GetDoctor(string doctorId)
         {
             try
             {
-                return Ok(await _doctorService.GetDoctorDetails(doctorId, patientId));
+                return Ok(await _doctorService.GetDoctorDetails(doctorId));
             }
             catch (Exception ex)
             {
