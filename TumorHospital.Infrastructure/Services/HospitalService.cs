@@ -138,6 +138,7 @@ namespace TumorHospital.Infrastructure.Services
                     VideoCallCost = !d.IsVideoCallDoctor ? null : d.VideoCallCost,
                     WorkingDays = d.Schedules.Select(s => new DoctorWorkDayPreifDto
                     {
+                        ScheduleId = s.Id,
                         Day = s.DayOfWeek.ToString(),
                         FromTime = s.StartTime,
                         ToTime = s.EndTime
