@@ -63,6 +63,10 @@ namespace TumorHospital.WebAPI.Controllers
         //}
 
 
+        [SwaggerOperation(Summary = NeedDocs.GetCategoriesOfNeedsSummary, Description = NeedDocs.GetCategoriesOfNeedsDescription)]
+        [HttpGet("Categories")]
+        public async Task<IActionResult> GetCategoriesOfNeeds() => Ok(_needService.GetCategoriesOfNeeds());
+
         [SwaggerOperation(Summary = NeedDocs.AddNeedSummary, Description = NeedDocs.AddNeedDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
@@ -128,18 +132,5 @@ namespace TumorHospital.WebAPI.Controllers
                 return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
         }
-
-
-        [SwaggerOperation(Summary = NeedDocs.GetCategoriesOfNeedsSummary, Description = NeedDocs.GetCategoriesOfNeedsDescription)]
-        [HttpGet("Categories")]
-        public async Task<IActionResult> GetCategoriesOfNeeds() => Ok(_needService.GetCategoriesOfNeeds());
-
-
-
-
-
-
-
-
     }
 }

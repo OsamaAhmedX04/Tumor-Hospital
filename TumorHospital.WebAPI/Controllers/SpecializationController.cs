@@ -80,26 +80,6 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
-
-
-        [SwaggerOperation(Summary = SpecializationDocs.DeleteSpecializationsSummary, Description = SpecializationDocs.DeleteSpecializationsDescription)]
-        //[Authorize(Roles = SystemRole.Admin)]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSpecializations(Guid id)
-        {
-            try
-            {
-                await _specializationService.DeleteSpecialization(id);
-                return Ok(new { Message = "Specialization Deleted Successfully" });
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("Message", ex.Message);
-                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-            }
-        }
-
-
         [SwaggerOperation(Summary = SpecializationDocs.AssignSpecializationToDoctorSummary, Description = SpecializationDocs.AssignSpecializationToDoctorDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("assign-to-doctor")]
@@ -119,6 +99,25 @@ namespace TumorHospital.WebAPI.Controllers
                 ModelState.AddModelError("Identity", ex.Message);
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+
+
+        [SwaggerOperation(Summary = SpecializationDocs.DeleteSpecializationsSummary, Description = SpecializationDocs.DeleteSpecializationsDescription)]
+        //[Authorize(Roles = SystemRole.Admin)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSpecializations(Guid id)
+        {
+            try
+            {
+                await _specializationService.DeleteSpecialization(id);
+                return Ok(new { Message = "Specialization Deleted Successfully" });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
         }
     }
 }

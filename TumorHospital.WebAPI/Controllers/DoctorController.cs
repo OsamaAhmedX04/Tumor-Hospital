@@ -22,31 +22,14 @@ namespace TumorHospital.WebAPI.Controllers
             _appointmentService = appointmentService;
         }
 
-        [SwaggerOperation(Summary = DoctorDocs.UploadProfilePictureSummary, Description = DoctorDocs.UploadProfilePictureDescription)]
-        [Authorize(Roles = SystemRole.Doctor)]
-        [HttpPost("Profile-Picture")]
-        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
-        {
-            try
-            {
-                await _profileService.UploadProfilePicture(file);
-                return Ok(new { Message = "Profile Picture Uploaded Successfully" });
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("Message", ex.Message);
-                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-            }
-        }
-
 
         [SwaggerOperation(Summary = DoctorDocs.GetDoctorsSummary, Description = DoctorDocs.GetDoctorsDescription)]
         [HttpGet("/api/Doctors")]
-        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsSurgeon = null, string? government = null, string? specializationName = null)
+        public async Task<IActionResult> GetDoctors(int pageNumber, string? workDay = null, bool? IsVideoCallDoctor = null, string? government = null, string? specializationName = null)
         {
             try
             {
-                return Ok(await _doctorService.GetDoctors(pageNumber, workDay, IsSurgeon, government, specializationName));
+                return Ok(await _doctorService.GetDoctors(pageNumber, workDay, IsVideoCallDoctor, government, specializationName));
             }
             catch (Exception ex)
             {
@@ -81,6 +64,23 @@ namespace TumorHospital.WebAPI.Controllers
             try
             {
                 return Ok(await _appointmentService.GetDoctorAppointments(pageNumber, doctorId, appointmentReason, appointmentStatus));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Message", ex.Message);
+                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+            }
+        }
+
+        [SwaggerOperation(Summary = DoctorDocs.UploadProfilePictureSummary, Description = DoctorDocs.UploadProfilePictureDescription)]
+        [Authorize(Roles = SystemRole.Doctor)]
+        [HttpPost("Profile-Picture")]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+        {
+            try
+            {
+                await _profileService.UploadProfilePicture(file);
+                return Ok(new { Message = "Profile Picture Uploaded Successfully" });
             }
             catch (Exception ex)
             {

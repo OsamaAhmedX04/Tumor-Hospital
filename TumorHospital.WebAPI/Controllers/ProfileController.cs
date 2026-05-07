@@ -49,22 +49,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
-        [Authorize(Roles = SystemRole.Patient)]
-        [HttpPut("Patient")]
-        [EnableRateLimiting("strict")]
-        public async Task<IActionResult> UpdateProfile(UpdatePatientProfileDto dto)
-        {
-            var validationResult = await _patientValidator.ValidateAsync(dto);
-            if (validationResult.IsValid)
-            {
-                await _profileService.UpdateProfile(dto);
-                return Ok("Patient profile updated successfully");
-            }
-            foreach (var error in validationResult.Errors)
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        }
+        
 
         [SwaggerOperation(Summary = ProfileDocs.GetDoctorProfileSummary, Description = ProfileDocs.GetDoctorProfileDescription)]
         [Authorize(Roles = SystemRole.Doctor)]
@@ -83,22 +68,7 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [SwaggerOperation(Summary = ProfileDocs.UpdateDoctorProfileSummary, Description = ProfileDocs.UpdateDoctorProfileDescription)]
-        [Authorize(Roles = SystemRole.Doctor)]
-        [HttpPut("Doctor")]
-        [EnableRateLimiting("strict")]
-        public async Task<IActionResult> UpdateProfile(UpdateDoctorProfileDto dto)
-        {
-            var validationResult = await _doctorValidator.ValidateAsync(dto);
-            if (validationResult.IsValid)
-            {
-                await _profileService.UpdateProfile(dto);
-                return Ok("Doctor profile updated successfully");
-            }
-            foreach (var error in validationResult.Errors)
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        }
+        
 
         [SwaggerOperation(Summary = ProfileDocs.GetReceptionistProfileSummary, Description = ProfileDocs.GetReceptionistProfileDescription)]
         [Authorize(Roles = SystemRole.Receptionist)]
@@ -114,6 +84,40 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 ModelState.AddModelError("Identity", ex.Message);
             }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
+        [Authorize(Roles = SystemRole.Patient)]
+        [HttpPut("Patient")]
+        [EnableRateLimiting("strict")]
+        public async Task<IActionResult> UpdateProfile(UpdatePatientProfileDto dto)
+        {
+            var validationResult = await _patientValidator.ValidateAsync(dto);
+            if (validationResult.IsValid)
+            {
+                await _profileService.UpdateProfile(dto);
+                return Ok("Patient profile updated successfully");
+            }
+            foreach (var error in validationResult.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [SwaggerOperation(Summary = ProfileDocs.UpdateDoctorProfileSummary, Description = ProfileDocs.UpdateDoctorProfileDescription)]
+        [Authorize(Roles = SystemRole.Doctor)]
+        [HttpPut("Doctor")]
+        [EnableRateLimiting("strict")]
+        public async Task<IActionResult> UpdateProfile(UpdateDoctorProfileDto dto)
+        {
+            var validationResult = await _doctorValidator.ValidateAsync(dto);
+            if (validationResult.IsValid)
+            {
+                await _profileService.UpdateProfile(dto);
+                return Ok("Doctor profile updated successfully");
+            }
+            foreach (var error in validationResult.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 

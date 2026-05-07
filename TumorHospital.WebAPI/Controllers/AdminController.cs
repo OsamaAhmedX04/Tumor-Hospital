@@ -29,6 +29,13 @@ namespace TumorHospital.WebAPI.Controllers
             _receptionistValidator = receptionistValidator;
         }
 
+        [SwaggerOperation(Summary = AdminDocs.GetDashboardSummary, Description = AdminDocs.GetDashboardDescription)]
+        [HttpGet("Dashboard")]
+        public async Task<IActionResult> GetDashboard()
+        {
+            return Ok(await _adminSevice.GetDashboardDataAsync());
+        }
+
         [SwaggerOperation(Summary = AdminDocs.CreateNewDoctorSummary, Description = AdminDocs.CreateNewDoctorDescription)]
         [HttpPost("create-doctor")]
         public async Task<IActionResult> CreateNewDoctor([FromBody] NewDoctorDto model)
@@ -107,14 +114,6 @@ namespace TumorHospital.WebAPI.Controllers
                 ModelState.AddModelError("Identity", ex.Message);
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        }
-
-
-        [SwaggerOperation(Summary = AdminDocs.GetDashboardSummary, Description = AdminDocs.GetDashboardDescription)]
-        [HttpGet("Dashboard")]
-        public async Task<IActionResult> GetDashboard()
-        {
-            return Ok(await _adminSevice.GetDashboardDataAsync());
         }
     }
 }

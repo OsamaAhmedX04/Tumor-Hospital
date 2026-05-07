@@ -23,6 +23,20 @@ namespace TumorHospital.WebAPI.Controllers
             _validator = validator;
         }
 
+        [HttpGet("{appointmentId}")]
+        public async Task<IActionResult> Get(Guid appointmentId)
+        {
+            try
+            {
+                return Ok(await _service.GetByAppointmentIdAsync(appointmentId));
+            }
+
+            catch (Exception ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(PrescriptionCreateUpdateDto dto)
         {
@@ -63,20 +77,6 @@ namespace TumorHospital.WebAPI.Controllers
             foreach (var error in validation.Errors)
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        }
-
-        [HttpGet("{appointmentId}")]
-        public async Task<IActionResult> Get(Guid appointmentId)
-        {
-            try
-            {
-                return Ok(await _service.GetByAppointmentIdAsync(appointmentId));
-            }
-
-            catch (Exception ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
         }
 
         [HttpDelete("{id}")]

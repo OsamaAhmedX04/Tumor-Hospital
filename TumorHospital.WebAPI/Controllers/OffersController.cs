@@ -22,6 +22,27 @@ namespace TumorHospital.WebAPI.Controllers
             _updateValidator = updateValidator;
         }
 
+        [HttpGet("Offers")]
+        public async Task<IActionResult> GetOffers()
+        {
+            var offers = await _offerService.GetAllOffersAsync();
+            return Ok(offers);
+        }
+
+        [HttpGet("ExpiredOffers")]
+        public async Task<IActionResult> GetExpired()
+        {
+            var offers = await _offerService.GetExpiredOffersAsync();
+            return Ok(offers);
+        }
+
+        [HttpGet("UpcomingOffers")]
+        public async Task<IActionResult> GetUpcoming()
+        {
+            var offers = await _offerService.GetUpcomingOffersAsync();
+            return Ok(offers);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddOffer(AddOfferDto dto)
         {
@@ -70,27 +91,6 @@ namespace TumorHospital.WebAPI.Controllers
             var success = await _offerService.RemoveOfferAsync(id);
             if (!success) return NotFound();
             return NoContent();
-        }
-
-        [HttpGet("Offers")]
-        public async Task<IActionResult> GetOffers()
-        {
-            var offers = await _offerService.GetAllOffersAsync();
-            return Ok(offers);
-        }
-
-        [HttpGet("ExpiredOffers")]
-        public async Task<IActionResult> GetExpired()
-        {
-            var offers = await _offerService.GetExpiredOffersAsync();
-            return Ok(offers);
-        }
-
-        [HttpGet("UpcomingOffers")]
-        public async Task<IActionResult> GetUpcoming()
-        {
-            var offers = await _offerService.GetUpcomingOffersAsync();
-            return Ok(offers);
         }
     }
 }
