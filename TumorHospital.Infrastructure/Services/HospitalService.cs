@@ -110,10 +110,12 @@ namespace TumorHospital.Infrastructure.Services
                     Id = d.ApplicationUserId,
                     FirstName = d.User.FirstName,
                     LastName = d.User.LastName,
+                    Email = d.User.Email,
                     Gender = d.Gender,
                     ProfileImageUrl = d.ProfilePicturePath == null ?
                                     null : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
-                    IsActive = d.User.IsActive
+                    IsActive = d.User.IsActive,
+                    IsDeleted = d.User.IsDeleted
                 },
                 pageNumber: pageNumber,
                 pageSize: 15
@@ -168,7 +170,8 @@ namespace TumorHospital.Infrastructure.Services
                     LastName = r.User.LastName,
                     Gender = r.Gender,
                     Email = r.User.Email,
-                    IsActive = r.User.IsActive
+                    IsActive = r.User.IsActive,
+                    IsDeleted = r.User.IsDeleted
                 },
                 pageNumber: pageNumber,
                 pageSize: 15

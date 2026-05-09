@@ -100,7 +100,7 @@ namespace TumorHospital.Infrastructure.Services
         public async Task<PageSourcePagination<DoctorDto>> GetDoctors(
     int pageNumber, string? workDay = null, bool? IsVideoCallDoctor = null, string? government = null, string? specializationName = null)
         {
-            Expression<Func<Doctor, bool>> filter = d => d.User.IsActive;
+            Expression<Func<Doctor, bool>> filter = d => d.User.IsActive && !d.User.IsDeleted;
 
             if (!string.IsNullOrEmpty(workDay))
             {
@@ -134,11 +134,13 @@ namespace TumorHospital.Infrastructure.Services
                     Id = d.ApplicationUserId,
                     FirstName = d.User.FirstName,
                     LastName = d.User.LastName,
+                    Email = d.User.Email,
                     ProfileImageUrl = d.ProfilePicturePath == null
                         ? null
                         : SupabaseConstants.PrefixSupaURL + d.ProfilePicturePath,
                     Gender = d.Gender,
-                    IsActive = true
+                    IsActive = d.User.IsActive,
+                    IsDeleted = d.User.IsDeleted,
                 },
                 pageSize: 15,
                 pageNumber: pageNumber

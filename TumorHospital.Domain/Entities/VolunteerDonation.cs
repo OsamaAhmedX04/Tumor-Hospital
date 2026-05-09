@@ -18,6 +18,8 @@ namespace TumorHospital.Domain.Entities
         [Phone]
         public string? Phone { get; set; }
         public decimal AmountDonated { get; set; }
+        public string? PaymentReference { get; set; }
         public DateTime DonationDate { get; set; }
+        public string Status { get; set; }
     }
 }
