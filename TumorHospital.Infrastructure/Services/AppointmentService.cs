@@ -389,7 +389,15 @@ namespace TumorHospital.Infrastructure.Services
 
             await _unitOfWork.Bills.AddAsync(bill);
 
-            await _unitOfWork.CompleteAsync();
+            try
+            {
+                await _unitOfWork.CompleteAsync();
+            }
+            catch(DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "Concurrency error while accepting appointment {AppointmentId}", appointmentId);
+                throw new DbUpdateConcurrencyException("The appointment was modified by another process. Please try again.");
+            }
 
             _logger.LogInformation(
                 "Creating bill for PatientId {PatientId}, AppointmentId {AppointmentId}",
@@ -452,7 +460,15 @@ namespace TumorHospital.Infrastructure.Services
             if (appointment == null)
                 throw new ArgumentException("Appointment not found.");
             appointment.Status = AppointmentStatus.Rejected;
-            await _unitOfWork.CompleteAsync();
+            try
+            {
+                await _unitOfWork.CompleteAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "Concurrency error while accepting appointment {AppointmentId}", appointmentId);
+                throw new DbUpdateConcurrencyException("The appointment was modified by another process. Please try again.");
+            }
         }
 
         public async Task AttendPatientToAppointment(string patientId, Guid appointmentId)
