@@ -51,12 +51,8 @@
 //CSV: 123
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.Donation;
-using TumorHospital.Application.DTOs.Request.Payment;
 using TumorHospital.Application.Intefaces.Services;
-using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -164,7 +160,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         }
 
-        
+
         //[HttpPost("/fawatirak-webhook")]
         //public async Task<IActionResult> Webhook([FromBody] WebHookModel model)
         //{

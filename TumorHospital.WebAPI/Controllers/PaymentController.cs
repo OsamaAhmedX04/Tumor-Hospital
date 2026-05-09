@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TumorHospital.Application.DTOs.Request.Donation;
+﻿using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.Payment;
 using TumorHospital.Application.Intefaces.Services;
 

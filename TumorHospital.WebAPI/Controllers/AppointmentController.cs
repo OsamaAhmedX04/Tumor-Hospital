@@ -178,7 +178,7 @@ namespace TumorHospital.WebAPI.Controllers
                 await _appointmentService.RejectAppointment(appointmentId);
                 return Ok(new { Message = "Appointment Rejected Successfully" });
             }
-            catch(DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException ex)
             {
                 ModelState.AddModelError("Concurrency", ex.Message);
             }

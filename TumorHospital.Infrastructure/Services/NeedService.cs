@@ -114,7 +114,7 @@ namespace TumorHospital.Infrastructure.Services
 
             need.Title = newNeed.Title;
 
-            if(newNeed.Image is not null)
+            if (newNeed.Image is not null)
                 need.ImagePath = await _fileService.EditAsync(need.ImagePath, newNeed.Image);
 
             need.NeedAmount = newNeed.NeedAmount;

@@ -393,7 +393,7 @@ namespace TumorHospital.Infrastructure.Services
             {
                 await _unitOfWork.CompleteAsync();
             }
-            catch(DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogError(ex, "Concurrency error while accepting appointment {AppointmentId}", appointmentId);
                 throw new DbUpdateConcurrencyException("The appointment was modified by another process. Please try again.");

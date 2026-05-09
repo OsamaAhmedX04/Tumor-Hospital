@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TumorHospital.Application.DTOs.Request.Donation;
 using TumorHospital.Application.DTOs.Request.Payment;
@@ -76,7 +75,7 @@ namespace TumorHospital.Infrastructure.Services
                     OnFailure = "https://tumor-hospital.vercel.app/donations/fail",
                     OnPending = "https://tumorhospital.runasp.net/api/Payment/fawaterak/webhooks/pending"
                 }
-               
+
             };
 
             var result = await _paymentService.CreateEInvoiceAsync(invoice);
@@ -136,7 +135,7 @@ namespace TumorHospital.Infrastructure.Services
 
 
             donation.Status = "Failed";
-           
+
             await _unitOfWork.CompleteAsync();
         }
 
