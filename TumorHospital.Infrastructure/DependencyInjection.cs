@@ -184,6 +184,14 @@ namespace TumorHospital.Infrastructure
             services.AddHttpClient<IMeetingService, MeetingService>();
             #endregion
 
+            #region Payment Gateway (Fawaterak)
+            services.AddOptions<FawaterakSettings>()
+                .Bind(configuration.GetSection("Fawaterak"))
+                .ValidateOnStart();
+
+            services.AddScoped<IPaymentService, PaymentService>();
+            #endregion
+
 
             return services;
         }

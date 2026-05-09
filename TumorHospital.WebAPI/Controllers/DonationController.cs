@@ -1,33 +1,54 @@
-﻿//🟢 For SUCCESS test (happy path)
+﻿//Test Cards
 
-//Use this:
+//# Test Cards
 
-//Visa
-//Card Number: 4005 5500 0000 0001
-//Expiry: 12 / 26
-//CVV: 100
-//Name: Fawaterak test
-//Expected result:
-//Payment succeeds ✅
-//User redirected to your success URL
-//Webhook hits your API
-//Donation → Paid
-//CollectedAmount increases
-//🔴 For FAILURE test (sad path)
+//Here is some test cards to test Master card and Visa
 
-//Use this:
+//**This Card always return successful transaction:\&#xA;**
+
+//Mastercard
+
+//Card Number :5123450000000008\
+//Card holder name : Fawaterak test\
+//Expiry Date : 12 / 26\
+//CSV: 100
 
 //Visa
-//Card Number: 4222 0000 0672 4235
-//Expiry: 12 / 26
-//CVV: 123
-//Expected result:
-//Payment fails ❌
-//User redirected to failure URL
-//Webhook hits your API
-//Donation → Failed
-//NO change in CollectedAmount
 
+//Card Number :4005 5500 0000 0001\
+//Card holder name : Fawaterak test\
+//Expiry Date : 12 / 26\
+//CSV: 100
+
+//Meeza
+
+//Card Number :5078 0362 4660 0381\
+//Card holder name : Fawaterak test\
+//Expiry Date : 12 / 26\
+//CSV: 100
+
+//* *This Card always return Failed transaction:\&#xA;**
+
+//Mastercard
+
+//Card Number :5543474002249996\
+//Card holder name : Fawaterak test\
+//Expiry Date : 05 / 26
+//CSV: 123
+
+//Visa
+
+//Card Number : 4222 0000 0672 4235\
+//Card holder name : Fawaterak test\
+//Expiry Date : 12 / 26
+//CSV: 123
+
+//Meeza
+
+//Card Number : 5078 0362 4278 3546\
+//Card holder name : Fawaterak test\
+//Expiry Date : 12 / 26
+//CSV: 123
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -53,57 +74,9 @@ namespace TumorHospital.WebAPI.Controllers
             _volunteerValidator = volunteerValidator;
         }
 
-        [HttpGet("/success")]
-        public IActionResult Success(string invoice_id)
-        {
-            return Ok(new
-            {
-                Status = "Success",
-                Message = "Payment completed successfully",
-                InvoiceId = invoice_id
-            });
-        }
 
-        [HttpGet("/fail")]
-        public IActionResult Fail(string invoice_id, string errorMessage)
-        {
-            return Ok(new
-            {
-                Status = "Failed",
-                Message = "Payment failed",
-                InvoiceId = invoice_id,
-                Error = errorMessage
-            });
-        }
 
-        [HttpGet("/pending")]
-        public IActionResult Pending(string invoice_id)
-        {
-            return Ok(new
-            {
-                Status = "Pending",
-                Message = "Payment is pending confirmation",
-                InvoiceId = invoice_id
-            });
-        }
 
-        [HttpPost("Donate")]
-        public async Task<IActionResult> Donate(VolunteerDto dto)
-        {
-            try
-            {
-                var url = await _donationService.CreateDonation(dto);
-                return Ok(new { PaymentUrl = url });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Donation failed",
-                    details = ex.Message
-                });
-            }
-        }
         //[SwaggerOperation(Summary = DonationDocs.DonateSummary, Description = DonationDocs.DonateDescription)]
         //[HttpPost("Donate")]
         //public async Task<IActionResult> Donate(VolunteerDto volunteer)
@@ -159,20 +132,52 @@ namespace TumorHospital.WebAPI.Controllers
         //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         //}
 
-
-        [HttpPost("fawatirak-webhook")]
-        public async Task<IActionResult> Webhook([FromBody] WebHookModel model)
+        [HttpPost("Donate")]
+        public async Task<IActionResult> Donate(VolunteerDto dto)
         {
-            try
+            var validationResult = await _volunteerValidator.ValidateAsync(dto);
+            if (validationResult.IsValid)
             {
-                await _donationService.HandleWebhook(model);
-                return Ok();
+                try
+                {
+                    var url = await _donationService.CreateDonation(dto);
+                    return Ok(new { PaymentUrl = url });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("Message", ex.Message);
+                    //return StatusCode(500, new
+                    //{
+                    //    message = "Donation failed",
+                    //    details = ex.Message
+                    //});
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(new { error = ex.Message });
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
             }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+
         }
+
+        
+        //[HttpPost("/fawatirak-webhook")]
+        //public async Task<IActionResult> Webhook([FromBody] WebHookModel model)
+        //{
+        //    try
+        //    {
+        //        await _donationService.HandleWebhook(model);
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //}
         //// 🔐 Verify request
         //if (!_paymentService.VerifyWebhook(model))
         //    return BadRequest("Invalid hash");
@@ -207,7 +212,7 @@ namespace TumorHospital.WebAPI.Controllers
 
         //return Ok();
 
-        
+
     }
 
 

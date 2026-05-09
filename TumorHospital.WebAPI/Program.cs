@@ -35,7 +35,9 @@ namespace TumorHospital.WebAPI
                 options.AddPolicy("AllowLocalHost", builder =>
                 {
                     builder.WithOrigins(
-                        "http://localhost:5173"
+                        "http://localhost:5173",
+                        "https://test-tumor.vercel.app",
+                        "https://tumor-hospital.vercel.app"
                 )
                 .AllowAnyMethod()
                 .AllowAnyHeader()
