@@ -13,16 +13,15 @@ namespace TumorHospital.Application.Validators.About
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Hospital Description is required")
-                .MaximumLength(1000);
+                .MaximumLength(2000);
 
             RuleFor(x => x.Mission)
                 .NotEmpty().WithMessage("Hospital Mission is required")
-                .MaximumLength(500);
+                .MaximumLength(2000);
 
             RuleFor(x => x.Vision)
                 .NotEmpty().WithMessage("Hospital Vision is required")
-                .MaximumLength(500);
-
+                .MaximumLength(2000);
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Hospital Email is required")
                 .EmailAddress();
