@@ -12,6 +12,8 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
 
             builder.Property(a => a.RequestCreatedAt).HasDefaultValueSql("GETDATE()").IsRequired();
 
+            builder.Property(a => a.RowVersion).IsRowVersion();
+
             builder.Property(a => a.Status)
                 .IsRequired()
                 .HasConversion<string>()

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.WebAPI.Extensions;
@@ -157,6 +158,10 @@ namespace TumorHospital.WebAPI.Controllers
                 await _appointmentService.AcceptAppointment(appointmentId);
                 return Ok(new { Message = "Appointment Accepted Successfully" });
             }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                ModelState.AddModelError("Concurrency", ex.Message);
+            }
             catch (Exception ex)
             {
                 ModelState.AddModelError("Identity", ex.Message);
@@ -173,11 +178,15 @@ namespace TumorHospital.WebAPI.Controllers
                 await _appointmentService.RejectAppointment(appointmentId);
                 return Ok(new { Message = "Appointment Rejected Successfully" });
             }
+            catch(DbUpdateConcurrencyException ex)
+            {
+                ModelState.AddModelError("Concurrency", ex.Message);
+            }
             catch (Exception ex)
             {
                 ModelState.AddModelError("Identity", ex.Message);
-                return BadRequest(new { Errors = ModelState.ToErrorResponse() });
             }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
     }

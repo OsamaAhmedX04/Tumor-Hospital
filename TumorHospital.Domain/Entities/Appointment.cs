@@ -26,6 +26,9 @@ namespace TumorHospital.Domain.Entities
         public AppointmentStatus Status { get; set; }
         public DateTime RequestCreatedAt { get; set; }
         public DateOnly? AttendenceDate { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         public Prescription? Prescription { get; set; }
         public Bill? Bill { get; set; }
 
