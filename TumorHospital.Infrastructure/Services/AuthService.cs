@@ -189,6 +189,9 @@ namespace TumorHospital.Infrastructure.Services
             if (user == null)
                 throw new Exception("User Not Found");
 
+            if(user.IsDeleted)
+                throw new Exception("User Not Found");
+
             var userRoles = await _userManager.GetRolesAsync(user);
             var mainRole = userRoles[0];
 

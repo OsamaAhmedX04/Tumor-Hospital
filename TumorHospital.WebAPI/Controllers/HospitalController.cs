@@ -99,7 +99,7 @@ namespace TumorHospital.WebAPI.Controllers
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalReceptionistsSummary, Description = HospitalDocs.GetAllHospitalReceptionistsDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
         [HttpGet("{hospitalId}/receptionists")]
-        public async Task<IActionResult> GetAllHospitalReceptionists(Guid hospitalId, string receptionistName, int pageNumber)
+        public async Task<IActionResult> GetAllHospitalReceptionists(Guid hospitalId, int pageNumber, string? receptionistName = null)
         {
             try
             {

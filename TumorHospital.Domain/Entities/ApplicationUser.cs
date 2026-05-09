@@ -12,6 +12,7 @@ namespace TumorHospital.Domain.Entities
         public string LastName { get; set; }
 
         public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
 
         public RefreshTokenAuth RefreshTokenAuth { get; set; }
 

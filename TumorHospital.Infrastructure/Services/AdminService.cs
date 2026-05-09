@@ -93,16 +93,18 @@ namespace TumorHospital.Infrastructure.Services
             if (doctor == null)
                 throw new Exception("This User Not Exist");
 
-            string doctorImagePath = await _unitOfWork.Doctors.GetEnhancedAsync
-                (
-                filter: d => d.ApplicationUserId == doctorId,
-                selector: d => d.ProfilePicturePath ?? "N/A"
-                )?? "N/A";
+            //string doctorImagePath = await _unitOfWork.Doctors.GetEnhancedAsync
+            //    (
+            //    filter: d => d.ApplicationUserId == doctorId,
+            //    selector: d => d.ProfilePicturePath ?? "N/A"
+            //    )?? "N/A";
 
-            if (doctorImagePath != "N/A")
-                await _fileService.DeleteAsync(doctorImagePath);
+            //if (doctorImagePath != "N/A")
+            //    await _fileService.DeleteAsync(doctorImagePath);
 
-            await _userManager.DeleteAsync(doctor);
+            //await _userManager.DeleteAsync(doctor);
+            doctor.IsDeleted = true;
+            await _userManager.UpdateAsync(doctor);
         }
 
         public async Task CreateNewReceptionist(NewReceptionistDto model)
@@ -155,12 +157,19 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task DeleteReceptionist(string receptionistId)
         {
-            var receptionist = await _unitOfWork.Receptionists.GetByIdAsync(receptionistId);
+            //var receptionist = await _unitOfWork.Receptionists.GetByIdAsync(receptionistId);
+            //if (receptionist == null)
+            //    throw new Exception("This User Not Exist");
+
+            //receptionist.IsDeleted = true;
+            //await _unitOfWork.CompleteAsync();
+
+            var receptionist = await _userManager.FindByIdAsync(receptionistId);
             if (receptionist == null)
                 throw new Exception("This User Not Exist");
 
             receptionist.IsDeleted = true;
-            await _unitOfWork.CompleteAsync();
+            await _userManager.UpdateAsync(receptionist);
         }
 
         public async Task<AdminDashboardResponse> GetDashboardDataAsync()
