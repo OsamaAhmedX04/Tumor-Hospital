@@ -1,14 +1,16 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.User;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
 {
-    //[Authorize(Roles = SystemRole.Admin)]
+    [Authorize(Roles = SystemRole.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -78,6 +80,21 @@ namespace TumorHospital.WebAPI.Controllers
             }
             foreach (var error in validation.Errors)
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [HttpPut("reactive-account/{userId}")]
+        public async Task<IActionResult> ReactiveAccount(string userId)
+        {
+            try
+            {
+                await _adminSevice.ReActiveAccount(userId);
+                return Ok(new { Message = "Account Reactivated Successfully" });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 

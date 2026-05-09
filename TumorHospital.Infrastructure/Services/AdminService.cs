@@ -172,6 +172,15 @@ namespace TumorHospital.Infrastructure.Services
             await _userManager.UpdateAsync(receptionist);
         }
 
+        public async Task ReActiveAccount(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new Exception("This User Not Exist");
+
+            user.IsDeleted = false;
+            await _userManager.UpdateAsync(user);
+        }
         public async Task<AdminDashboardResponse> GetDashboardDataAsync()
         {
             var totalPatients = await _unitOfWork.Patients.Count();

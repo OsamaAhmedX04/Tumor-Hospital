@@ -9,6 +9,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task DeleteDoctor(string doctorId);
         Task CreateNewReceptionist(NewReceptionistDto model);
         Task DeleteReceptionist(string receptionistId);
+        Task ReActiveAccount(string userId);
         Task<AdminDashboardResponse> GetDashboardDataAsync();
     }
 }
