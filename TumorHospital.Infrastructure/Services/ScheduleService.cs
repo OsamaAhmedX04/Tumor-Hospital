@@ -87,11 +87,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task DeleteScheduale(Guid scheduleId, string doctorId)
         {
-            var numberOfDoctorWorkDays = await _unitOfWork.DoctorSchedules
-                .GetAllAsIQueryable()
-                .GroupBy(ds => ds.DoctorId)
-                .Select(g => g.Count())
-                .FirstOrDefaultAsync();
+            var numberOfDoctorWorkDays = await _unitOfWork.DoctorSchedules.Count(ds => ds.DoctorId == doctorId);
             if (numberOfDoctorWorkDays <= 3)
                 throw new Exception("Each Doctor Must have at least 3 days of work");
 
@@ -150,7 +146,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new Exception("There is Appointments with this doctor at that day , You Can Update Schedule Between 12AM and 5AM OR After That Day");
 
             var isThereDuplicationDay = await IsDuplicatedDoctorWorkDayAsync(doctorId, schedule.DayOfWeek);
-            if (isThereDuplicationDay)
+            if (isThereDuplicationDay && schedule.DayOfWeek != day!.Name.ToString())
                 throw new Exception("This Doctor Already Work On This Day");
 
             var dayOfWeek = schedule.DayOfWeek switch
@@ -168,6 +164,7 @@ namespace TumorHospital.Infrastructure.Services
                 .Where(ds => ds.Id == scheduleId)
                 .ExecuteUpdateAsync(ds => ds
                     .SetProperty(ds => ds.StartTime, schedule.StartTime)
+                    .SetProperty(ds => ds.EndTime, schedule.StartTime.Add(TimeSpan.FromHours(8)))
                     .SetProperty(ds => ds.DayOfWeek, dayOfWeek)
                     .SetProperty(ds => ds.LastModified, DateTime.Now)
                     );
@@ -184,6 +181,7 @@ namespace TumorHospital.Infrastructure.Services
                 "Monday" => Day.Monday,
                 "Tuesday" => Day.Tuesday,
                 "Wednesday" => Day.Wednesday,
+                "Thursday" => Day.Thursday,
                 "Friday" => Day.Friday,
                 _ => throw new Exception("Invalid Day")
             };
