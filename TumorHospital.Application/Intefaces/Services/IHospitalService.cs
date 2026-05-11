@@ -8,7 +8,7 @@ namespace TumorHospital.Application.Intefaces.Services
     public interface IHospitalService
     {
         Task AddHospital(HospitalDto model);
-        Task UpdateHospital(Guid id, HospitalDto model);
+        Task UpdateHospital(Guid id, UpdateHospitalDto model);
         Task DeleteHospital(Guid id);
 
         Task<List<HospitalInfoDto>> GetHospitals();

@@ -66,7 +66,7 @@ namespace TumorHospital.WebAPI.Controllers
         [SwaggerOperation(Summary = SpecializationDocs.UpdateSpecializationsSummary, Description = SpecializationDocs.UpdateSpecializationsDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSpecializations(Guid id, SpecializationDto model)
+        public async Task<IActionResult> UpdateSpecializations(Guid id, UpdateSpecializationDto model)
         {
             try
             {

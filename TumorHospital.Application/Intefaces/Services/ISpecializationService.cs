@@ -6,7 +6,7 @@ namespace TumorHospital.Application.Intefaces.Services
     public interface ISpecializationService
     {
         Task AddSpecialization(SpecializationDto model);
-        Task UpdateSpecialization(Guid id, SpecializationDto model);
+        Task UpdateSpecialization(Guid id, UpdateSpecializationDto model);
         Task DeleteSpecialization(Guid id);
         Task AssignSpecializationToDoctor(string doctorId, string specializationName);
         Task<List<SpecializationDetailsDto>> GetSpecializations();

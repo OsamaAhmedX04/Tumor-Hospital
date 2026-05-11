@@ -62,15 +62,27 @@ namespace TumorHospital.Infrastructure.Services
             _cache.Remove("HospitalsGovernments");
         }
 
-        public async Task UpdateHospital(Guid id, HospitalDto model)
+        public async Task UpdateHospital(Guid id, UpdateHospitalDto model)
         {
             var hospital = await _unitOfWork.Hospitals.FirstOrDefaultAsync(h => h.Id == id);
             if (hospital is null)
                 throw new Exception("Id Not Exist");
-            if (!await IsDuplicatedAddress(model.Address))
-                throw new Exception("This Address Already Exist");
-            if (await IsDuplicatedName(model.Name))
-                throw new Exception("This Name Already Exist");
+            if (!string.IsNullOrEmpty(model.Address))
+            {
+                if (await IsDuplicatedAddress(model.Address))
+                    throw new Exception("This Address Already Exist");
+
+                hospital.Address = model.Address;
+            }
+
+            if (!string.IsNullOrEmpty(model.Name))
+            {
+                if (await IsDuplicatedName(model.Name))
+                    throw new Exception("This Name Already Exist");
+
+                hospital.Name = model.Name;
+            }
+                
             var numberOfCurrentDoctors = await _unitOfWork.Doctors.Count(d => d.HospitalId == id);
             var numberOfCurrentReceptionist = await _unitOfWork.Receptionists.Count(r => r.HospitalId == id);
 
@@ -79,9 +91,7 @@ namespace TumorHospital.Infrastructure.Services
             if (model.MaxNumberOfReceptionists < numberOfCurrentReceptionist)
                 throw new Exception($"There is {numberOfCurrentReceptionist} currently so you can go with only {model.MaxNumberOfReceptionists}");
 
-            hospital.Name = model.Name;
-            hospital.Government = model.Government;
-            hospital.Address = model.Address;
+            hospital.Government = model.Government.ToLower();
             hospital.MaxNumberOfDoctors = model.MaxNumberOfDoctors;
             hospital.MaxNumberOfReceptionists = model.MaxNumberOfReceptionists;
 
@@ -225,15 +235,22 @@ namespace TumorHospital.Infrastructure.Services
         {
             if (!_cache.TryGetValue("HospitalsGovernments", out List<string>? governments))
             {
-                governments = await _unitOfWork.Hospitals.GetAllAsync(selector: h => h.Government);
+                governments = await _unitOfWork.Hospitals
+                    .GetAllAsync(selector: h => h.Government);
+
+                governments = governments
+                    .Distinct()
+                    .ToList();
+
                 var cacheOptions = new MemoryCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(3)
                 };
-                _cache.Set("HospitalsGovernments", governments);
-            }
-            return governments ?? new List<string>();
 
+                _cache.Set("HospitalsGovernments", governments, cacheOptions);
+            }
+
+            return governments ?? new List<string>();
         }
 
         private async Task<bool> IsDuplicatedAddress(string address)

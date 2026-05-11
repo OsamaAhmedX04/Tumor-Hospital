@@ -14,11 +14,13 @@ namespace TumorHospital.WebAPI.Controllers
     {
         private readonly IHospitalService _hospitalService;
         private readonly IValidator<HospitalDto> _hospitalValidator;
+        private readonly IValidator<UpdateHospitalDto> _updateHospitalValidator;
 
-        public HospitalController(IHospitalService hospitalService, IValidator<HospitalDto> hospitalValidator)
+        public HospitalController(IHospitalService hospitalService, IValidator<HospitalDto> hospitalValidator, IValidator<UpdateHospitalDto> updateHospitalValidator)
         {
             _hospitalService = hospitalService;
             _hospitalValidator = hospitalValidator;
+            _updateHospitalValidator = updateHospitalValidator;
         }
 
         [SwaggerOperation(Summary = HospitalDocs.GetAllHospitalsSummary, Description = HospitalDocs.GetAllHospitalsDescription)]
@@ -162,9 +164,9 @@ namespace TumorHospital.WebAPI.Controllers
         [SwaggerOperation(Summary = HospitalDocs.UpdateHospitalSummary, Description = HospitalDocs.UpdateHospitalDescription)]
         //[Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{hospitalId}")]
-        public async Task<IActionResult> UpdateHospital(Guid hospitalId, HospitalDto model)
+        public async Task<IActionResult> UpdateHospital(Guid hospitalId, UpdateHospitalDto model)
         {
-            var validation = _hospitalValidator.Validate(model);
+            var validation = _updateHospitalValidator.Validate(model);
             if (validation.IsValid)
             {
                 try

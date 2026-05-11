@@ -43,24 +43,27 @@ namespace TumorHospital.Infrastructure.Services
         }
 
 
-        public async Task UpdateSpecialization(Guid id, SpecializationDto model)
+        public async Task UpdateSpecialization(Guid id, UpdateSpecializationDto model)
         {
             var specialization = await _unitOfWork.Specializations.GetByIdAsync(id);
             if (specialization == null)
                 throw new KeyNotFoundException("Specialization not found.");
 
-            if (string.IsNullOrEmpty(model.Name))
-                throw new ArgumentException("Specialization name cannot be empty.");
-            if (model.Name.Length > 50)
-                throw new ArgumentException("Specialization name Length Can not excced 50 char");
-
-            bool isExisting = await _unitOfWork.Specializations
+            if (!string.IsNullOrEmpty(model.Name))
+            {
+                bool isExisting = await _unitOfWork.Specializations
                 .AnyAsync(s => s.Name.ToLower() == model.Name.ToLower());
-            if (isExisting)
-                throw new InvalidOperationException("Specialization with the same name already exists.");
+                if (isExisting)
+                    throw new InvalidOperationException("Specialization with the same name already exists.");
 
-            specialization.Name = model.Name;
+                if (model.Name.Length > 50)
+                    throw new ArgumentException("Specialization name Length Can not excced 50 char");
+
+                specialization.Name = model.Name;
+            }
+            
             specialization.Description = string.IsNullOrEmpty(model.Description) ? "N/A" : model.Description;
+            
             await _unitOfWork.CompleteAsync();
             _cache.Remove("SpecializationNames");
         }
