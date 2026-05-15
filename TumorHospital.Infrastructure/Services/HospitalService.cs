@@ -82,7 +82,7 @@ namespace TumorHospital.Infrastructure.Services
 
                 hospital.Name = model.Name;
             }
-                
+
             var numberOfCurrentDoctors = await _unitOfWork.Doctors.Count(d => d.HospitalId == id);
             var numberOfCurrentReceptionist = await _unitOfWork.Receptionists.Count(r => r.HospitalId == id);
 

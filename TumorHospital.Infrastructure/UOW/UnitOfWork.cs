@@ -9,7 +9,6 @@ namespace TumorHospital.Infrastructure.UOW
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _db;
-        public IRepository<TestFile> TestFiles { get; }
         public IRepository<RefreshTokenAuth> RefreshTokenAuths { get; }
 
         public IRepository<Admin> Admins { get; }
@@ -60,7 +59,6 @@ namespace TumorHospital.Infrastructure.UOW
         {
             _db = db;
 
-            TestFiles = new Repository<TestFile>(_db);
             RefreshTokenAuths = new Repository<RefreshTokenAuth>(_db);
 
             Admins = new Repository<Admin>(_db);

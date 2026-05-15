@@ -5,7 +5,6 @@ namespace TumorHospital.Application.Intefaces.UOW
 {
     public interface IUnitOfWork
     {
-        IRepository<TestFile> TestFiles { get; }
         IRepository<RefreshTokenAuth> RefreshTokenAuths { get; }
 
         IRepository<Admin> Admins { get; }

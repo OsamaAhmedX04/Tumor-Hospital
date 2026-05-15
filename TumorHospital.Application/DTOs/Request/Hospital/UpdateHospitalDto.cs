@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TumorHospital.Application.DTOs.Request.Hospital
+﻿namespace TumorHospital.Application.DTOs.Request.Hospital
 {
     public class UpdateHospitalDto
     {

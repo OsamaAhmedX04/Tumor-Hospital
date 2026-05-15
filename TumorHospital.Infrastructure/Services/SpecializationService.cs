@@ -61,9 +61,9 @@ namespace TumorHospital.Infrastructure.Services
 
                 specialization.Name = model.Name;
             }
-            
+
             specialization.Description = string.IsNullOrEmpty(model.Description) ? "N/A" : model.Description;
-            
+
             await _unitOfWork.CompleteAsync();
             _cache.Remove("SpecializationNames");
         }
