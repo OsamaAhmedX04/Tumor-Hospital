@@ -134,7 +134,7 @@ namespace TumorHospital.Infrastructure.Services
         public async Task<DoctorInformationDto> GetHospitalDoctor(string doctorId)
         {
             var doctorDetails = await _unitOfWork.Doctors.GetEnhancedAsync(
-                filter: d => d.ApplicationUserId == doctorId && d.User.IsActive,
+                filter: d => d.ApplicationUserId == doctorId,
                 selector: d => new DoctorInformationDto
                 {
                     Id = d.ApplicationUserId,

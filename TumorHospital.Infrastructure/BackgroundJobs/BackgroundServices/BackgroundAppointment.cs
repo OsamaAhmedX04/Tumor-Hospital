@@ -14,40 +14,67 @@ namespace TumorHospital.Infrastructure.BackgroundJobs.BackgroundServices
             _unitOfWork = unitOfWork;
         }
 
+        //public async Task SetApprovedAppointmentsStatusToAbsent()
+        //{
+        //    DayOfWeek today = DateTime.Now.DayOfWeek;
+
+        //    // Previous day
+        //    DayOfWeek previousDay = (DayOfWeek)(((int)today + 6) % 7);
+
+        //    Day prevDay = previousDay switch
+        //    {
+        //        DayOfWeek.Saturday => Day.Saturday,
+        //        DayOfWeek.Sunday => Day.Sunday,
+        //        DayOfWeek.Monday => Day.Monday,
+        //        DayOfWeek.Tuesday => Day.Tuesday,
+        //        DayOfWeek.Wednesday => Day.Wednesday,
+        //        DayOfWeek.Thursday => Day.Thursday,
+        //        DayOfWeek.Friday => Day.Friday,
+        //        _ => Day.Friday
+        //    };
+
+        //    var appointments = _unitOfWork.Appointments
+        //        .GetAllAsIQueryable()
+        //        .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == prevDay);
+
+        //    if (appointments is not null)
+        //    {
+        //        await appointments.ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Absent));
+
+        //        // canceling bill
+        //        var appointmentsId = await appointments.Select(a => a.Id).ToListAsync();
+        //        await _unitOfWork.Bills
+        //            .GetAllAsIQueryable()
+        //            .Where(b => appointmentsId.Contains(b.AppointmentId!.Value))
+        //            .ExecuteUpdateAsync(setter => setter.SetProperty(b => b.Status, BillStatus.Cancelled));
+        //    }
+        //}
+
         public async Task SetApprovedAppointmentsStatusToAbsent()
         {
-            DayOfWeek today = DateTime.Now.DayOfWeek;
-
-            // Previous day
-            DayOfWeek previousDay = (DayOfWeek)(((int)today + 6) % 7);
-
-            Day prevDay = previousDay switch
-            {
-                DayOfWeek.Saturday => Day.Saturday,
-                DayOfWeek.Sunday => Day.Sunday,
-                DayOfWeek.Monday => Day.Monday,
-                DayOfWeek.Tuesday => Day.Tuesday,
-                DayOfWeek.Wednesday => Day.Wednesday,
-                DayOfWeek.Thursday => Day.Thursday,
-                DayOfWeek.Friday => Day.Friday,
-                _ => Day.Friday
-            };
+            var yesterday = DateOnly.FromDateTime(DateTime.Today.AddDays(-1));
 
             var appointments = _unitOfWork.Appointments
                 .GetAllAsIQueryable()
-                .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == prevDay);
+                .Where(a =>
+                    a.Status == AppointmentStatus.Approved &&
+                    a.AttendenceDate == yesterday);
 
-            if (appointments is not null)
-            {
-                await appointments.ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Absent));
+            var appointmentsId = await appointments
+                .Select(a => a.Id)
+                .ToListAsync();
 
-                // canceling bill
-                var appointmentsId = await appointments.Select(a => a.Id).ToListAsync();
-                await _unitOfWork.Bills
-                    .GetAllAsIQueryable()
-                    .Where(b => appointmentsId.Contains(b.AppointmentId!.Value))
-                    .ExecuteUpdateAsync(setter => setter.SetProperty(b => b.Status, BillStatus.Cancelled));
-            }
+            if (!appointmentsId.Any())
+                return;
+
+            await appointments.ExecuteUpdateAsync(setter =>
+                setter.SetProperty(a => a.Status, AppointmentStatus.Absent));
+
+            await _unitOfWork.Bills
+                .GetAllAsIQueryable()
+                .Where(b => appointmentsId.Contains(b.AppointmentId!.Value))
+                .ExecuteUpdateAsync(setter =>
+                    setter.SetProperty(b => b.Status, BillStatus.Cancelled));
         }
     }
 }

@@ -200,9 +200,9 @@ namespace TumorHospital.Infrastructure
         public static void AddBackgroundJobs(this IApplicationBuilder app)
         {
             RecurringJob.AddOrUpdate<IBackgroundAppointment>(
-                "ResetAppointmentsWeekly",
+                "ResetStateOfOldAppointments",
                 job => job.SetApprovedAppointmentsStatusToAbsent(),
-                "0 0 * * *", // every day at 12 AM
+                "0 1 * * *", // every day at 1 AM
                 new RecurringJobOptions
                 {
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time"),
@@ -215,7 +215,7 @@ namespace TumorHospital.Infrastructure
                 cronExpression: Cron.Daily,
                 options: new RecurringJobOptions
                 {
-                    TimeZone = TimeZoneInfo.Local
+                    TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")
                 }
             );
         }

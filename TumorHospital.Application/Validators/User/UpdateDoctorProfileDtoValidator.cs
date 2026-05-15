@@ -17,8 +17,10 @@ namespace TumorHospital.Application.Validators.User
                 .MaximumLength(50);
 
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("Phone number is required")
-                .Matches(@"^\+?\d{10,15}$").WithMessage("Invalid phone number");
+                //.NotEmpty().WithMessage("Phone number is required")
+                .Matches(@"^\+?\d{10,15}$").WithMessage("Invalid phone number")
+                .When(x => !string.IsNullOrEmpty(x.PhoneNumber));
+
             RuleFor(x => x.Gender)
                 .Must(g => g == Gender.Male.ToString() || g == Gender.Female.ToString()).WithMessage("Invalid gender");
 

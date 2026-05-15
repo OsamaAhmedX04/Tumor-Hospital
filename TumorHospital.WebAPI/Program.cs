@@ -36,6 +36,7 @@ namespace TumorHospital.WebAPI
                 {
                     builder.WithOrigins(
                         "http://localhost:5173",
+                        "http://localhost:5174",
                         "https://test-tumor.vercel.app",
                         "https://tumor-hospital.vercel.app"
                 )
