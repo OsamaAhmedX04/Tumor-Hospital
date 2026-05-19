@@ -82,6 +82,8 @@ namespace TumorHospital.Infrastructure.Services
 
         private async Task<bool> IsAvailableDay(string doctorId, Day dayOfWeek)
         {
+            if (dayOfWeek.ToString() == DateTime.Now.DayOfWeek.ToString()) return false;
+
             var appointments = await _unitOfWork.Appointments.GetAllAsync(
                 filter: a => a.DoctorId == doctorId &&
                              a.DayOfWeek == dayOfWeek &&
