@@ -23,7 +23,6 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = PatientDocs.GetAppointmentsSummary, Description = PatientDocs.GetAppointmentsDescription)]
-        
         [HttpGet("Appointments")]
         public async Task<IActionResult> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
@@ -40,7 +39,6 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = PatientDocs.GetBillsSummary, Description = PatientDocs.GetBillsDescription)]
-        [Authorize(Roles = SystemRole.Patient)]
         [HttpGet("Bills")]
         public async Task<IActionResult> GetBills(int pageNumber)
         {

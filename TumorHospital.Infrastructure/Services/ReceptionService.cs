@@ -1,5 +1,6 @@
 ﻿using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.DTOs.Response.User;
+using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 
@@ -8,7 +9,7 @@ namespace TumorHospital.Infrastructure.Services
     public class ReceptionService : IReceptionService
     {
         private readonly IUnitOfWork _unitOfWork;
-
+        
         public ReceptionService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;

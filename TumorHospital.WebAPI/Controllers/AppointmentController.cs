@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -67,6 +69,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost("consultaion")]
+        [Authorize(Roles = SystemRole.Patient)]
         public async Task<IActionResult> AppointConsultation(NewConsultationAppointmentDto appointmentDto)
         {
             var validationResult = await _newAppointmentConsultaionValidator.ValidateAsync(appointmentDto);
@@ -95,6 +98,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost("followup")]
+        [Authorize(Roles = SystemRole.Patient)]
         public async Task<IActionResult> AppointFollowUp(NewFollowUpAppointmentDto appointmentDto)
         {
             var validationResult = await _newAppointmentFollowUpValidator.ValidateAsync(appointmentDto);
@@ -123,6 +127,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost("video-call")]
+        [Authorize(Roles = SystemRole.Patient)]
         public async Task<IActionResult> AppointVideoCall(NewVideoCallAppointmentDto appointmentDto)
         {
             var validationResult = await _newAppointmentSurgeryValidator.ValidateAsync(appointmentDto);

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -67,12 +69,13 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("Pay/{billId}")]
-        public async Task<IActionResult> ReceivePayment(Guid billId, string receptionistId, string billCode)
+        [Authorize(Roles = SystemRole.Receptionist)]
+        public async Task<IActionResult> ReceivePayment(Guid billId, string billCode)
         {
             try
             {
                 await _billService
-                    .ReceivePayment(billId, receptionistId, billCode);
+                    .ReceivePayment(billId, billCode);
                 return Ok(new { Message = "Payment Received Successfully" });
             }
             catch (Exception ex)

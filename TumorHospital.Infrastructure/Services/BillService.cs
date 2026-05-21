@@ -74,8 +74,12 @@ namespace TumorHospital.Infrastructure.Services
             return bills;
         }
 
-        public async Task ReceivePayment(Guid billId, string receptionistId, string billCode)
+        public async Task ReceivePayment(Guid billId, string billCode)
         {
+            var receptionistId = _currentUserService.UserId;
+            if (receptionistId == null)
+                throw new Exception("User Not Authenticated");
+
             var bill = await _unitOfWork.Bills.GetByIdAsync(billId);
 
             if (bill == null)
