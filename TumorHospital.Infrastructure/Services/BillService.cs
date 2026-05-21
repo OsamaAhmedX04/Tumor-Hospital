@@ -49,7 +49,7 @@ namespace TumorHospital.Infrastructure.Services
         public async Task<PageSourcePagination<PatientBillDto>> GetPatientBills(int pageNumber)
         {
             var patientId = _currentUserService.UserId;
-            if( patientId == null)
+            if (patientId == null)
                 throw new Exception("User Not Found");
 
             if (!await _unitOfWork.Patients.IsExistAsync(patientId))

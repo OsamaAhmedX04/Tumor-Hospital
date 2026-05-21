@@ -49,7 +49,7 @@ namespace TumorHospital.Infrastructure.Services
             if (IsInValidTimeToAppoint())
                 throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
             var userId = _currentUserService.UserId;
-            if(userId == null)
+            if (userId == null)
                 throw new Exception("User must be authenticated to make an appointment.");
 
             var isUsersExist = await _userManager.FindByIdAsync(userId) != null &&
