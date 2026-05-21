@@ -9,7 +9,7 @@ namespace TumorHospital.Application.Intefaces.Services
             int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null
             );
 
-        Task<PageSourcePagination<PatientBillDto>> GetPatientBills(int pageNumber, string patientId);
+        Task<PageSourcePagination<PatientBillDto>> GetPatientBills(int pageNumber);
 
         Task ReceivePayment(Guid billId, string receptionistId, string billCode);
     }

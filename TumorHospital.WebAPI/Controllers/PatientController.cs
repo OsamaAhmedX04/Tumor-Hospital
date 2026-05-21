@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = SystemRole.Patient)]
     [ApiController]
     public class PatientController : ControllerBase
     {
@@ -20,13 +23,13 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = PatientDocs.GetAppointmentsSummary, Description = PatientDocs.GetAppointmentsDescription)]
-        //[Authorize(Roles = SystemRole.Patient)]
+        
         [HttpGet("Appointments")]
-        public async Task<IActionResult> GetAppointments(int pageNumber, string patientId, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<IActionResult> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
             try
             {
-                return Ok(await _appointmentService.GetPatientAppointments(pageNumber, patientId, appointmentReason, appointmentStatus));
+                return Ok(await _appointmentService.GetPatientAppointments(pageNumber, appointmentReason, appointmentStatus));
             }
             catch (Exception ex)
             {
@@ -37,13 +40,13 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = PatientDocs.GetBillsSummary, Description = PatientDocs.GetBillsDescription)]
-        //[Authorize(Roles = SystemRole.Patient)]
+        [Authorize(Roles = SystemRole.Patient)]
         [HttpGet("Bills")]
-        public async Task<IActionResult> GetBills(int pageNumber, string patientId)
+        public async Task<IActionResult> GetBills(int pageNumber)
         {
             try
             {
-                return Ok(await _billService.GetPatientBills(pageNumber, patientId));
+                return Ok(await _billService.GetPatientBills(pageNumber));
             }
             catch (Exception ex)
             {

@@ -26,12 +26,13 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IScheduleService _scheduleService;
         private readonly IOfferService _offerService;
         private readonly ILogger<AppointmentService> _logger;
+        private readonly ICurrentUserService _currentUserService;
         public AppointmentService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IScheduleService scheduleService,
-            IOfferService offerService, ILogger<AppointmentService> logger, IMeetingService meetingService)
+            IOfferService offerService, ILogger<AppointmentService> logger, IMeetingService meetingService, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -40,13 +41,18 @@ namespace TumorHospital.Infrastructure.Services
             _offerService = offerService;
             _logger = logger;
             _meetingService = meetingService;
+            _currentUserService = currentUserService;
         }
 
         public async Task AppointConsultation(NewConsultationAppointmentDto appointment)
         {
             if (IsInValidTimeToAppoint())
                 throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
-            var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
+            var userId = _currentUserService.UserId;
+            if(userId == null)
+                throw new Exception("User must be authenticated to make an appointment.");
+
+            var isUsersExist = await _userManager.FindByIdAsync(userId) != null &&
                               await _userManager.FindByIdAsync(appointment.DoctorId) != null;
             if (!isUsersExist)
                 throw new ArgumentException("Patient or Doctor does not exist.");
@@ -61,7 +67,12 @@ namespace TumorHospital.Infrastructure.Services
         {
             if (IsInValidTimeToAppoint())
                 throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
-            var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
+
+            var userId = _currentUserService.UserId;
+            if (userId == null)
+                throw new Exception("User must be authenticated to make an appointment.");
+
+            var isUsersExist = await _userManager.FindByIdAsync(userId) != null &&
                               await _userManager.FindByIdAsync(appointment.DoctorId) != null;
             if (!isUsersExist)
                 throw new ArgumentException("Patient or Doctor does not exist.");
@@ -76,7 +87,11 @@ namespace TumorHospital.Infrastructure.Services
         {
             if (IsInValidTimeToAppoint())
                 throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
-            var isUsersExist = await _userManager.FindByIdAsync(appointment.PatientId) != null &&
+            var userId = _currentUserService.UserId;
+            if (userId == null)
+                throw new Exception("User must be authenticated to make an appointment.");
+
+            var isUsersExist = await _userManager.FindByIdAsync(userId) != null &&
                               await _userManager.FindByIdAsync(appointment.DoctorId) != null;
             if (!isUsersExist)
                 throw new ArgumentException("Patient or Doctor does not exist.");
@@ -108,7 +123,7 @@ namespace TumorHospital.Infrastructure.Services
             if (!string.IsNullOrEmpty(appointmentStatus))
             {
                 if (!Enum.TryParse<AppointmentStatus>(appointmentStatus, out AppointmentStatus outStatus))
-                    throw new Exception("Invalid Appointment Reason");
+                    throw new Exception("Invalid Appointment Status");
                 else
                 {
                     status = outStatus;
@@ -143,9 +158,13 @@ namespace TumorHospital.Infrastructure.Services
 
             return appointments;
         }
-        public async Task<PageSourcePagination<AppointmentDto>> GetPatientAppointments(int pageNumber, string patientId, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<PageSourcePagination<AppointmentDto>> GetPatientAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
-            Expression<Func<Appointment, bool>>? filter = a => a.PatientId == patientId;
+            var userId = _currentUserService.UserId;
+            if (userId == null)
+                throw new Exception("User must be authenticated to make an appointment.");
+
+            Expression<Func<Appointment, bool>>? filter = a => a.PatientId == userId;
 
             AppointmentReason? reason = null;
             AppointmentStatus? status = null;
@@ -207,9 +226,13 @@ namespace TumorHospital.Infrastructure.Services
 
             return appointments;
         }
-        public async Task<PageSourcePagination<AppointmentDto>> GetDoctorAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<PageSourcePagination<AppointmentDto>> GetDoctorAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
-            Expression<Func<Appointment, bool>>? filter = a => a.DoctorId == doctorId;
+            var userId = _currentUserService.UserId;
+            if (userId == null)
+                throw new Exception("User must be authenticated to make an appointment.");
+
+            Expression<Func<Appointment, bool>>? filter = a => a.DoctorId == userId;
 
             AppointmentReason? reason = null;
             AppointmentStatus? status = null;

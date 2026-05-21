@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using TumorHospital.Application.DTOs.Response.Bill;
 using TumorHospital.Application.DTOs.Response.Pagination;
+using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Enums;
@@ -13,11 +14,13 @@ namespace TumorHospital.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppointmentService _appointmentService;
         private readonly ILogger<BillService> _logger;
-        public BillService(IUnitOfWork unitOfWork, IAppointmentService appointmentService, ILogger<BillService> logger)
+        private readonly ICurrentUserService _currentUserService;
+        public BillService(IUnitOfWork unitOfWork, IAppointmentService appointmentService, ILogger<BillService> logger, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _appointmentService = appointmentService;
             _logger = logger;
+            _currentUserService = currentUserService;
         }
 
         public async Task<PageSourcePagination<BillDto>> GetBills(
@@ -43,8 +46,12 @@ namespace TumorHospital.Infrastructure.Services
                 );
         }
 
-        public async Task<PageSourcePagination<PatientBillDto>> GetPatientBills(int pageNumber, string patientId)
+        public async Task<PageSourcePagination<PatientBillDto>> GetPatientBills(int pageNumber)
         {
+            var patientId = _currentUserService.UserId;
+            if( patientId == null)
+                throw new Exception("User Not Found");
+
             if (!await _unitOfWork.Patients.IsExistAsync(patientId))
                 throw new Exception("Patient Not Found");
 

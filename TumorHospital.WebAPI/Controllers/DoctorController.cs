@@ -57,13 +57,13 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = DoctorDocs.GetDoctorAppointmentsSummary, Description = DoctorDocs.GetDoctorAppointmentsDescription)]
-        //[Authorize(Roles = SystemRole.Doctor)]
+        [Authorize(Roles = SystemRole.Doctor)]
         [HttpGet("Appointments")]
-        public async Task<IActionResult> GetDoctorAppointments(int pageNumber, string doctorId, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<IActionResult> GetDoctorAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
             try
             {
-                return Ok(await _appointmentService.GetDoctorAppointments(pageNumber, doctorId, appointmentReason, appointmentStatus));
+                return Ok(await _appointmentService.GetDoctorAppointments(pageNumber, appointmentReason, appointmentStatus));
             }
             catch (Exception ex)
             {

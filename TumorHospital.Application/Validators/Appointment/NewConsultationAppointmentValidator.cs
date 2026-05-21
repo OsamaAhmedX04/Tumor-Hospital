@@ -8,8 +8,6 @@ namespace TumorHospital.Application.Validators.Appointment
     {
         public NewConsultationAppointmentValidator()
         {
-            RuleFor(x => x.PatientId)
-                .NotEmpty().WithMessage("PatientId is required.");
             RuleFor(x => x.DoctorId)
                 .NotEmpty().WithMessage("DoctorId is required.");
             RuleFor(x => x.DayOfWeek)
