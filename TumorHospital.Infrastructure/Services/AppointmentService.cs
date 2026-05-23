@@ -105,7 +105,7 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
-        public async Task<PageSourcePagination<AppointmentDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<PageSourcePagination<AppointmentBriefDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
         {
             Expression<Func<Appointment, bool>>? filter = null;
 
@@ -140,18 +140,16 @@ namespace TumorHospital.Infrastructure.Services
 
             var appointments = await _unitOfWork.Appointments.GetAllPaginatedEnhancedAsync(
                 filter: filter,
-                selector: a => new AppointmentDto
+                selector: a => new AppointmentBriefDto
                 {
                     AppointmentId = a.Id,
                     PatientName = a.Patient.User.FirstName + " " + a.Patient.User.LastName,
                     DoctorName = a.Doctor!.User.FirstName + " " + a.Doctor.User.LastName,
-                    DoctorImagePath = SupabaseConstants.PrefixSupaURL + a.Doctor.ProfilePicturePath,
                     Reason = a.Reason.ToString(),
                     DayOfWeek = a.DayOfWeek.ToString(),
                     FromTime = a.FromTime,
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
-                    IsPrescriptionExist = a.Prescription != null,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
