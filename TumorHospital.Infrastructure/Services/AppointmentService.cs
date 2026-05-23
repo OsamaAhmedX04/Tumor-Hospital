@@ -60,6 +60,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new ArgumentException("Doctor is not working on that day.");
 
             var appointmentEntity = _mapper.Map<Appointment>(appointment);
+            appointmentEntity.PatientId = userId;
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
@@ -80,6 +81,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new ArgumentException("Doctor is not working on that day.");
 
             var appointmentEntity = _mapper.Map<Appointment>(appointment);
+            appointmentEntity.PatientId = userId;
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
@@ -99,6 +101,7 @@ namespace TumorHospital.Infrastructure.Services
                 throw new ArgumentException("Doctor is not working on that day.");
 
             var appointmentEntity = _mapper.Map<Appointment>(appointment);
+            appointmentEntity.PatientId = userId;
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
