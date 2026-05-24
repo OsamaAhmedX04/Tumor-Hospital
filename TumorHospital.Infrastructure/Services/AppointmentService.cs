@@ -497,9 +497,13 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task AttendPatientToAppointment(string patientId, Guid appointmentId)
         {
-            if (await _unitOfWork.Patients.IsExistAsync(patientId))
+            var isPatientExist = await _unitOfWork.Patients.IsExistAsync(patientId);
+            var isAppointmentExist = await _unitOfWork.Appointments.IsExistAsync(appointmentId);
+
+            if (!isPatientExist)
                 throw new Exception("Patient with this id does not exist");
-            if (await _unitOfWork.Appointments.IsExistAsync(appointmentId))
+
+            if (!isAppointmentExist)
                 throw new Exception("Appointment with this id does not exist");
 
             await _unitOfWork.Appointments
