@@ -41,6 +41,7 @@ namespace TumorHospital.Infrastructure.Services
                     Status = b.Status.ToString(),
                     TotalAmount = b.FinalAmount
                 },
+                orderBy: b => b.OrderByDescending(b => b.CreatedAt),
                 pageSize: 20,
                 pageNumber: pageNumber
                 );
@@ -67,6 +68,7 @@ namespace TumorHospital.Infrastructure.Services
                     TotalAmount = b.FinalAmount,
                     BillCode = b.Code
                 },
+                orderBy: b => b.OrderByDescending(b => b.CreatedAt),
                 pageNumber: pageNumber,
                 pageSize: 20
                 );

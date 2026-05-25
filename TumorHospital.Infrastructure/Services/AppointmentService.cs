@@ -153,6 +153,7 @@ namespace TumorHospital.Infrastructure.Services
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
+                orderBy: a => a.OrderByDescending(a => a.RequestCreatedAt),
                 pageSize: 15,
                 pageNumber: pageNumber
                 );
@@ -221,6 +222,7 @@ namespace TumorHospital.Infrastructure.Services
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
+                orderBy: a => a.OrderByDescending(a => a.AttendenceDate),
                 pageSize: 15,
                 pageNumber: pageNumber
                 );
@@ -290,6 +292,7 @@ namespace TumorHospital.Infrastructure.Services
                     AttendenceDate = a.AttendenceDate
 
                 },
+                orderBy: a => a.OrderByDescending(a => a.AttendenceDate),
                 pageSize: 15,
                 pageNumber: pageNumber
                 );
