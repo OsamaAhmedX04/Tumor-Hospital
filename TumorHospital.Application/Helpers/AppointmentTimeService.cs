@@ -1,4 +1,5 @@
-﻿using TumorHospital.Domain.Entities;
+﻿using TumorHospital.Domain.Constants;
+using TumorHospital.Domain.Entities;
 
 namespace TumorHospital.Application.Helpers
 {
@@ -26,5 +27,33 @@ namespace TumorHospital.Application.Helpers
 
             return nowTime >= appointmentTime;
         }
+
+        public static TimeSlot? SelectValidTimeSlot
+            (HashSet<TimeSpan> appointmentedTimesForPatientInRequestedDay, HashSet<TimeSpan> appointmentedTimesForDoctorInRequestedDay,
+            TimeSpan doctorStartTime, TimeSpan doctorEndTime)
+        {
+
+            var timeSlot = doctorStartTime;
+
+            for (int i = 0; i < Appointments.NumberOfAppointmentsPerDay; i++)
+            {
+                bool isBusyTimeSlotForPatient = appointmentedTimesForPatientInRequestedDay.Contains(timeSlot);
+                bool isBusyTimeSlotForDoctor = appointmentedTimesForDoctorInRequestedDay.Contains(timeSlot);
+
+                if (!isBusyTimeSlotForPatient && !isBusyTimeSlotForDoctor)
+                {
+                    if (timeSlot.Add(TimeSpan.FromMinutes(30)) > doctorEndTime) break;
+
+                    return new TimeSlot { FromTime = timeSlot, ToTime = timeSlot.Add(TimeSpan.FromMinutes(30)) };
+                }
+
+                timeSlot = timeSlot.Add(TimeSpan.FromMinutes(30));
+            }
+
+            return null;
+        }
+
+        public static bool IsInValidTimeToAppoint()
+            => DateTime.Now.Hour >= 0 && DateTime.Now.Hour <= 5;
     }
 }

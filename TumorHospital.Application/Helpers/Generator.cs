@@ -28,7 +28,7 @@
             return password;
         }
         public static string GenerateRandomBillCode()
-            => GetRandomString(numbers, 12);
+            => GetRandomString(numbers, 2);
         private static string GetRandomString(char[] array, int numberOfChars)
         {
             string text = "";

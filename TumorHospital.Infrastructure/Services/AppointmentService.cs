@@ -46,7 +46,7 @@ namespace TumorHospital.Infrastructure.Services
 
         public async Task AppointConsultation(NewConsultationAppointmentDto appointment)
         {
-            if (IsInValidTimeToAppoint())
+            if (AppointmentTimeService.IsInValidTimeToAppoint())
                 throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
             var userId = _currentUserService.UserId;
             if (userId == null)
@@ -66,7 +66,7 @@ namespace TumorHospital.Infrastructure.Services
         }
         public async Task AppointFollowUp(NewFollowUpAppointmentDto appointment)
         {
-            if (IsInValidTimeToAppoint())
+            if (AppointmentTimeService.IsInValidTimeToAppoint())
                 throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
 
             var userId = _currentUserService.UserId;
@@ -87,8 +87,8 @@ namespace TumorHospital.Infrastructure.Services
         }
         public async Task AppointVideoCall(NewVideoCallAppointmentDto appointment)
         {
-            if (IsInValidTimeToAppoint())
-                throw new ApplicationException("Appointments Is Closed Between 12 AM and 5 AM");
+            if (AppointmentTimeService.IsInValidTimeToAppoint())
+                throw new ApplicationException($"Appointments Is Closed Between 12 AM and 5 AM");
             var userId = _currentUserService.UserId;
             if (userId == null)
                 throw new Exception("User must be authenticated to make an appointment.");
@@ -301,13 +301,14 @@ namespace TumorHospital.Infrastructure.Services
             var reasons = Enum.GetNames(typeof(AppointmentReason)).ToList();
             return reasons;
         }
+        
         public async Task AcceptAppointment(Guid appointmentId)
         {
+            #region get valid time slot for this appointment
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
             if (appointment == null)
-                throw new ArgumentException("Appointment not found.");
+                throw new Exception("Appointment not found.");
 
-            appointment.Status = AppointmentStatus.Approved;
 
             var doctorDaySchedule = await _unitOfWork.DoctorSchedules.GetEnhancedAsync(
                 filter: ds => ds.DoctorId == appointment.DoctorId && ds.DayOfWeek == appointment.DayOfWeek,
@@ -317,29 +318,41 @@ namespace TumorHospital.Infrastructure.Services
                     ds.EndTime
                 });
 
-            var lastAppointmentInRequestedDay = await _unitOfWork.Appointments
-            .GetAllAsIQueryable()
-            .AsNoTracking()
-            .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == appointment.DayOfWeek)
-            .OrderBy(a => a.FromTime) // order by start time
-            .LastOrDefaultAsync();
+            var appointmentedTimesForDoctorInRequestedDay = await _unitOfWork.Appointments
+                .GetAllAsIQueryable()
+                .AsNoTracking()
+                .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == appointment.DayOfWeek && a.DoctorId == appointment.DoctorId)
+                .Select(a => a.FromTime!.Value)
+                .OrderBy(a => a).ToListAsync();
 
-            if (lastAppointmentInRequestedDay is null)
-            {
-                appointment.FromTime = doctorDaySchedule!.StartTime;
-                appointment.ToTime = doctorDaySchedule.StartTime.Add(TimeSpan.FromMinutes(30));
-            }
-            else
-            {
-                appointment.FromTime = lastAppointmentInRequestedDay.ToTime;
-                appointment.ToTime = lastAppointmentInRequestedDay.ToTime!.Value.Add(TimeSpan.FromMinutes(30));
+            var appointmentedTimesForPatientInRequestedDay = await _unitOfWork.Appointments
+                .GetAllAsIQueryable()
+                .AsNoTracking()
+                .Where(a => a.Status == AppointmentStatus.Approved && a.DayOfWeek == appointment.DayOfWeek && a.PatientId == appointment.PatientId)
+                .Select(a => a.FromTime!.Value)
+                .OrderBy(a => a).ToListAsync();
 
-                if (appointment.ToTime == doctorDaySchedule!.EndTime)
-                    await RejectRestOfAppointments(appointment.DoctorId!, appointment.DayOfWeek);
-            }
+
+            TimeSlot? validTimeSlot = AppointmentTimeService.SelectValidTimeSlot(
+                new HashSet<TimeSpan>(appointmentedTimesForPatientInRequestedDay), new HashSet<TimeSpan>(appointmentedTimesForDoctorInRequestedDay),
+                doctorDaySchedule!.StartTime, doctorDaySchedule.EndTime);
+            
+            if(validTimeSlot == null)
+                throw new Exception("No available time for this appointment");
+
+
+            appointment.Status = AppointmentStatus.Approved;
+            appointment.FromTime = validTimeSlot.FromTime;
+            appointment.ToTime = validTimeSlot.ToTime;
+
+            if (appointment.ToTime == doctorDaySchedule!.EndTime)
+                await RejectRestOfAppointments(appointment.DoctorId!, appointment.DayOfWeek);
 
             appointment.AttendenceDate = DayHelper.GetDateThisWeek(appointment.DayOfWeek);
 
+            #endregion
+
+            #region create bill for this appointment
             var appointmentCost = await _unitOfWork.Doctors.GetEnhancedAsync(
                 filter: d => d.ApplicationUserId == appointment.DoctorId,
                 selector: d => new
@@ -356,12 +369,15 @@ namespace TumorHospital.Infrastructure.Services
                 AppointmentReason.VideoCall => appointmentCost!.VideoCallCost,
                 _ => 0.00m
             };
+
+            var billCode = 
+                $"{appointment.AttendenceDate.Value:yy}{appointment.AttendenceDate.Value.Month:D2}{appointment.AttendenceDate.Value.Day:D2}{Generator.GenerateRandomBillCode()}";
             var bill = new Bill
             {
                 PatientId = appointment.PatientId,
                 AppointmentId = appointment.Id,
                 OriginalAmount = amount!.Value,
-                Code = Generator.GenerateRandomBillCode(),
+                Code = billCode,
                 Status = BillStatus.Pending,
                 CreatedAt = DateTime.Now
             };
@@ -413,6 +429,9 @@ namespace TumorHospital.Infrastructure.Services
 
             await _unitOfWork.Bills.AddAsync(bill);
 
+            #endregion
+
+            #region save changes with concurrency handling
             try
             {
                 await _unitOfWork.CompleteAsync();
@@ -429,6 +448,9 @@ namespace TumorHospital.Infrastructure.Services
                 bill.AppointmentId
             );
 
+            #endregion
+
+            #region send email to patient to inform him that his appointment has been accepted
             var appointmentInfo = await _unitOfWork.Appointments.GetEnhancedAsync(
                 filter: a => a.Id == appointment.Id,
                 selector: a => new
@@ -474,7 +496,7 @@ namespace TumorHospital.Infrastructure.Services
                 ),
                 TimeSpan.FromHours(24));
             }
-
+            #endregion
 
         }
 
@@ -518,10 +540,5 @@ namespace TumorHospital.Infrastructure.Services
                 .Where(a => a.Status == AppointmentStatus.Pending && a.DoctorId == doctorId && a.DayOfWeek == day)
                 .ExecuteUpdateAsync(setter => setter.SetProperty(a => a.Status, AppointmentStatus.Rejected));
         }
-
-        private bool IsInValidTimeToAppoint()
-            => DateTime.Now.Hour >= 0 && DateTime.Now.Hour <= 5;
-
-
     }
 }

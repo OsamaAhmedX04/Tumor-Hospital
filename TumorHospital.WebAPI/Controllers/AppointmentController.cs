@@ -169,7 +169,7 @@ namespace TumorHospital.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Identity", ex.Message);
+                ModelState.AddModelError("Message", ex.Message);
             }
 
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
