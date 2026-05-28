@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using LinqKit;
+using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 using TumorHospital.Application.DTOs.Response.Bill;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.Services;
 using TumorHospital.Application.Intefaces.UOW;
+using TumorHospital.Domain.Entities;
 using TumorHospital.Domain.Enums;
 
 namespace TumorHospital.Infrastructure.Services
@@ -24,14 +27,27 @@ namespace TumorHospital.Infrastructure.Services
         }
 
         public async Task<PageSourcePagination<BillDto>> GetBills(
-            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null)
+            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null, int? month = null, int? year = null)
         {
+            Expression<Func<Bill, bool>>? filter = b => true;
+
+            if (month.HasValue)
+                filter = filter.And(b =>  b.CreatedAt.Month == month);
+
+            if (year.HasValue)
+                filter = filter.And(b => b.CreatedAt.Year == year);
+
+            if(!string.IsNullOrEmpty(patientEmail))
+                filter = filter.And(b => b.Patient.User.Email == patientEmail);
+
+            if (!string.IsNullOrEmpty(patientName))
+                filter = filter.And(b => (b.Patient.User.FirstName + " " + b.Patient.User.LastName).Contains(patientName));
+
+            if (!string.IsNullOrEmpty(billCode))
+                filter = filter.And(b => b.Code == billCode);
+
             return await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(
-                filter: b => b.Patient.User.Email == patientEmail
-                ||
-                (b.Patient.User.FirstName + " " + b.Patient.User.LastName).Contains(patientName ?? "")
-                ||
-                b.Code == billCode,
+                filter: filter,
                 selector: b => new BillDto
                 {
                     BillId = b.Id,

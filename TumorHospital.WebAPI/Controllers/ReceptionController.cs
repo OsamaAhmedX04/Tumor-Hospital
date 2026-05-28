@@ -53,12 +53,12 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [HttpGet("bills")]
-        public async Task<IActionResult> GetBills(int pageNumber, string? patientEmail, string? patientName, string? billCode)
+        public async Task<IActionResult> GetBills(int pageNumber, string? patientEmail, string? patientName, string? billCode, int? month, int? year)
         {
             try
             {
                 var bills = await _billService
-                    .GetBills(pageNumber, patientEmail, patientName);
+                    .GetBills(pageNumber, patientEmail, patientName, billCode, month, year);
                 return Ok(bills);
             }
             catch (Exception ex)

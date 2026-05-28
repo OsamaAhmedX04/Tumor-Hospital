@@ -38,11 +38,11 @@ namespace TumorHospital.WebAPI.Controllers
             => Ok(_appointmentService.AppointmentReasons());
 
         [HttpGet("/api/Appointments")]
-        public async Task<IActionResult> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<IActionResult> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null, int? month = null, int? year = null)
         {
             try
             {
-                return Ok(await _appointmentService.GetAppointments(pageNumber, appointmentReason, appointmentStatus));
+                return Ok(await _appointmentService.GetAppointments(pageNumber, appointmentReason, appointmentStatus, month, year));
             }
             catch (Exception ex)
             {

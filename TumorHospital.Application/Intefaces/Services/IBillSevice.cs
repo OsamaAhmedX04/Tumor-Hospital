@@ -6,7 +6,7 @@ namespace TumorHospital.Application.Intefaces.Services
     public interface IBillSevice
     {
         Task<PageSourcePagination<BillDto>> GetBills(
-            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null
+            int pageNumber, string? patientEmail = null, string? patientName = null, string? billCode = null, int? month = null, int? year = null
             );
 
         Task<PageSourcePagination<PatientBillDto>> GetPatientBills(int pageNumber);

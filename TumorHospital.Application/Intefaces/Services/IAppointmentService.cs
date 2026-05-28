@@ -10,7 +10,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task AppointFollowUp(NewFollowUpAppointmentDto appointment);
         Task AppointVideoCall(NewVideoCallAppointmentDto appointment);
 
-        Task<PageSourcePagination<AppointmentBriefDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null);
+        Task<PageSourcePagination<AppointmentBriefDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null, int? month = null, int? year = null);
         Task<PageSourcePagination<AppointmentDto>> GetPatientAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null);
         Task<PageSourcePagination<AppointmentDto>> GetDoctorAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null);
         List<string> AppointmentReasons();

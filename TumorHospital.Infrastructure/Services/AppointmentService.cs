@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Hangfire;
+using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -105,9 +106,15 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.Appointments.AddAsync(appointmentEntity);
             await _unitOfWork.CompleteAsync();
         }
-        public async Task<PageSourcePagination<AppointmentBriefDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null)
+        public async Task<PageSourcePagination<AppointmentBriefDto>> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null, int? month = null, int? year = null)
         {
-            Expression<Func<Appointment, bool>>? filter = null;
+            Expression<Func<Appointment, bool>>? filter = a => true;
+
+            if (month.HasValue)
+                filter = filter.And(a => a.AttendenceDate.HasValue && a.AttendenceDate.Value.Month == month);
+
+            if (year.HasValue)
+                filter = filter.And(a => a.AttendenceDate.HasValue && a.AttendenceDate.Value.Year == year);
 
             AppointmentReason? reason = null;
             AppointmentStatus? status = null;
@@ -341,7 +348,19 @@ namespace TumorHospital.Infrastructure.Services
                 doctorDaySchedule!.StartTime, doctorDaySchedule.EndTime);
             
             if(validTimeSlot == null)
+            {
+                appointment.Status = AppointmentStatus.Rejected;
+                try
+                {
+                    await _unitOfWork.CompleteAsync();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    _logger.LogError(ex, "Concurrency error while accepting appointment {AppointmentId}", appointmentId);
+                    throw new DbUpdateConcurrencyException("The appointment was modified by another process. Please try again.");
+                }
                 throw new Exception("No available time for this appointment");
+            }
 
 
             appointment.Status = AppointmentStatus.Approved;
