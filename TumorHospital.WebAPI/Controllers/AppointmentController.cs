@@ -38,6 +38,7 @@ namespace TumorHospital.WebAPI.Controllers
             => Ok(_appointmentService.AppointmentReasons());
 
         [HttpGet("/api/Appointments")]
+        [Authorize(Roles = SystemRole.Receptionist)]
         public async Task<IActionResult> GetAppointments(int pageNumber, string? appointmentReason = null, string? appointmentStatus = null, int? month = null, int? year = null)
         {
             try
@@ -54,6 +55,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [HttpGet("availble-times")]
+        [Authorize]
         public async Task<IActionResult> GetAvailableSheduleTimes(string doctorId, string day)
         {
             try
@@ -156,6 +158,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("accept-appointment")]
+        [Authorize(Roles = SystemRole.Receptionist)]
         public async Task<IActionResult> AcceptAppointment(Guid appointmentId)
         {
             try
@@ -176,6 +179,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("reject-appointment")]
+        [Authorize(Roles = SystemRole.Receptionist)]
         public async Task<IActionResult> RejectAppointment(Guid appointmentId)
         {
             try

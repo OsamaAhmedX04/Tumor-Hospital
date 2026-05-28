@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.Offer;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -23,6 +25,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("Offers")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> GetOffers()
         {
             var offers = await _offerService.GetAllOffersAsync();
@@ -30,6 +33,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("ExpiredOffers")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> GetExpired()
         {
             var offers = await _offerService.GetExpiredOffersAsync();
@@ -37,6 +41,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("UpcomingOffers")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> GetUpcoming()
         {
             var offers = await _offerService.GetUpcomingOffersAsync();
@@ -44,6 +49,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> AddOffer(AddOfferDto dto)
         {
             var validation = await _addValidator.ValidateAsync(dto);
@@ -65,6 +71,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> UpdateOffer(Guid id, UpdateOfferDto dto)
         {
             var validation = await _updateValidator.ValidateAsync(dto);
@@ -86,6 +93,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> DeleteOffer(Guid id)
         {
             var success = await _offerService.RemoveOfferAsync(id);

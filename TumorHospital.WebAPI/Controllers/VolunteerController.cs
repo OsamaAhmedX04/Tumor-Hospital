@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -16,7 +18,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = VolunteerDocs.GetAllVolunteersSummary, Description = VolunteerDocs.GetAllVolunteersDescription)]
-        //[Authorize(Roles = SystemRole.Admin + "," + SystemRole.Receptionist)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpGet("Volunteers")]
         public async Task<IActionResult> GetAllVolunteers(int pageNumber)
         {

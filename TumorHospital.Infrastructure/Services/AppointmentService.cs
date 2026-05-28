@@ -311,7 +311,7 @@ namespace TumorHospital.Infrastructure.Services
             var reasons = Enum.GetNames(typeof(AppointmentReason)).ToList();
             return reasons;
         }
-        
+
         public async Task AcceptAppointment(Guid appointmentId)
         {
             #region get valid time slot for this appointment
@@ -346,8 +346,8 @@ namespace TumorHospital.Infrastructure.Services
             TimeSlot? validTimeSlot = AppointmentTimeService.SelectValidTimeSlot(
                 new HashSet<TimeSpan>(appointmentedTimesForPatientInRequestedDay), new HashSet<TimeSpan>(appointmentedTimesForDoctorInRequestedDay),
                 doctorDaySchedule!.StartTime, doctorDaySchedule.EndTime);
-            
-            if(validTimeSlot == null)
+
+            if (validTimeSlot == null)
             {
                 appointment.Status = AppointmentStatus.Rejected;
                 try
@@ -392,7 +392,7 @@ namespace TumorHospital.Infrastructure.Services
                 _ => 0.00m
             };
 
-            var billCode = 
+            var billCode =
                 $"{appointment.AttendenceDate.Value:yy}{appointment.AttendenceDate.Value.Month:D2}{appointment.AttendenceDate.Value.Day:D2}{Generator.GenerateRandomBillCode()}";
             var bill = new Bill
             {

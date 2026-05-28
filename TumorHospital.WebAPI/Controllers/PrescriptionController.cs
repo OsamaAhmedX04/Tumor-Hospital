@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using TumorHospital.Application.DTOs.Request.Appointment;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -24,6 +26,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("{appointmentId}")]
+        [Authorize(Roles = SystemRole.Doctor + "," + SystemRole.Patient)]
         public async Task<IActionResult> Get(Guid appointmentId)
         {
             try
@@ -38,6 +41,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SystemRole.Doctor)]
         public async Task<IActionResult> Create(PrescriptionCreateUpdateDto dto)
         {
             var validation = await _validator.ValidateAsync(dto);
@@ -59,6 +63,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = SystemRole.Doctor)]
         public async Task<IActionResult> Update(Guid id, PrescriptionCreateUpdateDto dto)
         {
             var validation = await _validator.ValidateAsync(dto);
@@ -80,6 +85,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = SystemRole.Doctor)]
         public async Task<IActionResult> Delete(Guid id)
             => await _service.DeleteAsync(id) ? Ok(new { Message = "Prescription has been Deleted" }) : NotFound(new { Message = "Prescription Not Found" });
     }

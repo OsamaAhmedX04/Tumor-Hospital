@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.About_Contact;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -29,6 +31,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> Add(AddAboutInfoDto dto)
         {
             var validation = await _addValidator.ValidateAsync(dto);
@@ -50,6 +53,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> Update(Guid id, UpdateAboutInfoDto dto)
         {
             var validation = await _updateValidator.ValidateAsync(dto);
@@ -71,6 +75,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

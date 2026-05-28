@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TumorHospital.Application.DTOs.Request.Donation;
 using TumorHospital.Application.Intefaces.Services;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Documentation;
 using TumorHospital.WebAPI.Extensions;
-
-// NOT TESTED YET!
 
 namespace TumorHospital.WebAPI.Controllers
 {
@@ -46,29 +46,12 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
-        //[SwaggerOperation(Summary = NeedDocs.GetNeedSummary, Description = NeedDocs.GetNeedDescription)]
-        //[HttpGet("need/{id}")]
-        //public async Task<IActionResult> GetNeed(Guid id)
-        //{
-        //    try
-        //    {
-        //        var need = await _needService.GetNeed(id);
-        //        return Ok(need);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ModelState.AddModelError("Message", ex.Message);
-        //    }
-        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        //}
-
-
         [SwaggerOperation(Summary = NeedDocs.GetCategoriesOfNeedsSummary, Description = NeedDocs.GetCategoriesOfNeedsDescription)]
         [HttpGet("Categories")]
         public async Task<IActionResult> GetCategoriesOfNeeds() => Ok(_needService.GetCategoriesOfNeeds());
 
         [SwaggerOperation(Summary = NeedDocs.AddNeedSummary, Description = NeedDocs.AddNeedDescription)]
-        //[Authorize(Roles = SystemRole.Admin)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddNeed([FromForm] NewNeedDto need)
         {
@@ -88,7 +71,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = NeedDocs.UpdateNeedSummary, Description = NeedDocs.UpdateNeedDescription)]
-        //[Authorize(Roles = SystemRole.Admin)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateNeed([FromForm] UpdateNeedDto newNeed, Guid id)
         {
@@ -117,7 +100,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = NeedDocs.DeleteNeedSummary, Description = NeedDocs.DeleteNeedDescription)]
-        //[Authorize(Roles = SystemRole.Admin)]
+        [Authorize(Roles = SystemRole.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNeed(Guid id)
         {

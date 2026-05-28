@@ -122,7 +122,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = AuthDocs.LogoutSummary, Description = AuthDocs.LogoutDescription)]
-        //[Authorize(Roles = SystemRole.ActiveRole)]
+        [Authorize(Roles = SystemRole.ActiveRole)]
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout(string userId)
         {
@@ -130,33 +130,6 @@ namespace TumorHospital.WebAPI.Controllers
             return Ok(new { Message = "Loged Out" });
         }
 
-
-
-        //[SwaggerOperation(Summary = AuthDocs.ChangePasswordSummary, Description = AuthDocs.ChangePasswordDescription)]
-        ////[Authorize(Roles = SystemRole.Patient)]
-        //[HttpPut("Change-Password")]
-        //[EnableRateLimiting("strict")]
-        //public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
-        //{
-        //    var result = _ChangePasswordValidator.Validate(model);
-        //    if (result.IsValid)
-        //    {
-        //        try
-        //        {
-        //            await _authService.ChangePassword(model);
-        //            return Ok(new { Message = "Password Changed Successfully" });
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            ModelState.AddModelError("Identity", ex.Message);
-        //        }
-        //    }
-
-        //    foreach (var error in result.Errors)
-        //        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-
-        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
-        //}
 
         [SwaggerOperation(Summary = AuthDocs.ChangePasswordSummary, Description = AuthDocs.ChangePasswordDescription)]
         [Authorize(Roles = SystemRole.ActiveRole)]
@@ -187,7 +160,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [SwaggerOperation(Summary = AuthDocs.ChangeInActiveRolePasswordSummary, Description = AuthDocs.ChangeInActiveRolePasswordDescription)]
-        //[Authorize(Roles = SystemRole.InActiveRole)]
+        [Authorize(Roles = SystemRole.InActiveRole)]
         [HttpPut("Change-InActiveRole-Password")]
         public async Task<IActionResult> ChangeInActiveRolePassword(ChangePasswordDto model)
         {

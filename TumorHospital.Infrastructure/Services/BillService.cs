@@ -32,12 +32,12 @@ namespace TumorHospital.Infrastructure.Services
             Expression<Func<Bill, bool>>? filter = b => true;
 
             if (month.HasValue)
-                filter = filter.And(b =>  b.CreatedAt.Month == month);
+                filter = filter.And(b => b.CreatedAt.Month == month);
 
             if (year.HasValue)
                 filter = filter.And(b => b.CreatedAt.Year == year);
 
-            if(!string.IsNullOrEmpty(patientEmail))
+            if (!string.IsNullOrEmpty(patientEmail))
                 filter = filter.And(b => b.Patient.User.Email == patientEmail);
 
             if (!string.IsNullOrEmpty(patientName))

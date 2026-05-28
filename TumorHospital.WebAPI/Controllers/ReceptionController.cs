@@ -20,6 +20,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("/api/Receptionists")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> GetAllReceptionists(int pageNumber, string? receptionistName)
         {
             try
@@ -36,6 +37,7 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = SystemRole.Admin)]
         public async Task<IActionResult> GetReceptionist(string id)
         {
             try
@@ -53,6 +55,7 @@ namespace TumorHospital.WebAPI.Controllers
 
 
         [HttpGet("bills")]
+        [Authorize(Roles = SystemRole.Receptionist)]
         public async Task<IActionResult> GetBills(int pageNumber, string? patientEmail, string? patientName, string? billCode, int? month, int? year)
         {
             try
