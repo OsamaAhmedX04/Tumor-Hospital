@@ -44,7 +44,7 @@ namespace TumorHospital.Infrastructure.Services
                 filter = filter.And(b => (b.Patient.User.FirstName + " " + b.Patient.User.LastName).Contains(patientName));
 
             if (!string.IsNullOrEmpty(billCode))
-                filter = filter.And(b => b.Code == billCode);
+                filter = filter.And(b => b.Code.Contains(billCode));
 
             return await _unitOfWork.Bills.GetAllPaginatedEnhancedAsync(
                 filter: filter,
