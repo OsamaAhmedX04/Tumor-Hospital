@@ -21,37 +21,12 @@ namespace TumorHospital.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<PrescriptionResponseDto> CreateAsync(PrescriptionCreateUpdateDto dto)
-        {
-            var appointment = await _unitOfWork.Appointments.GetAsync(
-                x => x,
-                x => x.Id == dto.AppointmentId,
-                Includes: x => x.Prescription
-            );
-
-            if (appointment == null)
-                throw new Exception("Appointment not found");
-
-            if (!AppointmentTimeService.HasAppointmentHappened(appointment))
-                throw new Exception("Cannot create prescription before appointment happens");
-
-            if (appointment.Prescription != null)
-                throw new Exception("Prescription already exists");
-
-            var prescription = _mapper.Map<Prescription>(dto);
-
-            await _unitOfWork.Prescriptions.AddAsync(prescription);
-            await _unitOfWork.CompleteAsync();
-
-            return _mapper.Map<PrescriptionResponseDto>(prescription);
-        }
-
         public async Task<PrescriptionResponseDto> GetByAppointmentIdAsync(Guid appointmentId)
         {
             var prescription = await _unitOfWork.Prescriptions.GetAsync(
                 x => new PrescriptionResponseDto
                 {
-                    Id = x.Id,
+                    PrescriptionId = x.Id,
                     AppointmentId = x.AppointmentId,
                     Medication = x.Medication,
                     Dosage = x.Dosage,
@@ -67,7 +42,34 @@ namespace TumorHospital.Infrastructure.Services
             return prescription;
         }
 
-        public async Task<bool> UpdateAsync(Guid id, PrescriptionCreateUpdateDto dto)
+        public async Task CreateAsync(Guid appointmentId, PrescriptionCreateDto dto)
+        {
+            var appointment = await _unitOfWork.Appointments.GetAsync(
+                x => x,
+                x => x.Id == appointmentId,
+                Includes: x => x.Prescription
+            );
+
+            if (appointment == null)
+                throw new Exception("Appointment not found");
+
+            if (!AppointmentTimeService.HasAppointmentHappened(appointment))
+                throw new Exception("Cannot create prescription before appointment happens");
+
+            if (appointment.Prescription != null)
+                throw new Exception("Prescription already exists");
+
+            var prescription = _mapper.Map<Prescription>(dto);
+            prescription.AppointmentId = appointmentId;
+
+
+            await _unitOfWork.Prescriptions.AddAsync(prescription);
+            await _unitOfWork.CompleteAsync();
+        }
+
+
+
+        public async Task UpdateAsync(Guid id, PrescriptionUpdateDto dto)
         {
             var prescription = await _unitOfWork.Prescriptions.GetAsync(
                 x => x,
@@ -76,7 +78,7 @@ namespace TumorHospital.Infrastructure.Services
             );
 
             if (prescription == null)
-                return false;
+                throw new Exception("Prescription not found");
 
             if (!AppointmentTimeService.HasAppointmentHappened(prescription.Appointment))
                 throw new Exception("Cannot update prescription before appointment happens");
@@ -85,11 +87,9 @@ namespace TumorHospital.Infrastructure.Services
 
             _unitOfWork.Prescriptions.Update(prescription);
             await _unitOfWork.CompleteAsync();
-
-            return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             var prescription = await _unitOfWork.Prescriptions.GetAsync(
                 x => x,
@@ -98,16 +98,13 @@ namespace TumorHospital.Infrastructure.Services
             );
 
             if (prescription == null)
-                return false;
+                throw new Exception("Prescription not found");
 
             if (!AppointmentTimeService.HasAppointmentHappened(prescription.Appointment))
                 throw new Exception("Cannot delete prescription before appointment happens");
 
             _unitOfWork.Prescriptions.Delete(id);
             await _unitOfWork.CompleteAsync();
-
-            return true;
         }
     }
-
 }

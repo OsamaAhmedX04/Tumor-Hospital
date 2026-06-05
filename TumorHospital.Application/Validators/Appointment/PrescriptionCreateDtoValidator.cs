@@ -3,10 +3,9 @@ using TumorHospital.Application.DTOs.Request.Appointment;
 
 namespace TumorHospital.Application.Validators.Appointment
 {
-    public class PrescriptionUpdateDtoValidator
-    : AbstractValidator<PrescriptionUpdateDto>
+    public class PrescriptionCreateDtoValidator : AbstractValidator<PrescriptionCreateDto>
     {
-        public PrescriptionUpdateDtoValidator()
+        public PrescriptionCreateDtoValidator()
         {
             RuleFor(x => x.Medication)
                 .NotEmpty()

@@ -2,7 +2,7 @@
 {
     public class PrescriptionResponseDto
     {
-        public Guid Id { get; set; }
+        public Guid PrescriptionId { get; set; }
         public Guid AppointmentId { get; set; }
         public string Medication { get; set; }
         public string Dosage { get; set; }

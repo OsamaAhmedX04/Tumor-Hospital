@@ -15,14 +15,16 @@ namespace TumorHospital.WebAPI.Controllers
     public class PrescriptionController : ControllerBase
     {
         private readonly IPrescriptionService _service;
-        private readonly IValidator<PrescriptionCreateUpdateDto> _validator;
+        private readonly IValidator<PrescriptionUpdateDto> _updateValidator;
+        private readonly IValidator<PrescriptionCreateDto> _createValidator;
 
         public PrescriptionController(
             IPrescriptionService service,
-            IValidator<PrescriptionCreateUpdateDto> validator)
+            IValidator<PrescriptionUpdateDto> updateValidator, IValidator<PrescriptionCreateDto> createValidator)
         {
             _service = service;
-            _validator = validator;
+            _updateValidator = updateValidator;
+            _createValidator = createValidator;
         }
 
         [HttpGet("{appointmentId}")]
@@ -40,16 +42,16 @@ namespace TumorHospital.WebAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("{appointmentId}")]
         [Authorize(Roles = SystemRole.Doctor)]
-        public async Task<IActionResult> Create(PrescriptionCreateUpdateDto dto)
+        public async Task<IActionResult> Create(Guid appointmentId, PrescriptionCreateDto dto)
         {
-            var validation = await _validator.ValidateAsync(dto);
+            var validation = await _createValidator.ValidateAsync(dto);
             if (validation.IsValid)
             {
                 try
                 {
-                    await _service.CreateAsync(dto);
+                    await _service.CreateAsync(appointmentId, dto);
                     return Ok(new { Message = "New Prescription Has Created Successfully" });
                 }
                 catch (Exception ex)
@@ -62,17 +64,17 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{prescriptionId}")]
         [Authorize(Roles = SystemRole.Doctor)]
-        public async Task<IActionResult> Update(Guid id, PrescriptionCreateUpdateDto dto)
+        public async Task<IActionResult> Update(Guid prescriptionId, PrescriptionUpdateDto dto)
         {
-            var validation = await _validator.ValidateAsync(dto);
+            var validation = await _updateValidator.ValidateAsync(dto);
             if (validation.IsValid)
             {
                 try
                 {
-                    await _service.UpdateAsync(id, dto);
-                    return Ok(new { Message = "New Prescription Has Updated Successfully" });
+                    await _service.UpdateAsync(prescriptionId, dto);
+                    return Ok(new { Message = "Prescription Has Updated Successfully" });
                 }
                 catch (Exception ex)
                 {
@@ -84,9 +86,20 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{prescriptionid}")]
         [Authorize(Roles = SystemRole.Doctor)]
-        public async Task<IActionResult> Delete(Guid id)
-            => await _service.DeleteAsync(id) ? Ok(new { Message = "Prescription has been Deleted" }) : NotFound(new { Message = "Prescription Not Found" });
+        public async Task<IActionResult> Delete(Guid prescriptionid)
+        {
+            try
+            {
+                await _service.DeleteAsync(prescriptionid);
+                return Ok(new { Message = "Prescription has been Deleted" });
+            }
+
+            catch (Exception ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
     }
 }

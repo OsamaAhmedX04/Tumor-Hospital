@@ -10,7 +10,8 @@ namespace TumorHospital.Application.Profiles
         public PrescriptionMappingProfile()
         {
             CreateMap<Prescription, PrescriptionResponseDto>();
-            CreateMap<PrescriptionCreateUpdateDto, Prescription>();
+            CreateMap<PrescriptionCreateDto, Prescription>();
+            CreateMap<PrescriptionUpdateDto, Prescription>();
         }
     }
 }

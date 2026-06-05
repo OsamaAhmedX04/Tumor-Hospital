@@ -1,8 +1,7 @@
 ﻿namespace TumorHospital.Application.DTOs.Request.Appointment
 {
-    public class PrescriptionCreateUpdateDto
+    public class PrescriptionUpdateDto
     {
-        public Guid AppointmentId { get; set; }
         public string Medication { get; set; }
         public string Dosage { get; set; }
         public DateTime StartDate { get; set; }
