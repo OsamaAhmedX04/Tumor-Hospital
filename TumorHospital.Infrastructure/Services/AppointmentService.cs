@@ -218,6 +218,7 @@ namespace TumorHospital.Infrastructure.Services
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
                     IsPrescriptionExist = a.Prescription != null,
+                    IsHaveRayFile = a.Diagnostic != null,
                     IsVideoCall = a.Reason == AppointmentReason.VideoCall,
                     IsVideoCallAvailableToJoin = a.Reason ==
                             AppointmentReason.VideoCall &&
@@ -287,6 +288,7 @@ namespace TumorHospital.Infrastructure.Services
                     ToTime = a.ToTime,
                     Status = a.Status.ToString(),
                     IsPrescriptionExist = a.Prescription != null,
+                    IsHaveRayFile = a.Diagnostic != null,
                     IsVideoCall = a.Reason == AppointmentReason.VideoCall,
                     IsVideoCallAvailableToJoin = a.Reason ==
                             AppointmentReason.VideoCall &&

@@ -1,16 +1,18 @@
-﻿using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid.Helpers.Errors.Model;
+using System.Formats.Tar;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using TumorHospital.Application.DTOs.Request.ML;
 using TumorHospital.Application.DTOs.Response.ML;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
 using TumorHospital.Domain.Entities;
+using TumorHospital.Domain.Enums;
 using TumorHospital.Infrastructure.Settings;
 
 namespace TumorHospital.Infrastructure.ExternalServices
@@ -81,6 +83,10 @@ namespace TumorHospital.Infrastructure.ExternalServices
             if (appointment == null)
                 throw new Exception("Appointment not found");
 
+            if(appointment.Status != AppointmentStatus.Approved)
+                throw new Exception("Appointment not approved yet");
+
+
             _logger.LogInformation(
                 "Sending MRI image for AI analysis | AppointmentId: {AppointmentId} ",
                 dto.AppointmentId);
@@ -129,7 +135,7 @@ namespace TumorHospital.Infrastructure.ExternalServices
             if (result == null)
                 throw new Exception("Invalid AI response");
 
-            var filePath = "";
+            var filePath = await _fileService.UploadAsync(dto.Image, "Scans");
 
             var diagnostic = new Diagnostic
             {
