@@ -40,5 +40,6 @@ namespace TumorHospital.Domain.Entities
                 : null;
 
         public ICollection<VideoCall> VideoCalls { get; set; } = new List<VideoCall>();
+        public ICollection<Diagnostic> Diagnostics { get; set; } = new List<Diagnostic>();
     }
 }

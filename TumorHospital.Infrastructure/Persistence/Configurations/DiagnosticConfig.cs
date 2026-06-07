@@ -10,24 +10,38 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(d => d.Id);
 
-            builder.Property(d => d.ConfidenceScore)
-                .HasColumnType("DECIMAL(5,2)")
-                .IsRequired();
-
-            builder.Property(d => d.ModelOutput)
+            builder.Property(d => d.PredictedClass)
                 .HasMaxLength(50)
                 .IsRequired();
 
-            builder.Property(d => d.TumorLocation)
-                .HasMaxLength(100)
+            builder.Property(d => d.ConfidenceScore)
+                .HasColumnType("DECIMAL(5,3)")
+                .IsRequired();
+
+            builder.Property(d => d.GliomaProbability)
+                .HasColumnType("DECIMAL(5,3)")
+                .IsRequired();
+
+            builder.Property(d => d.MeningiomaProbability)
+                .HasColumnType("DECIMAL(5,3)")
+                .IsRequired();
+
+            builder.Property(d => d.NoTumorProbability)
+                .HasColumnType("DECIMAL(5,3)")
+                .IsRequired();
+
+            builder.Property(d => d.PituitaryProbability)
+                .HasColumnType("DECIMAL(5,3)")
                 .IsRequired();
 
             builder.Property(d => d.CreatedAt)
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("GETDATE()")
+                .IsRequired();
 
-            builder
-                .HasOne(d => d.MedicalRecord).WithMany(md => md.Diagnostics)
-                .HasForeignKey(d => d.MedicalRecordId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(d => d.Appointment)
+                .WithMany(a => a.Diagnostics)
+                .HasForeignKey(d => d.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -37,8 +37,6 @@ namespace TumorHospital.Infrastructure.UOW
         public IRepository<Specialization> Specializations { get; }
 
 
-        public IRepository<MedicalRecord> MedicalRecords { get; }
-
         public IRepository<Diagnostic> Diagnostics { get; }
 
         public IRepository<MentalHealthSurvey> MentalHealthSurvies { get; }
@@ -76,7 +74,6 @@ namespace TumorHospital.Infrastructure.UOW
             DoctorSchedules = new Repository<DoctorSchedule>(_db);
             Specializations = new Repository<Specialization>(_db);
 
-            MedicalRecords = new Repository<MedicalRecord>(_db);
             MentalHealthSurvies = new Repository<MentalHealthSurvey>(_db);
             Diagnostics = new Repository<Diagnostic>(_db);
             Prescriptions = new Repository<Prescription>(_db);

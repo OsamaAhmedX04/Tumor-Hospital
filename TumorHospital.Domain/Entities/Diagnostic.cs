@@ -8,12 +8,16 @@ namespace TumorHospital.Domain.Entities
         [Key]
         public Guid Id { get; set; }
 
-        [ForeignKey("MedicalRecord")]
-        public Guid MedicalRecordId { get; set; }
-        public MedicalRecord MedicalRecord { get; set; }
-        public string ModelOutput { get; set; }
-        public string TumorLocation { get; set; }
+        [ForeignKey("Appointment")]
+        public Guid AppointmentId { get; set; }
+        public Appointment Appointment { get; set; }
+
+        public string PredictedClass { get; set; }
         public decimal ConfidenceScore { get; set; }
+        public decimal GliomaProbability { get; set; }
+        public decimal MeningiomaProbability { get; set; }
+        public decimal NoTumorProbability { get; set; }
+        public decimal PituitaryProbability { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

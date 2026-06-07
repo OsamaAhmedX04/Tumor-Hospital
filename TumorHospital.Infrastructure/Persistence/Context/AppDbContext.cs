@@ -28,7 +28,6 @@ namespace TumorHospital.Infrastructure.Persistence.Context
         public DbSet<DoctorSchedule> DoctorSchedules { get; set; }
         public DbSet<Specialization> Specializations { get; set; }
 
-        public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<Diagnostic> Diagnostics { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<MentalHealthSurvey> MentalHealthSurvies { get; set; }

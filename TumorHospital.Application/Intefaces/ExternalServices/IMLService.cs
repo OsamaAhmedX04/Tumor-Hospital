@@ -1,0 +1,13 @@
+﻿using Microsoft.AspNetCore.Http;
+using TumorHospital.Application.DTOs.Request.ML;
+using TumorHospital.Application.DTOs.Response.ML;
+
+namespace TumorHospital.Application.Intefaces.ExternalServices
+{
+    public interface IMLService
+    {
+        Task<ChatResponseDto> ChatAsync(ChatRequestDto request);
+
+        Task<ExplainResponseDto> ExplainAsync(ExplainRequestDto dto);
+    }
+}

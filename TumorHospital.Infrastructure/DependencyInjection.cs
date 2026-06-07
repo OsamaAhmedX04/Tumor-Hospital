@@ -33,8 +33,8 @@ namespace TumorHospital.Infrastructure
             #region DBContext And Identity
             // Register DbContext
             services.AddDbContext<AppDbContext>(options =>
-            //options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
-            options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
+            //options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
             ));
 
             // Register Identity
@@ -150,8 +150,8 @@ namespace TumorHospital.Infrastructure
                 option
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                //.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
-                .UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
+                .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+                //.UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
             });
             services.AddHangfireServer();
             services.AddSingleton<HangfireLoggingFilter>();
@@ -190,6 +190,14 @@ namespace TumorHospital.Infrastructure
                 .ValidateOnStart();
 
             services.AddScoped<IPaymentService, PaymentService>();
+            #endregion
+
+            #region ML Integration 
+            services.AddOptions<MLExternalApisSettings>()
+                .Bind(configuration.GetSection("MLExternalApis"))
+                .ValidateOnStart();
+
+            services.AddScoped<IMLService, MLService>();
             #endregion
 
 
