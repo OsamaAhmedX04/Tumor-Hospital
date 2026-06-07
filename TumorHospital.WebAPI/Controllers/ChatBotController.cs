@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.ML;
 using TumorHospital.Application.Intefaces.ExternalServices;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -19,6 +21,7 @@ namespace TumorHospital.WebAPI.Controllers
             _chatValidator = chatValidator;
         }
 
+        [Authorize(Roles = SystemRole.Patient)]
         [HttpPost("chat")]
         public async Task<IActionResult> Chat([FromBody] ChatRequestDto dto)
         {
