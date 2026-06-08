@@ -14,6 +14,9 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50)
                 .IsRequired();
 
+            builder.Property(d => d.ImageURL)
+                .IsRequired();
+
             builder.Property(d => d.ConfidenceScore)
                 .HasColumnType("DECIMAL(5,3)")
                 .IsRequired();

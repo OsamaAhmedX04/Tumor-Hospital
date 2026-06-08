@@ -12,6 +12,8 @@ namespace TumorHospital.Domain.Entities
         public Guid AppointmentId { get; set; }
         public Appointment Appointment { get; set; }
 
+        public string ImageURL { get; set; }
+
         public string PredictedClass { get; set; }
         public decimal ConfidenceScore { get; set; }
         public decimal GliomaProbability { get; set; }

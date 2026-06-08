@@ -128,11 +128,15 @@ namespace TumorHospital.Infrastructure.ExternalServices
             if (result == null)
                 throw new Exception("Invalid AI response");
 
+            var filePath = await _fileService.UploadAsync(dto.Image, folder: "Scans");
+
             var diagnostic = new Diagnostic
             {
                 Id = Guid.NewGuid(),
 
                 AppointmentId = dto.AppointmentId,
+
+                ImageURL = filePath,
 
                 PredictedClass =
                     result.Prediction.PredictedClass,

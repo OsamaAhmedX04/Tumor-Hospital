@@ -22,10 +22,8 @@ namespace TumorHospital.Application.Intefaces.UOW
         IRepository<DoctorSchedule> DoctorSchedules { get; }
         IRepository<Specialization> Specializations { get; }
         IRepository<Diagnostic> Diagnostics { get; }
-        IRepository<MentalHealthSurvey> MentalHealthSurvies { get; }
         IRepository<Prescription> Prescriptions { get; }
 
-        IRepository<Notification> Notifications { get; }
         IRepository<FAQ> FAQs { get; }
 
         IRepository<AboutInfo> AboutInfos { get; }
