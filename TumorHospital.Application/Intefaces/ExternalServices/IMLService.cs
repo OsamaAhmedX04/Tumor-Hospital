@@ -9,5 +9,7 @@ namespace TumorHospital.Application.Intefaces.ExternalServices
         Task<ChatResponseDto> ChatAsync(ChatRequestDto request);
 
         Task<ExplainResponseDto> ExplainAsync(ExplainRequestDto dto);
+
+        Task<DiagnosticResponseDto> GetDiagnosticByAppointmentIdAsync(Guid appointmentId);
     }
 }

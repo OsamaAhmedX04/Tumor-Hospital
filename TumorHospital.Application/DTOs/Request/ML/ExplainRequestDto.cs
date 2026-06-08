@@ -6,6 +6,5 @@ namespace TumorHospital.Application.DTOs.Request.ML
     {
         public Guid AppointmentId { get; set; }
         public IFormFile Image { get; set; }
-        public bool Force { get; set; }
     }
 }

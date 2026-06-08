@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SendGrid.Helpers.Errors.Model;
 using TumorHospital.Application.DTOs.Request.ML;
 using TumorHospital.Application.DTOs.Response.ML;
 using TumorHospital.Application.Intefaces.ExternalServices;
@@ -99,7 +100,7 @@ namespace TumorHospital.Infrastructure.ExternalServices
                 dto.Image.FileName);
 
             formData.Add(
-                new StringContent(dto.Force.ToString().ToLower()),
+                new StringContent(false.ToString().ToLower()),
                 "force");
 
             var response = await _httpClient.PostAsync(
@@ -128,7 +129,7 @@ namespace TumorHospital.Infrastructure.ExternalServices
             if (result == null)
                 throw new Exception("Invalid AI response");
 
-            var filePath = await _fileService.UploadAsync(dto.Image, folder: "Scans");
+            var filePath = "";
 
             var diagnostic = new Diagnostic
             {
@@ -169,5 +170,61 @@ namespace TumorHospital.Infrastructure.ExternalServices
 
             return result;
         }
+
+        public async Task<DiagnosticResponseDto> GetDiagnosticByAppointmentIdAsync(Guid appointmentId)
+        {
+            _logger.LogInformation(
+                "Retrieving diagnostic | AppointmentId: {AppointmentId}",
+                appointmentId);
+
+            var diagnostic = await _unitOfWork.Diagnostics
+                .FirstOrDefaultAsync(d => d.AppointmentId == appointmentId);
+
+            if (diagnostic == null)
+            {
+                _logger.LogWarning(
+                    "Diagnostic not found | AppointmentId: {AppointmentId}",
+                    appointmentId);
+
+                throw new Exception("Diagnostic not found");
+            }
+
+            return new DiagnosticResponseDto
+            {
+                Id = diagnostic.Id,
+
+                AppointmentId = diagnostic.AppointmentId,
+
+                ImageURL = SupabaseConstants.PrefixSupaURL + diagnostic.ImageURL,
+
+                ExplainResponseDto = new ExplainResponseDto
+                {
+                    PredictedClass = diagnostic.PredictedClass,
+
+                    Confidence = diagnostic.ConfidenceScore,
+
+                    Prediction = new PredictionDto
+                    {
+                        PredictedClass = diagnostic.PredictedClass,
+
+                        Confidence = diagnostic.ConfidenceScore,
+
+                        Probabilities = new ProbabilitiesDto
+                        {
+                            Glioma = diagnostic.GliomaProbability,
+
+                            Meningioma = diagnostic.MeningiomaProbability,
+
+                            Notumor = diagnostic.NoTumorProbability,
+
+                            Pituitary = diagnostic.PituitaryProbability
+                        }
+                    }
+                },
+
+                CreatedAt = diagnostic.CreatedAt
+            };
+        }
+
     }
 }

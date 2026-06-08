@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.ML;
 using TumorHospital.Application.Intefaces.ExternalServices;
+using TumorHospital.Domain.Constants;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -51,5 +53,30 @@ namespace TumorHospital.WebAPI.Controllers
                 Errors = ModelState.ToErrorResponse()
             });
         }
+
+        [Authorize(Roles = SystemRole.Doctor)]
+        [HttpGet("diagnostic/{appointmentId}")]
+        public async Task<IActionResult> GetDiagnostic(Guid appointmentId)
+        {
+            try
+            {
+                var result =
+                    await _mlService.GetDiagnosticByAppointmentIdAsync(appointmentId);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(
+                    "DiagnosticError",
+                    ex.Message);
+
+                return BadRequest(new
+                {
+                    Errors = ModelState.ToErrorResponse()
+                });
+            }
+        }
+
     }
 }
