@@ -132,8 +132,6 @@ namespace TumorHospital.Infrastructure.ExternalServices
 
             var diagnostic = new Diagnostic
             {
-                Id = Guid.NewGuid(),
-
                 AppointmentId = dto.AppointmentId,
 
                 ImageURL = filePath,
