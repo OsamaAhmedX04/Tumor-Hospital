@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using TumorHospital.Application.DTOs.Request.ML;
 using TumorHospital.Application.DTOs.Response.ML;
+using TumorHospital.Application.DTOs.Response.MRI;
 using TumorHospital.Application.Intefaces.ExternalServices;
 using TumorHospital.Application.Intefaces.UOW;
 using TumorHospital.Domain.Constants;
@@ -76,7 +77,7 @@ namespace TumorHospital.Infrastructure.ExternalServices
             return result!;
         }
 
-        public async Task<ExplainResponseDto> ExplainAsync(ExplainRequestDto dto)
+        public async Task ExplainAsync(ExplainRequestDto dto)
         {
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
 
@@ -102,12 +103,12 @@ namespace TumorHospital.Infrastructure.ExternalServices
 
             formData.Add(
                 imageContent,
-                "image",
+                "file",
                 dto.Image.FileName);
 
-            formData.Add(
-                new StringContent(false.ToString().ToLower()),
-                "force");
+            //formData.Add(
+            //    new StringContent(false.ToString().ToLower()),
+            //    "force");
 
             var response = await _httpClient.PostAsync(
                 _settings.ExplainApi,
@@ -144,22 +145,22 @@ namespace TumorHospital.Infrastructure.ExternalServices
                 ImageURL = filePath,
 
                 PredictedClass =
-                    result.Prediction.PredictedClass,
+                    result.PredictedClass,
 
                 ConfidenceScore =
-                    result.Prediction.Confidence,
+                    result.Confidence,
 
                 GliomaProbability =
-                    result.Prediction.Probabilities.Glioma,
+                    result.Probabilities.Glioma,
 
                 MeningiomaProbability =
-                    result.Prediction.Probabilities.Meningioma,
+                    result.Probabilities.Meningioma,
 
                 NoTumorProbability =
-                    result.Prediction.Probabilities.Notumor,
+                    result.Probabilities.Notumor,
 
                 PituitaryProbability =
-                    result.Prediction.Probabilities.Pituitary,
+                    result.Probabilities.Pituitary,
 
                 CreatedAt = DateTime.Now
             };
@@ -174,8 +175,63 @@ namespace TumorHospital.Infrastructure.ExternalServices
                 result.PredictedClass,
                 result.Confidence);
 
-            return result;
         }
+
+        //public async Task<DiagnosticResponseDto> GetDiagnosticByAppointmentIdAsync(Guid appointmentId)
+        //{
+        //    _logger.LogInformation(
+        //        "Retrieving diagnostic | AppointmentId: {AppointmentId}",
+        //        appointmentId);
+
+        //    var diagnostic = await _unitOfWork.Diagnostics
+        //        .FirstOrDefaultAsync(d => d.AppointmentId == appointmentId);
+
+        //    if (diagnostic == null)
+        //    {
+        //        _logger.LogWarning(
+        //            "Diagnostic not found | AppointmentId: {AppointmentId}",
+        //            appointmentId);
+
+        //        throw new Exception("Diagnostic not found");
+        //    }
+
+        //    return new DiagnosticResponseDto
+        //    {
+        //        Id = diagnostic.Id,
+
+        //        AppointmentId = diagnostic.AppointmentId,
+
+        //        ImageURL = SupabaseConstants.PrefixSupaURL + diagnostic.ImageURL,
+
+        //        ExplainResponseDto = new ExplainResponseDto
+        //        {
+        //            PredictedClass = diagnostic.PredictedClass,
+
+        //            Confidence = diagnostic.ConfidenceScore,
+
+        //            Prediction = new PredictionDto
+        //            {
+        //                PredictedClass = diagnostic.PredictedClass,
+
+        //                Confidence = diagnostic.ConfidenceScore,
+
+        //                Probabilities = new ProbabilitiesDto
+        //                {
+        //                    Glioma = diagnostic.GliomaProbability,
+
+        //                    Meningioma = diagnostic.MeningiomaProbability,
+
+        //                    Notumor = diagnostic.NoTumorProbability,
+
+        //                    Pituitary = diagnostic.PituitaryProbability
+        //                }
+        //            }
+        //        },
+
+        //        CreatedAt = diagnostic.CreatedAt
+        //    };
+        //}
+
 
         public async Task<DiagnosticResponseDto> GetDiagnosticByAppointmentIdAsync(Guid appointmentId)
         {
@@ -209,28 +265,19 @@ namespace TumorHospital.Infrastructure.ExternalServices
 
                     Confidence = diagnostic.ConfidenceScore,
 
-                    Prediction = new PredictionDto
+                    Probabilities = new ProbabilitiesDto
                     {
-                        PredictedClass = diagnostic.PredictedClass,
+                        Glioma = diagnostic.GliomaProbability,
 
-                        Confidence = diagnostic.ConfidenceScore,
+                        Meningioma = diagnostic.MeningiomaProbability,
 
-                        Probabilities = new ProbabilitiesDto
-                        {
-                            Glioma = diagnostic.GliomaProbability,
+                        Notumor = diagnostic.NoTumorProbability,
 
-                            Meningioma = diagnostic.MeningiomaProbability,
-
-                            Notumor = diagnostic.NoTumorProbability,
-
-                            Pituitary = diagnostic.PituitaryProbability
-                        }
+                        Pituitary = diagnostic.PituitaryProbability
                     }
                 },
-
                 CreatedAt = diagnostic.CreatedAt
             };
         }
-
     }
 }

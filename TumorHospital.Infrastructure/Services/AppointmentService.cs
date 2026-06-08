@@ -243,7 +243,7 @@ namespace TumorHospital.Infrastructure.Services
             if (userId == null)
                 throw new Exception("User must be authenticated to make an appointment.");
 
-            Expression<Func<Appointment, bool>>? filter = a => a.DoctorId == userId;
+            Expression<Func<Appointment, bool>>? filter = a => a.DoctorId == userId && a.Status != AppointmentStatus.Pending;
 
             AppointmentReason? reason = null;
             AppointmentStatus? status = null;

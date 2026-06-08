@@ -21,6 +21,7 @@ namespace TumorHospital.WebAPI.Controllers
             _explainValidator = explainValidator;
         }
 
+        [Authorize(Roles = SystemRole.Patient)]
         [HttpPost("explain")]
         public async Task<IActionResult> Explain([FromForm] ExplainRequestDto dto)
         {
@@ -31,9 +32,9 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 try
                 {
-                    var result = await _mlService.ExplainAsync(dto);
+                    await _mlService.ExplainAsync(dto);
 
-                    return Ok(result);
+                    return Ok(new { Message = "Image Uploaded Successfully" });
                 }
                 catch (Exception ex)
                 {

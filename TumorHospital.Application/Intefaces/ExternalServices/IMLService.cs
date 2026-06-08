@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TumorHospital.Application.DTOs.Request.ML;
 using TumorHospital.Application.DTOs.Response.ML;
+using TumorHospital.Application.DTOs.Response.MRI;
 
 namespace TumorHospital.Application.Intefaces.ExternalServices
 {
@@ -8,7 +9,7 @@ namespace TumorHospital.Application.Intefaces.ExternalServices
     {
         Task<ChatResponseDto> ChatAsync(ChatRequestDto request);
 
-        Task<ExplainResponseDto> ExplainAsync(ExplainRequestDto dto);
+        Task ExplainAsync(ExplainRequestDto dto);
 
         Task<DiagnosticResponseDto> GetDiagnosticByAppointmentIdAsync(Guid appointmentId);
     }

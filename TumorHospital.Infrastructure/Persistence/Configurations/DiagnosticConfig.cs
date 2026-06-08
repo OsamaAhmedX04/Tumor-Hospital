@@ -18,23 +18,23 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.Property(d => d.ConfidenceScore)
-                .HasColumnType("DECIMAL(5,3)")
+                .HasColumnType("DECIMAL(10,4)")
                 .IsRequired();
 
             builder.Property(d => d.GliomaProbability)
-                .HasColumnType("DECIMAL(5,3)")
+                .HasColumnType("DECIMAL(10,4)")
                 .IsRequired();
 
             builder.Property(d => d.MeningiomaProbability)
-                .HasColumnType("DECIMAL(5,3)")
+                .HasColumnType("DECIMAL(10,4)")
                 .IsRequired();
 
             builder.Property(d => d.NoTumorProbability)
-                .HasColumnType("DECIMAL(5,3)")
+                .HasColumnType("DECIMAL(10,4)")
                 .IsRequired();
 
             builder.Property(d => d.PituitaryProbability)
-                .HasColumnType("DECIMAL(5,3)")
+                .HasColumnType("DECIMAL(10,4)")
                 .IsRequired();
 
             builder.Property(d => d.CreatedAt)
