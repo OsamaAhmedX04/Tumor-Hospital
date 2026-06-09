@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TumorHospital.Application.DTOs.Request.ML;
 using TumorHospital.Application.DTOs.Response.ML;
-using TumorHospital.Application.DTOs.Response.MRI;
 
 namespace TumorHospital.Application.Intefaces.ExternalServices
 {
