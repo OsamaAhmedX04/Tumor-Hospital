@@ -17,7 +17,7 @@ namespace TumorHospital.Application.Validators.Donation
                 .When(volunteer => !string.IsNullOrEmpty(volunteer.Email));
 
             RuleFor(volunteer => volunteer.Phone)
-                .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid Phone number format.")
+                .MaximumLength(20).WithMessage("Invalid Phone Length")
                 .When(volunteer => !string.IsNullOrEmpty(volunteer.Phone));
 
             RuleFor(volunteer => volunteer.AmountDonated)
