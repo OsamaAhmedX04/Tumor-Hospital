@@ -81,7 +81,8 @@ namespace TumorHospital.Infrastructure.Services
                 selector: o => new { o.DiscountPercentage }
                 );
 
-            doctorDetails.DiscountPercentage = offersDiscount.Sum(o => o.DiscountPercentage);
+            var sumOfOffers = offersDiscount.Sum(o => o.DiscountPercentage);
+            doctorDetails.DiscountPercentage = sumOfOffers == 0 ? null : sumOfOffers;
 
             return doctorDetails;
         }
