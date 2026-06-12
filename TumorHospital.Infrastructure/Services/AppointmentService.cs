@@ -226,7 +226,12 @@ namespace TumorHospital.Infrastructure.Services
                             a.AttendenceDate == DateOnly.FromDateTime(DateTime.Now) &&
                             a.FromTime <= DateTime.Now.TimeOfDay &&
                             a.ToTime >= DateTime.Now.TimeOfDay,
-                    VideoCallLink = a.MeetingJoinLink,
+                    VideoCallLink = a.Reason ==
+                            AppointmentReason.VideoCall &&
+                            a.Status == AppointmentStatus.Approved &&
+                            a.AttendenceDate == DateOnly.FromDateTime(DateTime.Now) &&
+                            a.FromTime <= DateTime.Now.TimeOfDay &&
+                            a.ToTime >= DateTime.Now.TimeOfDay ? a.MeetingJoinLink : null,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
                 },
@@ -296,7 +301,12 @@ namespace TumorHospital.Infrastructure.Services
                             a.AttendenceDate == DateOnly.FromDateTime(DateTime.Now) &&
                             a.FromTime <= DateTime.Now.TimeOfDay &&
                             a.ToTime >= DateTime.Now.TimeOfDay,
-                    VideoCallLink = a.MeetingStartLink,
+                    VideoCallLink = a.Reason ==
+                            AppointmentReason.VideoCall &&
+                            a.Status == AppointmentStatus.Approved &&
+                            a.AttendenceDate == DateOnly.FromDateTime(DateTime.Now) &&
+                            a.FromTime <= DateTime.Now.TimeOfDay &&
+                            a.ToTime >= DateTime.Now.TimeOfDay ? a.MeetingStartLink : null,
                     RequestCreatedAt = a.RequestCreatedAt,
                     AttendenceDate = a.AttendenceDate
 

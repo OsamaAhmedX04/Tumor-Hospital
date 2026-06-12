@@ -218,5 +218,33 @@ namespace TumorHospital.Infrastructure.Services
 
             return response;
         }
+
+        public async Task DeleteStaff(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new Exception("This User Not Exist");
+
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var role = userRoles[0];
+
+            //receptionist
+            if(role == SystemRole.Receptionist)
+            {
+                var receptionist = await _unitOfWork.Receptionists.FirstOrDefaultAsync(r => r.ApplicationUserId == userId);
+                receptionist!.HospitalId = null;
+            }
+            //doctor
+            else
+            {
+                var doctor = await _unitOfWork.Doctors.FirstOrDefaultAsync(r => r.ApplicationUserId == userId);
+                doctor!.HospitalId = null;
+            }
+
+            await _unitOfWork.CompleteAsync();
+        }
     }
 }

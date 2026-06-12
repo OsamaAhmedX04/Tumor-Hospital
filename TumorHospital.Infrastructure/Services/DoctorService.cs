@@ -26,7 +26,7 @@ namespace TumorHospital.Infrastructure.Services
         {
             var patientId = _currentUserService.UserId;
             var doctorDetails = await _unitOfWork.Doctors.GetEnhancedAsync(
-                filter: d => d.ApplicationUserId == doctorId && d.User.IsActive,
+                filter: d => d.ApplicationUserId == doctorId && d.User.IsActive && !d.User.IsDeleted,
                 selector: d => new DoctorDetailsDto
                 {
                     Id = d.ApplicationUserId,
@@ -76,6 +76,12 @@ namespace TumorHospital.Infrastructure.Services
             doctorDetails.IsAbleToAppointFollowUp = isAbleToAppointFollowUp;
             doctorDetails.IsAbleToAppointVideoCall = doctorDetails.IsVideoCallDoctor && isAbleToAppointVideoCall;
 
+            var offersDiscount = await _unitOfWork.Offers.GetAllAsyncEnhanced(
+                filter: o => o.IsActive,
+                selector: o => new { o.DiscountPercentage }
+                );
+
+            doctorDetails.DiscountPercentage = offersDiscount.Sum(o => o.DiscountPercentage);
 
             return doctorDetails;
         }

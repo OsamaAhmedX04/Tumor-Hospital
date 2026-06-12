@@ -132,5 +132,20 @@ namespace TumorHospital.WebAPI.Controllers
             }
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
+
+        [HttpDelete("Staff/{userId}")]
+        public async Task<IActionResult> DeleteStaff(string userId)
+        {
+            try
+            {
+                await _adminSevice.DeleteStaff(userId);
+                return Ok(new { Message = "User Deleted Successfully" });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
     }
 }
