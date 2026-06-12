@@ -184,8 +184,8 @@ namespace TumorHospital.Infrastructure.Services
         public async Task<AdminDashboardResponse> GetDashboardDataAsync()
         {
             var totalPatients = await _unitOfWork.Patients.Count();
-            var totalDoctors = await _unitOfWork.Doctors.Count();
-            var totalReceptionists = await _unitOfWork.Receptionists.Count();
+            var totalDoctors = await _unitOfWork.Doctors.Count(d => d.HospitalId != null);
+            var totalReceptionists = await _unitOfWork.Receptionists.Count(d => d.HospitalId != null);
             var totalAppointments = await _unitOfWork.Appointments.Count();
             var totalBills = await _unitOfWork.Bills.Count();
             var totalCharityNeeds = await _unitOfWork.CharityNeeds.Count();
@@ -232,7 +232,7 @@ namespace TumorHospital.Infrastructure.Services
             var role = userRoles[0];
 
             //receptionist
-            if(role == SystemRole.Receptionist)
+            if(role == SystemRole.Receptionist || role == SystemRole.InActiveReceptionist)
             {
                 var receptionist = await _unitOfWork.Receptionists.FirstOrDefaultAsync(r => r.ApplicationUserId == userId);
                 receptionist!.HospitalId = null;
