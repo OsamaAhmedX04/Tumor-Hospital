@@ -52,9 +52,18 @@ namespace TumorHospital.Infrastructure.Services
 
             if (appointment == null)
                 throw new Exception("Appointment not found");
+            var egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
 
-            if (!AppointmentTimeService.HasAppointmentHappened(appointment))
-                throw new Exception("Cannot create prescription before appointment happens");
+            var egyptNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, egyptTimeZone);
+            var appointmentEnd =
+                appointment.AttendenceDate.Value.ToDateTime(
+                    TimeOnly.FromTimeSpan(appointment.ToTime.Value)
+                );
+
+            if (egyptNow < appointmentEnd)
+                throw new Exception($"Cannot create prescription before appointment ends{appointmentEnd.ToString()} | {egyptNow.ToString()}");
+            //if (!AppointmentTimeService.HasAppointmentHappened(appointment))
+            //    throw new Exception("Cannot create prescription before appointment happens");
 
             if (appointment.Prescription != null)
                 throw new Exception("Prescription already exists");

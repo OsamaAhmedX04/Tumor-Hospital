@@ -184,8 +184,8 @@ namespace TumorHospital.Infrastructure.Services
         public async Task<AdminDashboardResponse> GetDashboardDataAsync()
         {
             var totalPatients = await _unitOfWork.Patients.Count();
-            var totalDoctors = await _unitOfWork.Doctors.Count();
-            var totalReceptionists = await _unitOfWork.Receptionists.Count();
+            var totalDoctors = await _unitOfWork.Doctors.Count(d => d.HospitalId != null);
+            var totalReceptionists = await _unitOfWork.Receptionists.Count(d => d.HospitalId != null);
             var totalAppointments = await _unitOfWork.Appointments.Count();
             var totalBills = await _unitOfWork.Bills.Count();
             var totalCharityNeeds = await _unitOfWork.CharityNeeds.Count();
@@ -217,6 +217,34 @@ namespace TumorHospital.Infrastructure.Services
             };
 
             return response;
+        }
+
+        public async Task DeleteStaff(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new Exception("This User Not Exist");
+
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var role = userRoles[0];
+
+            //receptionist
+            if(role == SystemRole.Receptionist || role == SystemRole.InActiveReceptionist)
+            {
+                var receptionist = await _unitOfWork.Receptionists.FirstOrDefaultAsync(r => r.ApplicationUserId == userId);
+                receptionist!.HospitalId = null;
+            }
+            //doctor
+            else
+            {
+                var doctor = await _unitOfWork.Doctors.FirstOrDefaultAsync(r => r.ApplicationUserId == userId);
+                doctor!.HospitalId = null;
+            }
+
+            await _unitOfWork.CompleteAsync();
         }
     }
 }

@@ -27,6 +27,33 @@ namespace TumorHospital.WebAPI.Controllers
         }
 
 
+        //[HttpPost("Donate")]
+        //public async Task<IActionResult> Donate(VolunteerDto dto)
+        //{
+        //    var validationResult = await _volunteerValidator.ValidateAsync(dto);
+        //    if (validationResult.IsValid)
+        //    {
+        //        try
+        //        {
+        //            var url = await _donationService.CreateDonation(dto);
+        //            return Ok(new { PaymentUrl = url });
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ModelState.AddModelError("Message", ex.Message);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (var error in validationResult.Errors)
+        //        {
+        //            ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        //        }
+        //    }
+        //    return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+
+        //}
+
         [HttpPost("Donate")]
         public async Task<IActionResult> Donate(VolunteerDto dto)
         {
@@ -35,8 +62,8 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 try
                 {
-                    var url = await _donationService.CreateDonation(dto);
-                    return Ok(new { PaymentUrl = url });
+                    await _donationService.Donate(dto);
+                    return Ok(new { Message = "Donation Created Successfully" });
                 }
                 catch (Exception ex)
                 {

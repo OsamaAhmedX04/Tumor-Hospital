@@ -175,5 +175,30 @@ namespace TumorHospital.Infrastructure.Services
 
             await _unitOfWork.CompleteAsync();
         }
+
+        public async Task Donate(VolunteerDto dto)
+        {
+            var need = await _unitOfWork.CharityNeeds.GetByIdAsync(dto.CharityNeedId);
+
+            if (need == null)
+                throw new Exception("Charity need not found");
+
+            var donation = new VolunteerDonation
+            {
+                VolunteerName = dto.VolunteerName,
+                Email = dto.Email,
+                Phone = dto.Phone,
+                AmountDonated = dto.AmountDonated,
+                CharityNeedId = dto.CharityNeedId,
+                Status = "Paid"
+            };
+
+            await _unitOfWork.VolunteerDonations.AddAsync(donation);
+
+            need.CollectedAmount += donation.AmountDonated;
+            if (need.CollectedAmount >= need.NeedAmount)
+                need.IsCompleted = true;
+            await _unitOfWork.CompleteAsync();
+        }
     }
 }

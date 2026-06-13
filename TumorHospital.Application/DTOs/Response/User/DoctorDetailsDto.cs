@@ -12,6 +12,7 @@
         public decimal ConsultationCost { get; set; }
         public decimal FollowUpCost { get; set; }
         public decimal? VideoCallCost { get; set; }
+        public decimal? DiscountPercentage { get; set; }
         public string Location { get; set; } = null!;
         public bool IsAbleToAppointConsultation { get; set; }
         public bool IsAbleToAppointFollowUp { get; set; }
