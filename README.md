@@ -249,11 +249,15 @@ An appointment follows this lifecycle:
 - Appointment time arrives
 - Doctor attends patient
 
-## 4. Completed
+## 4. Bill Generated
+- After Accepting Appointment Bill Is Generated
+- Receptionist Receive Payment From Patient (at hospital)
+
+## 5. Completed
 - Consultation finished
 - Prescription can be created AFTER this stage
 
-## 5. Archived State
+## 6. Archived State
 - Historical record kept for reporting
 
 ---
