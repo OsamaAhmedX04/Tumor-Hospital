@@ -1,203 +1,135 @@
-# Intelligent Tumor Hospital Backend (ASP.NET Core .NET 8)
+# Tumor Hospital — Backend (ASP.NET Core / .NET 8)
 
-## 📌 Project Overview
-This backend is part of a healthcare management platform designed to support hospital operations, focusing on:
-- Patient management  
-- Doctor portal  
-- Appointment scheduling  
-- AI-powered diagnostic integration  
-- Medical history & document handling  
-- Mental health chatbot integration (API-ready)  
-- Prescription management  
-- Notifications & billing (future-ready)
+Comprehensive README for the Tumor Hospital backend. This document summarizes features, libraries and technologies used, integrations, deployment and development guidance, and a detailed section on the complexity of implementing a production-ready appointment system.
 
-This README covers only the **Backend (.NET 8)** implementation using **Clean Architecture**, **SQL Server**, and **Identity + JWT Authentication**.
+Projects in this solution
+- TumorHospital.WebAPI — ASP.NET Core Web API (entry point)
+- TumorHospital.Application — Application layer (DTOs, services, validation, mapping)
+- TumorHospital.Infrastructure — Infrastructure concerns (EF Core, Identity, external integrations, background jobs)
+- TumorHospital.Domain — Domain models and core abstractions
 
----
+Table of contents
+- Features
+- Libraries & Technologies
+- Integrations
+- Appointment system: complexity and design considerations
+- Development & local setup
+- Deployment & operational notes
+- Contribution
 
-## 🛠️ Technologies Used
-- .NET 8 Web API
-- Entity Framework Core
-- SQL Server
-- ASP.NET Core Identity (with JWT Authentication)
-- Clean Architecture (Domain, Application, Infrastructure, API)
-- Swagger / Swashbuckle
-- Dependency Injection
-- AutoMapper (if applicable)
-- FluentValidation (if used)
+## Features
+- Authentication & Authorization: ASP.NET Core Identity + JWT bearer tokens, role-based access (Admin, Doctor, Patient).
+- User management: registration, profile management, role assignment.
+- Patients & Doctors: CRUD APIs and profile management.
+- Appointment management: create, read, update, cancel, availability checks, reminders (background jobs).
+- FAQs management endpoints and content administration.
+- File storage: upload/download support (Supabase Storage integration configured in Infrastructure).
+- Background processing: Hangfire for scheduled jobs and asynchronous tasks (reminders, batch jobs, cleanup).
+- Email notifications: SendGrid integration for transactional emails (verification, reminders, alerts).
+- Health checks: readiness/liveness endpoints and UI integration.
+- Logging and observability: Serilog with file sink, structured logging.
+- API documentation: Swagger with annotations.
+- Validation: FluentValidation pipeline for DTOs and API inputs.
+- Mapping: AutoMapper profiles for DTO ↔ domain transformations.
 
----
+## Libraries & technologies used
+- Platform: .NET 8 (net8.0), ASP.NET Core Web API
+- Authentication & identity: Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.AspNetCore.Authentication.JwtBearer, System.IdentityModel.Tokens.Jwt
+- Persistence: Microsoft.EntityFrameworkCore.SqlServer, Microsoft.EntityFrameworkCore.Tools, LinqKit for complex expressions
+- Background jobs: Hangfire
+- Email: SendGrid + AspNetCore.HealthChecks.SendGrid
+- File storage: Supabase, Supabase.Storage
+- Validation & mapping: FluentValidation.AspNetCore, AutoMapper.Extensions.Microsoft.DependencyInjection
+- Logging & diagnostics: Serilog.AspNetCore, Serilog.Settings.Configuration, Serilog.Sinks.File
+- API docs: Swashbuckle.AspNetCore, Swashbuckle.AspNetCore.Annotations
+- Misc: Microsoft.AspNetCore.WebUtilities, Newtonsoft.Json
 
-## 🏗️ Architecture Overview
-This backend follows a layered Clean Architecture structure:
+## Integrations
+- SendGrid: transactional email delivery for account verification, appointment reminders, admin alerts. Use service API key stored in configuration or a secrets store.
+- Supabase Storage: used for storing uploaded documents, patient imaging, or other files. Service role keys must be kept secret and server-side operations limited.
+- Hangfire: persistent background job processing using SQL Server storage or other supported storage. Dashboard typically exposed at /hangfire (protect with auth).
+- HealthChecks: SQL Server and SendGrid integrations for health probes; HealthChecks UI can be enabled for monitoring.
 
-```
-├── RentMate.Domain            → Entities, Value Objects, Interfaces
-├── RentMate.Application       → Business Logic, Services, DTOs, Validation
-├── RentMate.Infrastructure    → EF Core, Identity, Migrations, Repositories
-└── RentMate.API               → Controllers, DI, Startup, Swagger
-```
+## Appointment system — complexity and design considerations
+Implementing a production-grade appointment system in a hospital context is one of the most complex subsystems. Below are key facets and recommendations.
 
----
+1) Domain modeling and resources
+- Model entities: Appointment, Practitioner (doctor), Patient, Room, ServiceType, and optionally Equipment.
+- Availability model: working schedules, recurring availabilities, breaks, holidays, leave, and exceptions.
 
-## ✅ Features Implemented (Backend Only)
-✔ Patient Registration & Profiles  
-✔ Doctor Registration & Profiles  
-✔ Identity + JWT Authentication  
-✔ Role-Based Authorization (Patient, Doctor, Admin)  
-✔ Medical Records & Upload Support  
-✔ Appointment Scheduling API  
-✔ Diagnostic Model Integration Ready (REST-based)  
-✔ Treatment & Prescription Endpoints  
-✔ Admin Operations  
-✔ Secure Data Handling (Encryption + EF Tracking)
+2) Slot generation and querying
+- Generate possible slots from practitioners' schedules and service durations.
+- Provide efficient availability queries (date range + filters) and pagination.
+- Cache generated availability where appropriate but invalidate on schedule changes or bookings.
 
-### Upcoming / Planned:
-⬜ Billing & Insurance APIs  
-⬜ Mental Health Chatbot Integration  
-⬜ Analytics & Dashboard Reports  
-⬜ Notification Services
+3) Concurrency and double-booking
+- Use transactional booking flows. Prefer database-level constraints for critical uniqueness (e.g., unique index on practitioner+timeslot) to guard against race conditions.
+- Implement optimistic concurrency tokens for appointment edits.
+- For high-concurrency scenarios, consider distributed locks (Redis, advisory locks) or a single-writer job approach.
 
----
+4) Time zones & DST
+- Store all times in UTC in the DB. Convert to and from local time only at the API boundary or UI.
+- Carefully test DST transitions and recurring appointments that cross DST boundaries.
 
-## 📦 Prerequisites
-Make sure you have:
-- .NET 8 SDK installed  
-- SQL Server (LocalDB or full instance)  
-- Visual Studio / Rider / VS Code  
-- Postman / Swagger for testing  
+5) Recurring appointments & exceptions
+- Model series and exception items separately so edits/cancellations can apply to a single occurrence or the whole series.
 
----
+6) Rescheduling and cancellations
+- Expose idempotent endpoints and use idempotency keys for client retries.
+- Maintain audit trail for changes and trigger compensating actions (e.g., cancel reminders).
 
-## ⚙️ Configuration & Setup
+7) Notifications & reminders
+- Use Hangfire to schedule reminder jobs. Persist reminder state and track delivery attempts.
+- Implement retry and dead-lettering for failed notifications.
 
-### 1️⃣ Clone the Repo
-```bash
-git clone <your-repo-url>
-cd <your-backend-folder>
-```
+8) Integration with external calendars
+- Provide optional iCal export or two-way sync (Google Calendar / Exchange) using secure OAuth flows.
 
-### 2️⃣ Configure `appsettings.json` in **API** project:
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=YOUR_SERVER;Database=HospitalDB;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;"
-  },
-  "Jwt": {
-    "Key": "YOUR_SECRET_KEY",
-    "Issuer": "YOUR_ISSUER",
-    "Audience": "YOUR_AUDIENCE",
-    "DurationInMinutes": 60
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*"
-}
-```
+9) Testing & validation
+- Extensive unit tests for scheduling logic, integration tests hitting DB transactions, and end-to-end tests for booking flows.
 
----
+10) Security & compliance
+- Enforce least-privilege for file storage and integrations. Apply encryption at rest for sensitive health data as required by regulations.
 
-## 🗄️ Database Setup
-### Run EF Core Migrations
-```bash
-dotnet ef database update
-```
+Trade-offs & performance
+- Real-time availability computation is costly; use caching and incremental updates when needed.
+- Strong consistency (preventing double-booking) requires careful design; optimistic approaches are easier but can lead to conflicts.
 
-If there are no migrations yet:
-```bash
-dotnet ef migrations add InitialCreate -p RentMate.Infrastructure -s RentMate.API
-```
+## Development & local setup
+### Prerequisites
+- .NET 8 SDK
+- SQL Server (LocalDB, Docker container, or remote instance)
+- (Optional) Redis for distributed locking, if used
 
----
+### Environment variables / recommended settings
+- ConnectionStrings__DefaultConnection — SQL Server connection string
+- Jwt__Issuer, Jwt__Audience, Jwt__Key — JWT settings
+- SendGrid__ApiKey — SendGrid API key
+- Supabase__Url, Supabase__Key — Supabase configuration for storage
 
-## ▶️ Run the Application
-From the API project directory:
-```bash
-dotnet run
-```
+### Common commands
+- dotnet restore
+- dotnet build
+- dotnet ef database update --project TumorHospital.Infrastructure --startup-project TumorHospital.WebAPI
+- dotnet run --project TumorHospital.WebAPI
 
-Or using Visual Studio (F5).
+### Running Hangfire dashboard
+- Dashboard usually exposed under /hangfire; secure the endpoint with authentication and role checks.
 
-Swagger UI will be available at:  
-🔗 `https://localhost:<port>/swagger`
+## Operational considerations
+- Secrets: use an external secret manager (Azure Key Vault, AWS Secrets Manager) in production.
+- Logging: centralize logs (Seq, Elasticsearch, Application Insights). Serilog is configured with a file sink by default.
+- Monitoring: enable health checks and integrate with your monitoring system for alerts.
+- Backups: schedule DB backups and test restore procedures.
 
----
+## Contribution
+- Follow the layered architecture: Domain → Application → Infrastructure → WebAPI.
+- Add unit and integration tests for domain logic (especially appointment scheduling and concurrency scenarios).
+- Keep DI registrations and environment-specific configuration in the WebAPI project.
 
-## 🔐 Authentication Flow (Identity + JWT)
-- User registers (Patient / Doctor / Admin)  
-- API generates JWT after login  
-- Token is passed via `Authorization: Bearer <token>`  
-- Role-based authorization applied on controllers  
+## License
+- Add a LICENSE file to the repo to declare licensing (e.g., MIT) if open-sourcing. Otherwise include internal licensing terms.
 
----
-
-## 🌍 Environment Variables (Optional)
-```
-ASPNETCORE_ENVIRONMENT=Development
-ConnectionStrings__DefaultConnection="..."
-Jwt__Key="..."
-Jwt__Issuer="..."
-Jwt__Audience="..."
-```
-
----
-
-## 📚 API Overview (Examples)
-
-### Auth Endpoints
-```
-POST /api/auth/register
-POST /api/auth/login
-```
-
-### Patients
-```
-GET /api/patients
-POST /api/patients
-```
-
-### Doctors
-```
-GET /api/doctors
-POST /api/doctors
-```
-
-### Appointments
-```
-POST /api/appointments
-GET /api/appointments/{id}
-```
-
-(More endpoints can be detailed in Swagger or Postman)
-
----
-
-## ✅ Contribution Guidelines
-- Follow Clean Architecture best practices  
-- Use feature-based folders where suitable  
-- Follow naming conventions for DTOs, Services, and Controllers  
-- Ensure migrations remain consistent  
-
----
-
-## 🚀 Future Enhancements
-- Payment & Billing Module  
-- Notification Services (Email/SMS/Twilio)  
-- Chatbot Integration APIs  
-- Analytics & Dashboard KPIs  
-- Cloud Deployment Support  
-
----
-
-## 📝 License
-Internal / Academic Use Only (Update as needed)
-
----
-
-## ✅ Notes
-- Team member names intentionally excluded as requested  
-- Adjust database connection and JWT keys before production  
+## Next steps
+- Add example API documentation (example requests/responses) and a sample appsettings.Development.json template without secrets.
+- Add automated tests for scheduling logic and CI build pipeline.
