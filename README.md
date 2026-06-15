@@ -53,6 +53,170 @@ This system is designed for oncology hospital workflows:
 
 ---
 
+# 🏥 Authentication Services – Business Overview
+
+This document describes the **business logic** behind the Tumor Hospital authentication system. It focuses on **what each service does for the hospital**, not technical endpoints.
+
+---
+
+## 👑 AdminService – Staff & System Management
+
+**Purpose:** Enables hospital administrators to manage doctors, receptionists, and oversee system activity.
+
+### Business Capabilities
+
+| Business Need | How AdminService Solves It |
+|---------------|----------------------------|
+| **Hire a new doctor** | Admin creates a doctor account → system generates a random password and emails it to the doctor. The doctor is placed in an "inactive" state until they set their own password. |
+| **Hire a new receptionist** | Same flow as doctor: admin creates account, random password emailed, role set to inactive receptionist. |
+| **Remove a staff member** | Admin soft‑deletes a doctor or receptionist. The account remains in the database (for legal records) but cannot log in. The staff member is also unassigned from their hospital. |
+| **Reactivate a staff member** | Admin can restore a soft‑deleted account, allowing the person to log in again. |
+| **View hospital dashboard** | Admin sees key metrics: total patients, doctors, receptionists, appointments, bills, revenue, pending/cancelled bills, and charity needs. |
+| **Ensure hospital capacity** | When creating a doctor/receptionist, the system checks if the hospital has not exceeded its max allowed staff. Prevents over‑hiring. |
+
+### Business Flow – Hiring a Doctor
+
+1. Hospital admin enters doctor details (name, email, specialization, hospital).
+2. System validates that the hospital has available slots.
+3. System creates a user account with a secure random password.
+4. The doctor receives an email with their temporary password.
+5. The doctor **must** log in and change the password before accessing any medical features.
+6. The doctor’s role becomes active (`Doctor` instead of `InActiveDoctor`).
+
+> ✅ This ensures every staff member chooses their own password while allowing centralised onboarding.
+
+---
+
+## 🔐 AuthService – Patient & Staff Authentication
+
+**Purpose:** Manages all login, registration, password, and token operations for patients and staff.
+
+### Patient Journey (Self‑Service)
+
+| Step | Business Logic |
+|------|----------------|
+| **Register** | Patient provides name, email, password, gender. System creates an account with `EmailConfirmed = false`. A 6‑digit confirmation token is sent by email. |
+| **Confirm email** | Patient enters the 6‑digit token. System activates the account, issues a JWT (access token) and a refresh token for future logins. |
+| **Login** | Patient provides email and password. System checks email confirmation, account not deleted, and credentials. On success, returns access + refresh token. |
+| **Logout** | System invalidates the refresh token so the session cannot be extended. |
+| **Change password** | Logged‑in patient provides old and new password. System validates and updates. |
+| **Forgot password** | Patient requests a reset → system emails a 6‑digit token. Patient uses token + new password to reset. |
+
+### Staff Account Activation (First‑time login)
+
+**Critical for new doctors/receptionists created by admin:**
+
+1. Staff receives an email with a random password.
+2. Staff logs in using that password.
+3. System detects the account is in `InActiveDoctor` or `InActiveReceptionist` role.
+4. Staff is **forced** to change their password (old password = the random one, new password = their choice).
+5. After successful change, the role is upgraded to active (`Doctor` or `Receptionist`).
+6. Staff now has full access to their assigned duties.
+
+> 🔁 This flow ensures every staff member uses a personal, secret password while allowing admin to onboard quickly.
+
+### Refresh Token – Seamless Session Extension
+
+- When access token expires, the user (patient or staff) can obtain a new access token using the refresh token.
+- The old refresh token is **rotated** (replaced with a new one) to prevent reuse attacks.
+- Refresh token expiry depends on whether the user checked "Remember me" (30 days) or not (1 day).
+
+### Password Reset for All Users
+
+- **Forgot password** triggers a 6‑digit token sent to the registered email.
+- **Resend token** allows requesting a new token if the first one expired (1‑hour validity).
+- **Reset password** validates the token and updates the password.
+
+---
+
+## 🛡️ Role‑Based Access Control (Business Rules)
+
+The system enforces the following **business rules**:
+
+| Role | What they can do in the hospital |
+|------|----------------------------------|
+| **Admin** | Create/delete staff, view all dashboards, manage hospitals, specializations, offers, charity needs. |
+| **Doctor** | Manage own schedule, accept/reject appointments, write prescriptions, view patient diagnostics, conduct video calls. |
+| **Receptionist** | Receive cash payments, mark patient attendance, view appointment lists. |
+| **Patient** | Book appointments (consultation, follow‑up, video call), view own bills, upload MRI scans, get AI diagnostic reports, donate to charity. |
+| **InActiveDoctor / InActiveReceptionist** | **Only** allowed to change password (first login). Cannot access any other system features until activated. |
+
+---
+
+## 📧 Email Notifications – Business Triggers
+
+The system automatically sends emails for these business events:
+
+- **Patient registration** → confirmation token.
+- **Patient confirms email** → (no email, but token consumed).
+- **Resend confirmation** → new token email.
+- **Forgot password** → reset token email.
+- **Resend reset token** → new reset token email.
+- **Admin creates doctor** → email with random password and activation instructions.
+- **Admin creates receptionist** → same as doctor.
+
+All emails are sent via **SendGrid** and contain the hospital’s branding.
+
+---
+
+## 🚦 Security & Compliance – Business Safeguards
+
+- **Rate limiting** prevents brute‑force attacks on registration, login, and password reset (100 attempts per minute per IP).
+- **Soft delete** keeps patient/staff records for legal retention but blocks access.
+- **Refresh token rotation** protects against session hijacking.
+- **Email confirmation** ensures real patient ownership of the email address.
+- **First‑time password change** guarantees that only the intended staff knows the final password.
+
+---
+
+## 🔄 Business Process Summary
+
+### Onboarding a new patient
+1. Patient fills registration form.
+2. System sends confirmation code.
+3. Patient confirms email.
+4. Patient can log in and book appointments.
+
+### Hiring a new doctor (admin)
+1. Admin fills doctor details.
+2. System emails random password.
+3. Doctor logs in with that password.
+4. Doctor is forced to change password.
+5. Doctor can now manage schedule and appointments.
+
+### Handling a forgotten password (any user)
+1. User requests "forgot password".
+2. System emails a 6‑digit code.
+3. User enters code + new password.
+4. Password is updated.
+
+---
+
+## 📊 Key Metrics Available to Admin
+
+The admin dashboard shows:
+- Total patients, doctors, receptionists, appointments, bills, charity needs.
+- Total revenue (sum of paid bills).
+- Pending and cancelled bills count.
+- Completed charity needs.
+
+This gives hospital management real‑time oversight.
+
+---
+
+## 📝 Notes for Hospital Management
+
+- **Doctors/receptionists** cannot be fully deleted – only soft‑deleted to preserve audit trails.
+- **Password policies** enforce strong passwords (minimum length, complexity) to reduce security risks.
+- **Session timeout** is controlled by JWT expiry (default 15 Minutes) – users are automatically logged out after that unless they use refresh token.
+- **Remember me** extends refresh token lifetime to 30 days for convenience.
+
+---
+
+
+
+
+
 # 📅 Appointment System (Core Heart of the System)
 
 The appointment system is the most critical and concurrency-sensitive module.
@@ -322,24 +486,77 @@ Example:
 
 ---
 
-# 🔐 Security
+# 🔒 Security Controls
 
-- JWT Authentication
-- Role-Based Access Control:
-  - Admin
-  - Doctor
-  - Receptionist
-  - Patient
+## 🔁 Dual-Token Authentication
+
+- Short‑lived JWT access token – expires in **15 minutes** – reduces window for token misuse.
+- Refresh token stored in **HttpOnly Secure cookie** (not accessible via JavaScript) – protects against XSS token theft.
+- Refresh token lifetime: **1 day** (normal) or **30 days** (with "Remember Me").
+- Automatic **rotation** – each refresh invalidates the old refresh token and issues a new one, preventing replay attacks.
+
+**Business impact:** Minimizes risk of session hijacking; users stay logged in safely without re‑entering credentials frequently.
 
 ---
+
+## ✅ Input Validation (FluentValidation)
+
+- All API request DTOs validated **before** entering business logic.
+- Field‑level rules: email format, password complexity, required fields, string lengths, enums.
+- Invalid requests immediately return **400 Bad Request** with detailed field errors (no processing).
+- Prevents malformed data, injection attempts, and business rule violations at the gate.
+
+**Business impact:** Blocks malicious or corrupted data early; reduces debugging time and protects database integrity.
+
+---
+
+## 🛡️ SQL Injection Prevention
+
+- Entity Framework Core used exclusively with **parameterized LINQ queries**.
+- No raw SQL string concatenation or interpolation anywhere in the codebase.
+- All user input passed as parameters – impossible for attackers to alter query structure.
+- Automated checks in CI/CD to detect accidental raw SQL.
+
+**Business impact:** Eliminates the most dangerous database attack vector – patient records remain confidential and uncorrupted.
+
+---
+
+## 🌐 Strict CORS Policy
+
+- Explicit **allowlist** of trusted origins (frontend domains, hospital portals).
+- Wildcard origins (`*`) **prohibited** in production – no unrestricted cross‑origin calls.
+- Only configured HTTP methods and headers are permitted.
+- Preflight requests (OPTIONS) handled correctly for complex requests.
+
+**Business impact:** Prevents unauthorized websites from calling the API; stops cross‑site request forgery (CSRF) and data leaks.
+
+---
+
+## 🚦 Rate Limiting (DoS Prevention)
+
+- Returns `429 Too Many Requests` with retry‑after header.
+
+**Business impact:** Mitigates brute‑force password attacks, credential stuffing, and denial‑of‑service attempts – system remains responsive.
+
+---
+
+## 📜 Audit Logging
+
+- Dedicated **audit log file** (structured JSON via Serilog) recording every critical event.
+- Logged events: login attempts (success/failure), token refresh operations, role changes (e.g., InActive → Doctor), payments (bills, donations), file uploads (MRI scans, profile pictures).
+- Each log includes: timestamp, user ID (if authenticated), IP address, action type, outcome.
+- Audit logs stored separately from application logs – append‑only, tamper‑evident.
+
+**Business impact:** Provides full accountability for forensic investigations, compliance audits, and breach analysis.
+
+---
+
 
 # 🚀 Key Design Patterns
 
 - Repository Pattern
 - Unit of Work
-- CQRS (light usage)
 - Specification Pattern
-- Strategy pattern (external services)
 - Options Pattern
 - Dependency Injection
 
@@ -352,10 +569,6 @@ This system is built to reflect real hospital-grade constraints:
 - Concurrency-safe appointment handling
 - Strong domain validation
 - External integrations (AI + Payments)
-
-The most critical engineering challenge solved here is:
-
-> **Preventing race conditions in appointment approval using optimistic concurrency control**
 
 ---
 
