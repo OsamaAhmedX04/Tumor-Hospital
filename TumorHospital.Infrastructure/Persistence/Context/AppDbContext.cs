@@ -40,6 +40,8 @@ namespace TumorHospital.Infrastructure.Persistence.Context
         public DbSet<Pharmacist> Pharmacists { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<MedicinePurchaseOrder> MedicinePurchaseOrders { get; set; }
+        public DbSet<MedicineSale> MedicineSales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

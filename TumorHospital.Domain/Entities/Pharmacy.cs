@@ -19,5 +19,7 @@ namespace TumorHospital.Domain.Entities
         public DateTime CreatedAt { get; set; }
 
         public ICollection<Pharmacist> pharmacists { get; set; } = new List<Pharmacist>();
+        public ICollection<MedicinePurchaseOrder> purchaseOrders { get; set; } = new List<MedicinePurchaseOrder>();
+        public ICollection<MedicineSale> MedicineSales { get; set; } = new List<MedicineSale>();
     }
 }

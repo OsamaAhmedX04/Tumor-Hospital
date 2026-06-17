@@ -56,6 +56,10 @@ namespace TumorHospital.Infrastructure.UOW
         
         public IRepository<Supplier> Suppliers { get; set; }
 
+        public IRepository<MedicinePurchaseOrder> MedicinePurchaseOrders { get; set; }
+
+        public IRepository<MedicineSale> MedicineSales { get; set; }
+
 
         public UnitOfWork(AppDbContext db)
         {
@@ -89,6 +93,9 @@ namespace TumorHospital.Infrastructure.UOW
             Pharmacists = new Repository<Pharmacist>(_db);
             Medicines = new Repository<Medicine>(_db);
             Suppliers = new Repository<Supplier>(_db);
+
+            MedicinePurchaseOrders = new Repository<MedicinePurchaseOrder>(_db);
+            MedicineSales = new Repository<MedicineSale>(_db);
 
         }
 

@@ -34,6 +34,8 @@ namespace TumorHospital.Application.Intefaces.UOW
         IRepository<Pharmacist> Pharmacists { get; set; }
         IRepository<Medicine> Medicines { get; set; }
         IRepository<Supplier> Suppliers { get; set; }
+        IRepository<MedicinePurchaseOrder> MedicinePurchaseOrders { get; set; }
+        IRepository<MedicineSale> MedicineSales { get; set; }
 
 
         Task<int> CompleteAsync();

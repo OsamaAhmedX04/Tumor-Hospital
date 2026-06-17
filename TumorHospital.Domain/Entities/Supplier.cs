@@ -22,5 +22,6 @@ namespace TumorHospital.Domain.Entities
         public DateTime CreatedAt { get; set; }
 
         public ICollection<Medicine> Medicines { get; set; } = new List<Medicine>();
+        public ICollection<MedicinePurchaseOrder> purchaseOrders { get; set; } = new List<MedicinePurchaseOrder>();
     }
 }

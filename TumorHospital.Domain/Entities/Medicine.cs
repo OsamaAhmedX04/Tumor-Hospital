@@ -28,5 +28,8 @@ namespace TumorHospital.Domain.Entities
         public int MinimumQuantity { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; }
+
+        public ICollection<MedicinePurchaseOrder> purchaseOrders { get; set; } = new List<MedicinePurchaseOrder>();
+        public ICollection<MedicineSale> MedicineSales { get; set; } = new List<MedicineSale>();
     }
 }
