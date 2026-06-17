@@ -10,5 +10,8 @@
         public const string InActiveReceptionist = "InActiveReceptionistRole";
         public const string InActiveRole = "InActiveReceptionistRole,InActiveDoctorRole";
         public const string ActiveRole = "Doctor,Patient,Admin";
+
+        public const string Pharmacist = "Pharmacist";
+        public const string InActivePharmacist = "InActivePharmacistRole";
     }
 }

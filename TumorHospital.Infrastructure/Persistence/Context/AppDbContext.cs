@@ -36,6 +36,11 @@ namespace TumorHospital.Infrastructure.Persistence.Context
 
         public DbSet<VideoCall> VideoCalls { get; set; }
 
+        public DbSet<Pharmacy> Pharmacies { get; set; }
+        public DbSet<Pharmacist> Pharmacists { get; set; }
+        public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -20,5 +20,6 @@ namespace TumorHospital.Domain.Entities
         public ICollection<Doctor> Doctors { get; set; } = new List<Doctor>();
         public ICollection<Patient> Patients { get; set; } = new List<Patient>();
         public ICollection<Receptionist> Receptionists { get; set; } = new List<Receptionist>();
+        public ICollection<Pharmacist> Pharmacists { get; set; } = new List<Pharmacist>();
     }
 }

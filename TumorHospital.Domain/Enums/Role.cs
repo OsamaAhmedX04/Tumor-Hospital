@@ -7,6 +7,8 @@
         Receptionist,
         InActiveDoctorRole,
         InActiveReceptionistRole,
-        Patient
+        Patient,
+        Pharmacist,
+        InActivePharmacist
     }
 }

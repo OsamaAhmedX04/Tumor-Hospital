@@ -48,6 +48,14 @@ namespace TumorHospital.Infrastructure.UOW
 
         public IRepository<VideoCall> VideoCalls { get; }
 
+        public IRepository<Pharmacy> Pharmacies { get; set; }
+
+        public IRepository<Pharmacist> Pharmacists { get; set; }
+        
+        public IRepository<Medicine> Medicines { get; set; }
+        
+        public IRepository<Supplier> Suppliers { get; set; }
+
 
         public UnitOfWork(AppDbContext db)
         {
@@ -76,6 +84,11 @@ namespace TumorHospital.Infrastructure.UOW
             FAQs = new Repository<FAQ>(_db);
             AboutInfos = new Repository<AboutInfo>(_db);
             VideoCalls = new Repository<VideoCall>(_db);
+
+            Pharmacies = new Repository<Pharmacy>(_db);
+            Pharmacists = new Repository<Pharmacist>(_db);
+            Medicines = new Repository<Medicine>(_db);
+            Suppliers = new Repository<Supplier>(_db);
 
         }
 

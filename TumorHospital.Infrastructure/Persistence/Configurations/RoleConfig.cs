@@ -53,6 +53,21 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
                     Name = "Patient",
                     NormalizedName = "PATIENT",
                     ConcurrencyStamp = "44444444-4444-4444-4444-444444444444"
+                },
+                new IdentityRole
+                {
+                    Id = "d8a9f3c1-7e4b-4d82-a4f9-5c6b2e8a1111",
+                    Name = "Pharmacist",
+                    NormalizedName = "PHARMACIST",
+                    ConcurrencyStamp = "55555555-5555-5555-5555-555555555555"
+                },
+
+                new IdentityRole
+                {
+                    Id = "f1b6c8e2-9a73-4f51-b8d4-3e7a9c2b2222",
+                    Name = "InActivePharmacistRole",
+                    NormalizedName = "INACTIVEPHARMACISROLE",
+                    ConcurrencyStamp = "66666666-6666-6666-6666-666666666666"
                 }
             };
 

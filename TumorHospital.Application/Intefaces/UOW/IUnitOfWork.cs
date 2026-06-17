@@ -30,6 +30,11 @@ namespace TumorHospital.Application.Intefaces.UOW
 
         IRepository<VideoCall> VideoCalls { get; }
 
+        IRepository<Pharmacy> Pharmacies { get; set; }
+        IRepository<Pharmacist> Pharmacists { get; set; }
+        IRepository<Medicine> Medicines { get; set; }
+        IRepository<Supplier> Suppliers { get; set; }
+
 
         Task<int> CompleteAsync();
     }
