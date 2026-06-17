@@ -51,9 +51,9 @@ namespace TumorHospital.Infrastructure.UOW
         public IRepository<Pharmacy> Pharmacies { get; set; }
 
         public IRepository<Pharmacist> Pharmacists { get; set; }
-        
+
         public IRepository<Medicine> Medicines { get; set; }
-        
+
         public IRepository<Supplier> Suppliers { get; set; }
 
         public IRepository<MedicinePurchaseOrder> MedicinePurchaseOrders { get; set; }

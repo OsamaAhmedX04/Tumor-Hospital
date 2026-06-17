@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SendGrid.Helpers.Errors.Model;
-using System.Formats.Tar;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -83,7 +80,7 @@ namespace TumorHospital.Infrastructure.ExternalServices
             if (appointment == null)
                 throw new Exception("Appointment not found");
 
-            if(appointment.Status != AppointmentStatus.Approved)
+            if (appointment.Status != AppointmentStatus.Approved)
                 throw new Exception("Appointment not approved yet");
 
 

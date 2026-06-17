@@ -232,7 +232,7 @@ namespace TumorHospital.Infrastructure.Services
             var role = userRoles[0];
 
             //receptionist
-            if(role == SystemRole.Receptionist || role == SystemRole.InActiveReceptionist)
+            if (role == SystemRole.Receptionist || role == SystemRole.InActiveReceptionist)
             {
                 var receptionist = await _unitOfWork.Receptionists.FirstOrDefaultAsync(r => r.ApplicationUserId == userId);
                 receptionist!.HospitalId = null;
