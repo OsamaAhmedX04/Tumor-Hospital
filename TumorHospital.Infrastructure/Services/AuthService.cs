@@ -195,7 +195,12 @@ namespace TumorHospital.Infrastructure.Services
             var userRoles = await _userManager.GetRolesAsync(user);
             var mainRole = userRoles[0];
 
-            bool isInActiveAccount = mainRole == Role.InActiveDoctorRole.ToString() || mainRole == Role.InActiveReceptionistRole.ToString();
+            bool isInActiveAccount = 
+                mainRole == Role.InActiveDoctorRole.ToString() 
+                ||
+                mainRole == Role.InActiveReceptionistRole.ToString()
+                ||
+                mainRole == Role.InActivePharmacist.ToString();
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
                 throw new Exception("Email Not Confirmed Yet");
@@ -289,7 +294,8 @@ namespace TumorHospital.Infrastructure.Services
 
             var isInActiveDoctor = await _userManager.IsInRoleAsync(user, Role.InActiveDoctorRole.ToString());
             var isInActiveReceptionist = await _userManager.IsInRoleAsync(user, Role.InActiveReceptionistRole.ToString());
-            if (!isInActiveDoctor && !isInActiveReceptionist) throw new Exception("User Already Active");
+            var isInActivePharmacist = await _userManager.IsInRoleAsync(user, Role.InActivePharmacist.ToString());
+            if (!isInActiveDoctor && !isInActiveReceptionist && !isInActivePharmacist) throw new Exception("User Already Active");
 
             var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
@@ -300,19 +306,27 @@ namespace TumorHospital.Infrastructure.Services
                 await _userManager.RemoveFromRoleAsync(user, Role.InActiveDoctorRole.ToString());
                 await _userManager.AddToRoleAsync(user, Role.Doctor.ToString());
             }
+            else if (isInActivePharmacist)
+            {
+                await _userManager.RemoveFromRoleAsync(user, Role.InActivePharmacist.ToString());
+                await _userManager.AddToRoleAsync(user, Role.Pharmacist.ToString());
+            }
             else
             {
                 await _userManager.RemoveFromRoleAsync(user, Role.InActiveReceptionistRole.ToString());
                 await _userManager.AddToRoleAsync(user, Role.Receptionist.ToString());
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles[0];
 
             var jwtToken = _jwtService.GenerateToken(new UserDto
             {
                 Id = user.Id,
                 Email = user.Email!,
                 Name = user.FirstName + " " + user.LastName,
-                Role = isInActiveDoctor ? Role.Doctor.ToString() : Role.Receptionist.ToString()
+                //Role = isInActiveDoctor ? Role.Doctor.ToString() : Role.Receptionist.ToString()
+                Role = role
             });
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
