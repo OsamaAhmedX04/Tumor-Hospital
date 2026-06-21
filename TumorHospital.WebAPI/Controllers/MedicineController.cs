@@ -1,13 +1,7 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TumorHospital.Application.DTOs.Request.Medicine;
-using TumorHospital.Application.DTOs.Request.Supply;
-using TumorHospital.Application.DTOs.Response.Medicine;
-using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Intefaces.Services;
-using TumorHospital.Domain.Entities;
-using TumorHospital.Infrastructure.Services;
 using TumorHospital.WebAPI.Extensions;
 
 namespace TumorHospital.WebAPI.Controllers
@@ -63,7 +57,7 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 try
                 {
-                    await _medicineService.UpdateMedicine(medicineId ,dto);
+                    await _medicineService.UpdateMedicine(medicineId, dto);
                     return Ok(new { Message = "Medicine Updated Successfully" });
                 }
                 catch (Exception ex)
