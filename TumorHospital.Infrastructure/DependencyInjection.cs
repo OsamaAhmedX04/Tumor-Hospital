@@ -33,8 +33,8 @@ namespace TumorHospital.Infrastructure
             #region DBContext And Identity
             // Register DbContext
             services.AddDbContext<AppDbContext>(options =>
-            //options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
-            options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
+            //options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")
             ));
 
             // Register Identity
@@ -136,6 +136,13 @@ namespace TumorHospital.Infrastructure
             services.AddScoped<IOfferService, OfferService>();
             services.AddSignalR();
             services.AddScoped<IVideoCallService, VideoCallService>();
+
+            services.AddScoped<IPharmacistService, PharmacistService>();
+            services.AddScoped<IPharmacyService, PharmacyService>();
+            services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<IMedicineService, MedicineService>();
+            services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+
             #endregion
 
             #region BackgroundServices
@@ -150,8 +157,8 @@ namespace TumorHospital.Infrastructure
                 option
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                //.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
-                .UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
+                .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+                //.UseSqlServerStorage(configuration.GetConnectionString("ProductionConnection"));
             });
             services.AddHangfireServer();
             services.AddSingleton<HangfireLoggingFilter>();
