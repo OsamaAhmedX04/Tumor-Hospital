@@ -17,7 +17,12 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Description)
                 .HasMaxLength(1000);
 
-            builder.Property(x => x.Price)
+            builder.Property(x => x.SellingPrice)
+                .IsRequired()
+                .HasPrecision(18, 2);
+
+            builder.Property(x => x.PurchasePrice)
+                .IsRequired()
                 .HasPrecision(18, 2);
 
             builder.Property(x => x.QuantityInStock)

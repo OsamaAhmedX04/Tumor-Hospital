@@ -16,7 +16,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task UpdateMedicine(Guid medicineId, UpdateMedicineDto dto);
         Task DeleteMedicine(Guid medicineId);
         Task ReassignMedicineToSupplier(Guid medicineId, Guid supplierId);
-        Task SellMedicine(Guid medicineId);
+        Task SellMedicine(Guid medicineId, int quantity);
 
     }
 }
