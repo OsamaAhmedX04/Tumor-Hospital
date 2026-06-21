@@ -10,8 +10,8 @@ namespace TumorHospital.Application.Intefaces.Services
 {
     public interface IPharmacyService
     {
-        Task<PharmacyDto> GetAllPharmacies();
-        Task<PharmacyDetailsDto> GetPharmacy(Guid pharmacyId);
+        Task<List<PharmacyDto>> GetAllPharmacies();
+        Task<PharmacyDetailsDto> GetPharmacy(Guid pharmacyId, int? year = null, int? month = null);
         Task CreatePharmacy(NewPharmacyDto dto);
         Task UpdatePharmacy(Guid pharmacyId, UpdatePharmacyDto dto);
         Task DeletePharmacy(Guid pharmacyId);
