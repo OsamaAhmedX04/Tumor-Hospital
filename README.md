@@ -1,5 +1,5 @@
 
-# 🏥 Tumor Hospital Management System
+# 🏥 Medexa
 
 A production-grade healthcare management platform built with ASP.NET Core Web API following Clean Architecture principles.
 
