@@ -477,6 +477,47 @@ Workflow:
 
 ---
 
+# 💊 Pharmacy & Supply Chain Management
+
+The Pharmacy & Supply Chain Management module provides comprehensive control over pharmaceutical operations, ensuring efficient inventory management, supplier coordination, and medicine availability across the healthcare system.
+
+## 💉 Medicine Management
+
+* Manage medicine inventory and stock levels.
+* Create, update, and remove medicines.
+* Search medicines with pagination support.
+* Reassign medicines to different suppliers.
+* Process medicine sales and automatically update inventory quantities.
+
+## 🏪 Pharmacy Management
+
+* Create and manage pharmacies within the system.
+* Update pharmacy information and operational details.
+* Access pharmacy performance statistics and detailed reports.
+* Monitor pharmacy activities and inventory operations.
+
+## 👨‍🔬 Pharmacist Management
+
+* Register pharmacists and assign them to pharmacies.
+* Manage pharmacist accounts and responsibilities.
+* Remove pharmacists when necessary.
+
+## 🚚 Supplier Management
+
+* Maintain supplier records and information.
+* Create, update, and remove suppliers.
+* Search and manage suppliers efficiently.
+* Support pharmaceutical procurement operations.
+
+## 📦 Purchase Order Management
+
+* Generate purchase orders for suppliers.
+* Track order requests and their statuses.
+* Complete or decline supplier orders.
+* Facilitate inventory replenishment and stock management.
+* Ensure continuous medicine availability through procurement workflows.
+
+
 # ⚙️ Background Jobs (Hangfire)
 
 Used for:
