@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.Pharmacy;
 using TumorHospital.Application.Helpers;
 using TumorHospital.Application.Intefaces.ExternalServices;

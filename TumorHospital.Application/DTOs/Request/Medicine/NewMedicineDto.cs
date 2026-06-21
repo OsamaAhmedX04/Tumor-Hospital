@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TumorHospital.Domain.Entities;
-
-namespace TumorHospital.Application.DTOs.Request.Medicine
+﻿namespace TumorHospital.Application.DTOs.Request.Medicine
 {
     public class NewMedicineDto
     {

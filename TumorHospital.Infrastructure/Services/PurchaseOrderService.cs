@@ -1,10 +1,5 @@
 ﻿using LinqKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Response.Medicine;
 using TumorHospital.Application.DTOs.Response.Pagination;
 using TumorHospital.Application.Intefaces.ExternalServices;
@@ -26,7 +21,7 @@ namespace TumorHospital.Infrastructure.Services
             _currentUserService = currentUserService;
         }
 
-        public async Task<PageSourcePagination<PurchaseOrderRequestDto>> 
+        public async Task<PageSourcePagination<PurchaseOrderRequestDto>>
             GetAllRequestsOrderToSuppliers(int pageNumber, string? medicineName = null, string? status = null, string? supplierName = null)
         {
             Expression<Func<MedicinePurchaseOrder, bool>> filter = o => true;
@@ -82,7 +77,7 @@ namespace TumorHospital.Infrastructure.Services
             var currentPharmacistId = _currentUserService.UserId;
             var pharmacy = await _unitOfWork.Pharmacists.GetEnhancedAsync(
                 filter: p => p.ApplicationUserId == currentPharmacistId,
-                selector: p => new {p.PharmacyId}
+                selector: p => new { p.PharmacyId }
                 );
 
             var order = new MedicinePurchaseOrder
@@ -127,6 +122,6 @@ namespace TumorHospital.Infrastructure.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        
+
     }
 }

@@ -1,11 +1,5 @@
 ﻿using LinqKit;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.Medicine;
 using TumorHospital.Application.DTOs.Response.Medicine;
 using TumorHospital.Application.DTOs.Response.Pagination;
@@ -136,7 +130,7 @@ namespace TumorHospital.Infrastructure.Services
 
             var pharmacy = await _unitOfWork.Pharmacists.GetEnhancedAsync(
                 filter: p => p.ApplicationUserId == currentPharmacistId,
-                selector: p => new {p.PharmacyId}
+                selector: p => new { p.PharmacyId }
                 );
 
             var medicineSale = new MedicineSale

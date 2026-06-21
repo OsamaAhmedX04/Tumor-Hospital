@@ -1,10 +1,5 @@
 ﻿using LinqKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using TumorHospital.Application.DTOs.Request.Pharmacy;
 using TumorHospital.Application.DTOs.Response.Pharmacy;
 using TumorHospital.Application.Intefaces.Services;
@@ -44,7 +39,7 @@ namespace TumorHospital.Infrastructure.Services
         {
             Expression<Func<MedicineSale, bool>> filter = m => true;
 
-            if(year != null)
+            if (year != null)
             {
                 filter = filter.And(m => m.PharmacyId == pharmacyId && m.CreatedAt!.Value.Year == year);
             }
@@ -75,7 +70,7 @@ namespace TumorHospital.Infrastructure.Services
                         HireDate = x.HireDate,
                         TotalSales = x.MedicineSales.Where(filter.InvokeEFCore).Sum(x => x.TotalAmount),
                         IsDeleted = x.User.IsDeleted
-                        
+
                     }).ToList()
                 }
                 );
