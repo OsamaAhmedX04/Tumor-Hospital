@@ -161,5 +161,48 @@ namespace TumorHospital.Infrastructure.Services
 
             return true;
         }
+
+        public async Task<PharmacistProfileResponse> GetPharmacistProfile()
+        {
+            var userId = _currentUserService.UserId;
+            var pharmacist = await _unitOfWork.Pharmacists.GetEnhancedAsync(
+                filter: p => p.ApplicationUserId == userId && !p.User.IsDeleted && p.User.IsActive,
+                selector: p => new PharmacistProfileResponse
+                {
+                    FirstName = p.User.FirstName,
+                    LastName = p.User.LastName,
+                    Email = p.User.Email,
+                    HireDate = p.HireDate,
+                    PhoneNumber = p.User.PhoneNumber,
+                    PharmacyName = p.Pharmacy.Name,
+                    PharmacyLocation = p.Pharmacy.Location
+                }
+                );
+
+            if (pharmacist == null) throw new Exception("Pharmacist not found");
+
+            return pharmacist;
+        }
+
+        public async Task<bool> UpdateProfile(UpdatePharmacistProfileDto dto)
+        {
+            var userId = _currentUserService.UserId;
+            var pharmacist = await _unitOfWork.Pharmacists
+                .GetAsync(
+                filter: p => p.ApplicationUserId == userId && !p.User.IsDeleted && p.User.IsActive,
+                selector: p => p,
+                Includes: p => p.User
+                );
+
+            if (pharmacist == null) throw new Exception("Pharmacist not found");
+
+            pharmacist.User.FirstName = dto.FirstName;
+            pharmacist.User.LastName = dto.LastName;
+            pharmacist.User.PhoneNumber = dto.PhoneNumber;
+
+            await _unitOfWork.CompleteAsync();
+
+            return true;
+        }
     }
 }

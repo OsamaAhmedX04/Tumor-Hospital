@@ -19,16 +19,19 @@ namespace TumorHospital.WebAPI.Controllers
         private readonly IValidator<UpdatePatientProfileDto> _patientValidator;
         private readonly IValidator<UpdateDoctorProfileDto> _doctorValidator;
         private readonly IValidator<UpdateReceptionistProfileDto> _receptionistValidator;
+        private readonly IValidator<UpdatePharmacistProfileDto> _pharmacistValidator;
 
         public ProfileController(IProfileService profileSevice,
             IValidator<UpdatePatientProfileDto> patientValidator,
             IValidator<UpdateDoctorProfileDto> doctorValidator,
-            IValidator<UpdateReceptionistProfileDto> receptionistValidator)
+            IValidator<UpdateReceptionistProfileDto> receptionistValidator,
+            IValidator<UpdatePharmacistProfileDto> pharmacistValidator)
         {
             _profileService = profileSevice;
             _patientValidator = patientValidator;
             _doctorValidator = doctorValidator;
             _receptionistValidator = receptionistValidator;
+            _pharmacistValidator = pharmacistValidator;
         }
 
         [SwaggerOperation(Summary = ProfileDocs.GetPatientProfileSummary, Description = ProfileDocs.GetPatientProfileDescription)]
@@ -86,6 +89,23 @@ namespace TumorHospital.WebAPI.Controllers
             return BadRequest(new { Errors = ModelState.ToErrorResponse() });
         }
 
+
+        [Authorize(Roles = SystemRole.Pharmacist)]
+        [HttpGet("Pharmacist")]
+        public async Task<IActionResult> GetPharmacistProfile()
+        {
+            try
+            {
+                var result = await _profileService.GetPharmacistProfile();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Identity", ex.Message);
+            }
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
         [SwaggerOperation(Summary = ProfileDocs.UpdatePatientProfileSummary, Description = ProfileDocs.UpdatePatientProfileDescription)]
         [Authorize(Roles = SystemRole.Patient)]
         [HttpPut("Patient")]
@@ -131,6 +151,22 @@ namespace TumorHospital.WebAPI.Controllers
             {
                 await _profileService.UpdateProfile(dto);
                 return Ok("Receptionist profile updated successfully");
+            }
+            foreach (var error in validationResult.Errors)
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            return BadRequest(new { Errors = ModelState.ToErrorResponse() });
+        }
+
+        [Authorize(Roles = SystemRole.Pharmacist)]
+        [HttpPut("Pharmacist")]
+        [EnableRateLimiting("strict")]
+        public async Task<IActionResult> UpdateProfile(UpdatePharmacistProfileDto dto)
+        {
+            var validationResult = await _pharmacistValidator.ValidateAsync(dto);
+            if (validationResult.IsValid)
+            {
+                await _profileService.UpdateProfile(dto);
+                return Ok("Pharmacist profile updated successfully");
             }
             foreach (var error in validationResult.Errors)
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);

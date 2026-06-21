@@ -13,5 +13,7 @@ namespace TumorHospital.Application.Intefaces.Services
         Task<bool> UpdateProfile(UpdateDoctorProfileDto dto);
         Task<ReceptionistProfileResponse> GetReceptionistProfile();
         Task<bool> UpdateProfile(UpdateReceptionistProfileDto dto);
+        Task<PharmacistProfileResponse> GetPharmacistProfile();
+        Task<bool> UpdateProfile(UpdatePharmacistProfileDto dto);
     }
 }
