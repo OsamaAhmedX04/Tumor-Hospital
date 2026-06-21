@@ -12,7 +12,7 @@ namespace TumorHospital.Domain.Entities
         public string Address { get; set; } = null!;
         public string? ContactPersonName { get; set; }
         public string? ContactPersonPhone { get; set; }
-        public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
         public DateTime CreatedAt { get; set; }
 
         public ICollection<Medicine> Medicines { get; set; } = new List<Medicine>();

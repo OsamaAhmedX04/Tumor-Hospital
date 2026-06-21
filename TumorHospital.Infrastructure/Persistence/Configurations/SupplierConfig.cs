@@ -32,8 +32,8 @@ namespace TumorHospital.Infrastructure.Persistence.Configurations
             builder.Property(x => x.ContactPersonPhone)
                 .HasMaxLength(30);
 
-            builder.Property(x => x.IsActive)
-                .HasDefaultValue(true);
+            builder.Property(x => x.IsDeleted)
+                .HasDefaultValue(false);
 
             builder.Property(x => x.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");

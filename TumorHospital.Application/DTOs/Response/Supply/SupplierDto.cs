@@ -15,7 +15,6 @@ namespace TumorHospital.Application.DTOs.Response.Supply
         public string Address { get; set; } = null!;
         public string? ContactPersonName { get; set; }
         public string? ContactPersonPhone { get; set; }
-        public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; }
     }
 }
