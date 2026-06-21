@@ -5,6 +5,10 @@ A production-grade healthcare management platform built with ASP.NET Core Web AP
 
 It orchestrates hospital operations including appointments, prescriptions, donations, AI diagnostics, scheduling, payments, and role-based access control.
 
+<p align="center">
+  <img src="MedexaLogo.png" alt="Medexa Logo" width="400"/>
+</p>
+
 ---
 
 # 📌 System Overview
