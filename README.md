@@ -62,6 +62,8 @@ It orchestrates hospital operations including appointments, prescriptions, donat
   - [🚦 Rate Limiting](#-rate-limiting-dos-prevention)
   - [📜 Audit Logging](#-audit-logging)
 
+---
+
 # 📌 System Overview
 
 This system is designed for oncology hospital workflows:
