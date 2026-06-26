@@ -395,6 +395,49 @@ catch (DbUpdateConcurrencyException)
 
 ---
 
+##Appointment Scheduling
+
+The Appointment Scheduling module was one of the most challenging components of MediX due to the complexity of its business rules and the large number of possible scheduling scenarios.
+
+Challenge
+
+A scheduling system is more than simply creating, updating, or canceling appointments. It must handle multiple constraints simultaneously, including:
+
+- Doctor availability.
+- Patient availability.
+- Time slot conflicts.
+- Appointment approval and rejection.
+- Rescheduling scenarios.
+- Automatic assignment of the earliest available time slot.
+
+The initial implementation relied heavily on conditional statements ("if/else"). While it fulfilled the functional requirements, the code became increasingly difficult to maintain as new business rules were introduced.
+
+Solution
+
+To improve scalability, the scheduling logic was redesigned using an algorithmic approach instead of condition-driven logic.
+
+The algorithm works by:
+
+1. Retrieving all approved appointment time slots for the selected doctor.
+2. Retrieving all approved appointment time slots for the selected patient.
+3. Converting both collections into "HashSet<TimeSpan>" for efficient lookups.
+4. Iterating through the doctor's working hours in 30-minute intervals.
+5. Returning the first time slot that is available for both the doctor and the patient.
+
+Performance Optimization
+
+Using "HashSet<TimeSpan>" reduced lookup complexity from O(n) to O(1) on average, eliminating repeated linear searches while scanning the available schedule.
+
+This approach provides:
+
+- Better scalability.
+- Cleaner and more maintainable business logic.
+- Faster appointment scheduling.
+- Easier extension for future business requirements.
+
+Key Takeaway
+
+This module demonstrated that improving software design is not only about making the code work, but also about choosing the right algorithm and data structures to achieve both scalability and performance.
 # 🧩 Result
 
 - No lost updates
