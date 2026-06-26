@@ -11,6 +11,57 @@ It orchestrates hospital operations including appointments, prescriptions, donat
 
 ---
 
+# 📑 Table of Contents
+
+- [🏥 Medexa](#-medexa)
+- [📌 System Overview](#-system-overview)
+- [🏗️ Architecture](#️-architecture)
+  - [Clean Architecture Layers](#clean-architecture-layers)
+    - [Domain Layer](#domain-layer)
+    - [Application Layer](#application-layer)
+    - [Infrastructure Layer](#infrastructure-layer)
+    - [API Layer](#api-layer)
+
+- [🏥 Authentication Services – Business Overview](#-authentication-services--business-overview)
+  - [👑 AdminService – Staff & System Management](#-adminservice--staff--system-management)
+  - [🔐 AuthService – Patient & Staff Authentication](#-authservice--patient--staff-authentication)
+  - [🛡️ Role-Based Access Control](#️-role-based-access-control-business-rules)
+  - [📧 Email Notifications](#-email-notifications--business-triggers)
+  - [🚦 Security & Compliance](#-security--compliance--business-safeguards)
+  - [🔄 Business Process Summary](#-business-process-summary)
+  - [📊 Key Metrics Available to Admin](#-key-metrics-available-to-admin)
+  - [📝 Notes for Hospital Management](#-notes-for-hospital-management)
+
+- [📅 Appointment System (Core Heart of the System)](#-appointment-system-core-heart-of-the-system)
+  - [🔄 Appointment Lifecycle](#-appointment-lifecycle)
+  - [⚠️ Complexity of Appointment System](#️-complexity-of-appointment-system)
+  - [💥 Race Condition Problem](#-race-condition-problem-acceptreject)
+  - [🧠 Why This Happens](#-why-this-happens)
+  - [🛡️ Solution: Optimistic Concurrency Control](#️-solution-optimistic-concurrency-control)
+  - [📅 Appointment Scheduling](#-appointment-scheduling)
+  - [🧩 Result](#-result)
+
+- [💊 Prescription Rule Enforcement](#-prescription-rule-enforcement)
+- [💰 Donation System Complexity](#-donation-system-complexity)
+- [🏥 Hospital Management Module](#-hospital-management-module)
+- [📆 Scheduling System](#-scheduling-system)
+- [🤖 AI Diagnostic Module](#-ai-diagnostic-module)
+- [💊 Pharmacy & Supply Chain Management](#-pharmacy--supply-chain-management)
+  - [💉 Medicine Management](#-medicine-management)
+  - [🏪 Pharmacy Management](#-pharmacy-management)
+  - [👨‍🔬 Pharmacist Management](#-pharmacist-management)
+  - [🚚 Supplier Management](#-supplier-management)
+  - [📦 Purchase Order Management](#-purchase-order-management)
+
+- [⚙️ Background Jobs (Hangfire)](#️-background-jobs-hangfire)
+- [🔒 Security Controls](#-security-controls)
+  - [🔁 Dual-Token Authentication](#-dual-token-authentication)
+  - [✅ Input Validation](#-input-validation-fluentvalidation)
+  - [🛡️ SQL Injection Prevention](#️-sql-injection-prevention)
+  - [🌐 Strict CORS Policy](#-strict-cors-policy)
+  - [🚦 Rate Limiting](#-rate-limiting-dos-prevention)
+  - [📜 Audit Logging](#-audit-logging)
+
 # 📌 System Overview
 
 This system is designed for oncology hospital workflows:
