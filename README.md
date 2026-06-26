@@ -450,7 +450,7 @@ catch (DbUpdateConcurrencyException)
 
 ## Appointment Scheduling
 
-The Appointment Scheduling module was one of the most challenging components of MediX due to the complexity of its business rules and the large number of possible scheduling scenarios.
+The Appointment Scheduling module was one of the most challenging components of Medexa due to the complexity of its business rules and the large number of possible scheduling scenarios.
 
 ### Challenge
 
